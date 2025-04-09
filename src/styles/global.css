@@ -1,0 +1,106 @@
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Default/Desktop responsive size */
+  --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
+  /* Mobile Responsive Sizes */
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+  /* Weights */
+  --font-weight-unified: 700; /* Default weight */
+  --font-weight-bold: 900;    /* Bold weight */
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit */
+  --spacing-unit: 1rem;
+  /* Spacing Scale */
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+}
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  /* Apply Default/Desktop Size */
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Default heading/paragraph styles */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-weight-bold);
+    /* font-size: inherit; Let em control relative size */
+    line-height: 1.3;
+    margin-bottom: var(--spacing-sm);
+}
+/* Keep heading size relative to current context (body) */
+h3 { font-size: 1.1em; }
+
+p, li, dt, dd, span, label {
+    font-weight: inherit;
+    font-size: inherit; /* Inherit from parent */
+    line-height: inherit;
+    margin-bottom: var(--spacing-sm);
+}
+*:last-child { margin-bottom: 0; } /* Applies too broadly, use with caution or more specific selectors */
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover,
+button:hover { color: var(--color-text-hover); }
+button.active { color: var(--color-text-hover); }
+button { cursor: pointer; }
+
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        /* Apply Mobile Content Responsive Font Size */
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+    /* Example mobile heading adjustment if needed */
+    /* h3 { font-size: 1.2em; } */
+}

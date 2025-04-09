@@ -1,0 +1,60 @@
+---
+// src/components/StaticInfo.astro
+const introText = "Good that you're here. I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment."
+---
+<div class="static-info-wrapper">
+    <div class="static-column static-column-left">
+        <div class="placeholder-visual">STATIC VISUAL</div>
+    </div>
+    <div class="static-column static-column-right">
+        <p>{introText}</p>
+    </div>
+</div>
+
+<style>
+    .static-info-wrapper {
+        display: flex;
+        gap: var(--column-gap-desktop); /* Use layout variable */
+        height: 100%; /* Optional: Tries to fill parent */
+    }
+    .static-column {
+        flex-basis: 0;
+        flex-grow: 1;
+        min-width: 0; /* Prevent content push */
+    }
+    .static-column p {
+        margin-top: 0;
+        /* Use global line-height */
+        line-height: var(--line-height-unified);
+        /* Color should be inherited from body, but can be explicit */
+        /* color: var(--color-text-unified); */
+    }
+    .placeholder-visual {
+        width: 100%;
+        min-height: 200px; /* Keep min-height for now */
+        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1); /* Use text color with alpha */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em; /* Relative size */
+        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6); /* Lighter text color */
+        border: var(--line-thickness) dashed var(--color-border); /* Use variables */
+        padding: var(--spacing-md); /* Add some padding */
+    }
+
+    /* Add RGB version of text color to root if needed for rgba() */
+    :root {
+        --color-text-unified-rgb: 204, 204, 204; /* Assuming #ccc */
+    }
+
+    /* --- Mobile Adjustments for Static Info (If Needed) --- */
+    @media (max-width: 768px) {
+        .static-info-wrapper {
+             flex-direction: column; /* Stack columns */
+             gap: var(--spacing-lg); /* Adjust vertical gap */
+        }
+        .placeholder-visual {
+            min-height: 150px; /* Maybe smaller on mobile */
+        }
+    }
+</style>

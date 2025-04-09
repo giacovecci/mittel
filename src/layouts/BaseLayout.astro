@@ -1,0 +1,63 @@
+---
+// src/layouts/BaseLayout.astro
+// Imports global.css, retains header padding logic
+// Updated Font Import to include weight 500
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {/* Import Google Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {/* --- UPDATED: Added 500 weight --- */}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+      /* Import the global styles */
+      @import '../styles/global.css'; /* Adjust path if needed */
+
+      /* Keep header height estimation logic separate */
+     :root {
+        /* Define Header Heights */
+        --header-height-estimate-desktop: 3.5rem;
+        --header-height-estimate-mobile-px: 92px;
+
+        /* Use desktop by default */
+        --header-height-estimate: var(--header-height-estimate-desktop);
+
+         /* Keep scrollbar variables if needed globally */
+        --scrollbar-track-color: #222;
+        --scrollbar-thumb-color: #555;
+        --scrollbar-width: 8px;
+    }
+
+    body {
+        /* Apply dynamic padding based on the current estimate */
+        padding-top: var(--header-height-estimate);
+        transition: padding-top 0.3s ease;
+        /* Allow component styles to control scroll */
+        overflow-y: hidden; /* Default for desktop split view */
+    }
+
+    /* Update header height variable on mobile */
+    @media (max-width: 768px) {
+         :root {
+             /* Switch to mobile header estimate */
+             --header-height-estimate: var(--header-height-estimate-mobile-px);
+         }
+         body {
+            overflow-y: auto; /* ALLOW body scroll on mobile */
+         }
+    }
+    </style>
+</head>
+<body>
+    <slot />
+</body>
+</html>

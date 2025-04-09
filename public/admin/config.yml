@@ -1,0 +1,62 @@
+backend:
+  name: github                                # Using GitHub
+  # !!! IMPORTANT: REPLACE THIS LINE !!!
+  repo: giacovecci/mittel # Your GitHub username / repository name
+  # !!! IMPORTANT: VERIFY THIS LINE !!!
+  branch: main                                # Your repository's default branch (e.g., 'main' or 'master')
+
+  # Authentication details will be added later (e.g., git_gateway)
+  # For local testing now, you might rely on browser auth if logged into GitHub.
+  # Full setup requires Git Gateway or similar for deployment.
+
+# ========================================
+# Media File Handling
+# Where images/files uploaded via CMS are stored
+# ========================================
+media_folder: "public/uploads"       # Path within the repo to store uploaded media
+public_folder: "/uploads"            # Public URL path corresponding to media_folder
+
+# ========================================
+# Collections Definition
+# Defines the types of content you can manage
+# ========================================
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Thumbnail", name: "thumbnail", widget: "image" }
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        types:
+          - label: "Two Column"
+            name: "twoColumn"
+            widget: "object"
+            fields:
+              - { label: "Left Text", name: "left", widget: "text" }
+              - { label: "Right Text", name: "right", widget: "text" }
+          - label: "Full Width Image"
+            name: "fullWidthImage"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "src", widget: "image" }
+          - label: "Full Width Embed"
+            name: "fullWidthEmbed"
+            widget: "object"
+            fields:
+              - { label: "Embed Code", name: "embedCode", widget: "text", hint: "Paste the full HTML embed code (e.g., YouTube iframe, Spotify player)." }
+              - { label: "Caption", name: "caption", widget: "string", required: false, hint: "Optional caption displayed below the embed." }
+
+          # --- (Optional) Block Type 4: Full Width Text ---
+          # Uncomment the following lines if you need a simple full-width text block
+          #- label: "Full Width Text"
+          #  name: "fullWidthMarkdown"
+          #  widget: "object"
+          #  hint: "A block for standard text content spanning the full width."
+          #  fields:
+          #    - { label: "Text Content", name: "content", widget: "markdown", modes: ["raw", "rich_text"] }

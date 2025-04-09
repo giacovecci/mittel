@@ -1,0 +1,49 @@
+---
+// src/components/OverviewGrid.astro
+import GridItem from './GridItem.astro';
+
+// Assuming 'items' passed from index.astro contains id, title, imageUrl, altText
+export interface Props {
+    items: Array<{ id: string; title: string; imageUrl?: string; altText?: string; }>;
+}
+const { items = [] } = Astro.props;
+---
+<div id="overview-grid-wrapper" class="overview-grid-wrapper">
+    {items.length > 0 ? (
+        <div class="overview-grid">
+            {items.map(item => (
+                // Pass all needed props to GridItem
+                <GridItem item={item} />
+            ))}
+        </div>
+    ) : (
+        <p>No overview items found.</p>
+    )}
+</div>
+
+<style>
+    .overview-grid-wrapper {
+      padding: 0; /* Remove wrapper padding, let main handle it */
+    }
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columns */
+        gap: 1.5rem;
+    }
+
+    /* ================================== */
+    /* --- MOBILE GRID STYLES --- */
+    /* ================================== */
+    @media (max-width: 768px) {
+        .overview-grid {
+            grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
+            gap: 1rem;
+        }
+    }
+     @media (max-width: 480px) { /* Optional: Smaller mobile */
+         .overview-grid {
+            /* grid-template-columns: 1fr; */ /* Can uncomment for 1 column */
+            gap: 0.75rem;
+         }
+     }
+</style>
