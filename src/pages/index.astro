@@ -1,23 +1,32 @@
 ---
 // src/pages/index.astro
-// Simplified structure, CSS, and JS
+import { getCollection } from 'astro:content'; // Import Astro's content collection function
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import StaticInfo from '../components/StaticInfo.astro';
 import FeedEntry from '../components/FeedEntry.astro';
 import OverviewGrid from '../components/OverviewGrid.astro';
+import type { CollectionEntry } from 'astro:content'; // Import type for better safety
 
-// Sample data - ensure it matches what GridItem expects (id, title, imageUrl, altText)
-const feedItems = [
-    { id: 'project-1', title: 'Project Alpha', imageUrl: '/placeholder.jpg', altText: 'Placeholder 1' },
-    { id: 'project-2', title: 'Project Beta', imageUrl: '/placeholder.jpg', altText: 'Placeholder 2' },
-    { id: 'project-3', title: 'Another Project', imageUrl: '/placeholder.jpg', altText: 'Placeholder 3' },
-    { id: 'project-4', title: 'Case Study Four', imageUrl: '/placeholder.jpg', altText: 'Placeholder 4' },
-    { id: 'project-5', title: 'Fifth Entry', imageUrl: '/placeholder.jpg', altText: 'Placeholder 5' },
-    { id: 'project-6', title: 'Sixth Thing', imageUrl: '/placeholder.jpg', altText: 'Placeholder 6' },
-    { id: 'project-7', title: 'Item Seven', imageUrl: '/placeholder.jpg', altText: 'Placeholder 7' },
-    { id: 'project-8', title: 'The Last One', imageUrl: '/placeholder.jpg', altText: 'Placeholder 8' },
-];
+// Fetch all entries from the 'feed' collection
+const feedEntries: CollectionEntry<'feed'>[] = await getCollection('feed');
+
+// Optional: Sort entries by date, newest first (ensure 'date' field exists in frontmatter)
+// feedEntries.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// --- Prepare data for components ---
+
+// 1. Data for OverviewGrid: Map fetched entries to the structure OverviewGrid expects
+//    (Ensure GridItem.astro uses `item.id` for the link/data-target-id and `item.imageUrl` for the image)
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug, // Use slug as the unique ID for linking
+    title: entry.data.title || 'Untitled', // Use entry title
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', // Use thumbnail from frontmatter, fallback to placeholder
+    altText: entry.data.title || 'Feed item thumbnail' // Use title for alt text, or provide a generic one
+}));
+
+// 2. Data for FeedEntry: We will pass the full entry object to FeedEntry
+//    It contains both `slug` (for the ID) and `data` (for title, date, contentBlocks)
 ---
 <BaseLayout title="My Portfolio - Home">
     <Header />
@@ -26,25 +35,32 @@ const feedItems = [
     <main id="main-content" class="feed-active">
         <div class="vertical-divider"></div>
 
-        {/* Content Areas - Structure remains simple */}
+        {/* Left Column: Static Info */}
         <aside id="info-content" class="left-column">
             <StaticInfo />
         </aside>
 
+        {/* Right Column: Scrollable Feed */}
         <section id="feed-content" class="right-column">
-            {feedItems.map(item => (
-                <FeedEntry entryId={item.id} />
+            {/* Loop through fetched entries and pass the full entry object */}
+            {feedEntries.map(entry => (
+                <FeedEntry entry={entry} />
+                /* Pass the whole entry object. FeedEntry will use entry.slug for its ID
+                   and entry.data for its content. */
             ))}
         </section>
 
+        {/* Full Width Overview Grid */}
         <div id="overview-content">
-            <OverviewGrid items={feedItems} />
+            {/* Pass the specifically mapped 'overviewItems' array */}
+            <OverviewGrid items={overviewItems} />
         </div>
     </main>
 </BaseLayout>
 
-{/* Styles */}
+{/* Styles remain unchanged - keep your existing <style> block */}
 <style>
+   /* --- KEEP YOUR EXISTING CSS RULES HERE --- */
     :root { /* Define fallbacks if needed */
         --content-padding-x: 1.25rem;
         --column-gap: 1.25rem;
@@ -98,7 +114,7 @@ const feedItems = [
     /* ================================== */
     /* --- MOBILE STYLES (max-width: 768px) --- */
     /* ================================== */
-     @media (max-width: 768px) {
+    @media (max-width: 768px) {
         main {
             display: block; /* Stack everything */
             height: auto; /* Allow content height */
@@ -117,15 +133,15 @@ const feedItems = [
             padding: 0; /* Keep internal padding reset */
             /* --- Remove specific margin-top logic --- */
             /* Spacing is now handled by main's padding-top */
-             /* Optionally add margin-bottom for spacing between sections if multiple could be visible */
-             margin-bottom: 1.5rem; /* Example spacing below each section */
+            /* Optionally add margin-bottom for spacing between sections if multiple could be visible */
+            margin-bottom: 1.5rem; /* Example spacing below each section */
         }
-         /* Ensure last element has no bottom margin */
-         #info-content:last-child,
-         #feed-content:last-child,
-         #overview-content:last-child {
+        /* Ensure last element has no bottom margin */
+        #info-content:last-child,
+        #feed-content:last-child,
+        #overview-content:last-child {
             margin-bottom: 0;
-         }
+        }
 
 
         /* --- Mobile Content Visibility Rules (Remain the same) --- */
@@ -146,15 +162,16 @@ const feedItems = [
     }
 </style>
 
-{/* --- Corrected Script --- */}
+{/* Script remains unchanged - keep your existing <script> block */}
 <script>
+   // --- KEEP YOUR EXISTING SCRIPT HERE ---
     document.addEventListener('DOMContentLoaded', () => {
         // Get elements
         const mainElement = document.getElementById('main-content');
         const infoBtn = document.getElementById('info-view-btn') as HTMLButtonElement | null;
         const feedBtn = document.getElementById('feed-view-btn') as HTMLButtonElement | null;
         const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
-        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+        const overviewGridWrapper = document.getElementById('overview-grid-wrapper'); // Make sure OverviewGrid.astro has this ID on its wrapper
         const infoContent = document.getElementById('info-content');
         const feedContent = document.getElementById('feed-content'); // Scroll target
 
@@ -174,12 +191,12 @@ const feedItems = [
         }
 
         function setActiveButton(activeBtn: HTMLButtonElement | null): void {
-             [infoBtn, feedBtn, overviewBtn].forEach(btn => {
-                 if (btn) { // Check button exists
-                     btn.classList.toggle('active', btn === activeBtn);
-                 }
-             });
-         }
+            [infoBtn, feedBtn, overviewBtn].forEach(btn => {
+                if (btn) { // Check button exists
+                    btn.classList.toggle('active', btn === activeBtn);
+                }
+            });
+        }
 
         function setMainView(view: 'feed' | 'overview'): void {
             mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible'); // Use non-null assertion
@@ -198,21 +215,21 @@ const feedItems = [
                     setActiveButton(feedBtn); // Default to feed button active
                 }
             }
-             console.log(`Main view set to: ${view}`);
+            console.log(`Main view set to: ${view}`);
         }
 
-         function toggleMobileInfoFeed(showInfo: boolean): void {
-             if (!isMobileView()) return;
-             currentMobileInfoVisible = showInfo;
-             mainElement!.classList.toggle('info-visible', showInfo); // Use non-null assertion
+        function toggleMobileInfoFeed(showInfo: boolean): void {
+            if (!isMobileView()) return;
+            currentMobileInfoVisible = showInfo;
+            mainElement!.classList.toggle('info-visible', showInfo); // Use non-null assertion
 
-             setActiveButton(showInfo ? infoBtn : feedBtn);
-             console.log(`Mobile info visibility toggled: ${showInfo}`);
+            setActiveButton(showInfo ? infoBtn : feedBtn);
+            console.log(`Mobile info visibility toggled: ${showInfo}`);
 
-             if (mainElement!.classList.contains('overview-active')) {
-                  setMainView('feed');
-             }
-         }
+            if (mainElement!.classList.contains('overview-active')) {
+                setMainView('feed');
+            }
+        }
 
         // --- Event Listeners ---
         overviewBtn.addEventListener('click', () => { setMainView('overview'); });
@@ -222,22 +239,34 @@ const feedItems = [
         });
         infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); });
 
+        // Ensure the event listener for grid items uses the correct selector and attribute
         overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
             if (event.target instanceof Element) {
-                 const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                 if (gridItemLink) {
+                // Ensure GridItem.astro's clickable element (likely <a>) has class 'grid-item' and 'data-target-id' attribute
+                const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                 if (gridItemLink && gridItemLink.dataset.targetId) { // Check dataset.targetId exists
                      event.preventDefault();
-                     const targetId = gridItemLink.dataset.targetId;
-                     if (!targetId) { console.error("Grid item missing data-target-id"); return; };
+                     const targetId = gridItemLink.dataset.targetId; // e.g., "project-alpha"
 
-                     const targetFeedElement = document.getElementById(targetId);
+                     // Find the feed entry article by its ID
+                     const targetFeedElement = document.getElementById(targetId); // This ID must match the <article id={entry.slug}> in FeedEntry.astro
+
                      if (targetFeedElement) {
                          setMainView('feed');
                          if (isMobileView()) { toggleMobileInfoFeed(false); }
                          requestAnimationFrame(() => {
-                              targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // Scroll the FEED COLUMN container, not the element itself directly into view if it has padding etc.
+                            // Or use scrollIntoView if the container scrolls properly
+                             targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                            // Alternative: scroll feed container
+                            // const feedContainer = document.getElementById('feed-content');
+                            // const offsetTop = targetFeedElement.offsetTop;
+                            // feedContainer?.scrollTo({ top: offsetTop - 20, behavior: 'smooth'}); // Adjust offset as needed
                          });
-                     } else { console.error(`Target element #${targetId} not found.`); }
+                     } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
+                 } else if (gridItemLink) {
+                      console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
                  }
             }
         });

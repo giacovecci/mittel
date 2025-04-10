@@ -1,0 +1,18 @@
+---
+// src/components/MarkdownRenderer.astro
+import { marked } from 'marked'; // Or your preferred Markdown parser library
+
+interface Props {
+  markdown: string;
+}
+
+const { markdown } = Astro.props;
+const html = marked.parse(markdown || ''); // Parse the markdown string
+
+// Export a function for use with set:html and Astro.glob
+export function render(markdownString: string) {
+    return marked.parse(markdownString || '');
+}
+---
+{/* Render the parsed HTML directly */}
+<Fragment set:html={html} />

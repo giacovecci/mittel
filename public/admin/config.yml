@@ -1,62 +1,46 @@
+# public/admin/config.yml
+
 backend:
-  name: github                                # Using GitHub
-  # !!! IMPORTANT: REPLACE THIS LINE !!!
-  repo: giacovecci/mittel # Your GitHub username / repository name
-  # !!! IMPORTANT: VERIFY THIS LINE !!!
-  branch: main                                # Your repository's default branch (e.g., 'main' or 'master')
+  name: github # Use the GitHub backend
+  repo: giacovecci/mittel # Path to your GitHub repository (username/repo_name)
+  branch: main # The branch to work from (usually 'main' or 'master')
+  # Optional: Specify the folder where the CMS interface lives if it's not in the root
+  # site_domain: your-netlify-site-url.netlify.app # Add this later when deploying
 
-  # Authentication details will be added later (e.g., git_gateway)
-  # For local testing now, you might rely on browser auth if logged into GitHub.
-  # Full setup requires Git Gateway or similar for deployment.
+media_folder: "public/uploads" # Location where uploaded media files will be stored (relative to root)
+public_folder: "/uploads" # The public URL path for accessing media files
 
-# ========================================
-# Media File Handling
-# Where images/files uploaded via CMS are stored
-# ========================================
-media_folder: "public/uploads"       # Path within the repo to store uploaded media
-public_folder: "/uploads"            # Public URL path corresponding to media_folder
-
-# ========================================
-# Collections Definition
-# Defines the types of content you can manage
-# ========================================
 collections:
-  - name: "feed"
-    label: "Feed Entries"
-    folder: "src/content/feed"
-    create: true
-    slug: "{{slug}}"
-    fields:
+  - name: "feed" # Used in routes, e.g., /admin/collections/feed
+    label: "Feed Entries" # Used in the UI
+    folder: "src/content/feed" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
+    fields: # The fields for each document, usually in front matter
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Thumbnail", name: "thumbnail", widget: "image" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
+      - { label: "Layout", name: "layout", widget: "hidden", default: "@/layouts/BlogPost.astro" } # Assuming a layout might be needed later
       - label: "Content Blocks"
         name: "contentBlocks"
         widget: "list"
         types:
-          - label: "Two Column"
+          - label: "Two Column Block"
             name: "twoColumn"
             widget: "object"
             fields:
-              - { label: "Left Text", name: "left", widget: "text" }
-              - { label: "Right Text", name: "right", widget: "text" }
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown" }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown" }
           - label: "Full Width Image"
             name: "fullWidthImage"
             widget: "object"
             fields:
-              - { label: "Image", name: "src", widget: "image" }
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
           - label: "Full Width Embed"
             name: "fullWidthEmbed"
             widget: "object"
             fields:
-              - { label: "Embed Code", name: "embedCode", widget: "text", hint: "Paste the full HTML embed code (e.g., YouTube iframe, Spotify player)." }
-              - { label: "Caption", name: "caption", widget: "string", required: false, hint: "Optional caption displayed below the embed." }
-
-          # --- (Optional) Block Type 4: Full Width Text ---
-          # Uncomment the following lines if you need a simple full-width text block
-          #- label: "Full Width Text"
-          #  name: "fullWidthMarkdown"
-          #  widget: "object"
-          #  hint: "A block for standard text content spanning the full width."
-          #  fields:
-          #    - { label: "Text Content", name: "content", widget: "markdown", modes: ["raw", "rich_text"] }
+              - { label: "Embed Code (HTML)", name: "embedCode", widget: "text" }
+      # Removed the 'body' field as content is now structured in contentBlocks
+      # - { label: "Body", name: "body", widget: "markdown" } # We'll use contentBlocks instead

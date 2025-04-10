@@ -1,6 +1,9 @@
 ---
 // src/components/Header.astro
 // Apply responsive mobile header font size - CORRECTED
+
+// --- Add your email address here ---
+const contactEmail = "hey@mittel.tv"; // <<< REPLACE WITH YOUR ACTUAL EMAIL ADDRESS
 ---
 <header id="main-header">
     {/* Header Left */}
@@ -40,13 +43,15 @@
         </nav>
         {/* Contact Item */}
         <div class="header-contact-item">
-             <a href="#" id="contact-link">
+             {/* --- Updated href attribute --- */}
+             <a href={`mailto:${contactEmail}`} id="contact-link">
                 <span class="arrow mobile-only">→</span> Contact
              </a>
         </div>
     </div>
 </header>
 
+{/* Styles remain unchanged - keep your existing <style> block */}
 <style>
     /* Use global variables */
     :root {
