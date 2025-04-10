@@ -1,8 +1,6 @@
 backend:
-  name: github                                # Using GitHub
-  # !!! IMPORTANT: REPLACE THIS LINE !!!
+  name: git-gateway                                # Using GitHub
   repo: giacovecci/mittel # Your GitHub username / repository name
-  # !!! IMPORTANT: VERIFY THIS LINE !!!
   branch: main                                # Your repository's default branch (e.g., 'main' or 'master')
 
   # Authentication details will be added later (e.g., git_gateway)
