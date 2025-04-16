@@ -19,8 +19,6 @@ backend:
 
 # Better Decap + Bridge logo (optional)
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-
-# Add site links in DecapCMS (optional)
 site_url: https://mittel.reiseburo.workers.dev
 
 media_folder: "public/uploads" # Location where uploaded media files will be stored (relative to root)
@@ -58,5 +56,3 @@ collections:
             widget: "object"
             fields:
               - { label: "Embed Code (HTML)", name: "embedCode", widget: "text" }
-      # Removed the 'body' field as content is now structured in contentBlocks
-      # - { label: "Body", name: "body", widget: "markdown" } # We'll use contentBlocks instead
