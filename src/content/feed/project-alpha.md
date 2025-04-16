@@ -1,5 +1,5 @@
 ---
-title: "Project Alpha: A Deep Dive"
+title: ósma kolumna
 date: 2025-04-16T22:54:00.000Z
 thumbnail: /uploads/signal-2024-01-11-164636.jpeg
 contentBlocks:
