@@ -1,5 +1,5 @@
 ---
-title: "Project Alpha: A Deep Dive"
+title: Alfalfa
 date: 2025-04-16T22:48:00.000Z
 thumbnail: null
 contentBlocks:
