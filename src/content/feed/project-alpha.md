@@ -1,44 +1,45 @@
 ---
-# src/content/feed/project-alpha.md
-
 title: "Project Alpha: A Deep Dive"
-date: 2024-10-26 # Use YYYY-MM-DD format
-thumbnail: /uploads/project-alpha-thumb.jpg # Path relative to the public folder
-# Optional: Add alt text for the thumbnail if you want to use it in GridItem
-# altText: "Close-up of the Project Alpha interface on a laptop screen"
-
-# Layout field (optional, can be used by Astro if needed, currently ignored by FeedEntry)
-# layout: '@/layouts/BlogPost.astro'
-
+date: 2025-04-16T22:54:00.000Z
+thumbnail: /uploads/signal-2024-01-11-164636.jpeg
 contentBlocks:
   - twoColumn:
-      left: |
+      left: >
         ### Overview
+
 
         Project Alpha was our first major undertaking in the **foobar** sector. The primary goal was to streamline the user onboarding process.
 
+
         *   Reduced clicks by 40%
+
         *   Improved task completion rate
+
         *   Gathered positive user feedback
-      right: |
+      right: >
         ### Technology Stack
+
 
         We leveraged a modern stack to ensure scalability and maintainability.
 
+
         1.  **Frontend:** Astro + Preact
+
         2.  **Styling:** Tailwind CSS
+
         3.  **Backend:** Supabase (Postgres, Auth)
+
         4.  **Deployment:** Vercel
 
+
         > This combination provided rapid development cycles and a robust final product.
-
   - fullWidthImage:
-      image: /uploads/project-alpha-screenshot-1.png # Path relative to the public folder
-      alt: "Screenshot showing the main dashboard of Project Alpha"
-
+      image: /uploads/project-alpha-screenshot-1.png
+      alt: Screenshot showing the main dashboard of Project Alpha
   - twoColumn:
-      left: |
+      left: >
         #### Challenges
+
 
         Integrating the legacy authentication system presented a significant hurdle. We addressed this by implementing a temporary adapter pattern while phasing out the old system.
       right: |
@@ -47,10 +48,12 @@ contentBlocks:
         *   Clear API contracts are crucial.
         *   User testing early and often saves time.
         *   Don't underestimate deployment complexities.
-
   - fullWidthEmbed:
-      embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' # Example YouTube embed
-
+      embedCode: <iframe width="560" height="315"
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video
+        player" frameborder="0" allow="accelerometer; autoplay; clipboard-write;
+        encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
 ---
 
 <!-- Note: Markdown content placed *outside* the frontmatter (after the closing ---) is typically accessed via `entry.body` when using `getCollection`. Since we are relying *only* on `contentBlocks` in `FeedEntry.astro`, this area will be ignored by our current setup. -->
