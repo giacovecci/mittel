@@ -1,7 +1,7 @@
 ---
 title: Alfalfa
 date: 2025-04-16T22:48:00.000Z
-thumbnail: null
+thumbnail: /uploads/screenshot-2025-03-02-142044.png
 contentBlocks:
   - twoColumn:
       left: >
