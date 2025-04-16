@@ -1,6 +1,6 @@
 ---
-title: ósma kolumna
-date: 2025-04-16T22:54:00.000Z
+title: LUTY ósma kolumna
+date: 2025-02-01T00:54:00.000Z
 thumbnail: /uploads/signal-2024-01-11-164636.jpeg
 contentBlocks:
   - twoColumn:
