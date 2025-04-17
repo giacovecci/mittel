@@ -4,7 +4,7 @@ date: 2025-04-17T12:31:00.000Z
 thumbnail: /uploads/project-alpha-thumb.jpg
 contentBlocks:
   - type: twoColumn
-    left: On the left hand side
+    left: "![](/uploads/screenshot-2025-03-02-142044.png)"
     right: >-
       ### Herkunft und Bedeutung
 
