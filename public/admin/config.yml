@@ -1,14 +1,14 @@
 # public/admin/config.yml
 
-# Use DecapBridge auth (required)
+# --- Backend Configuration (Keep Existing) ---
 backend:
   name: git-gateway
-  repo: giacovecci/mittel
+  repo: giacovecci/mittel # Make sure this is your correct repo
   branch: main
-  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
-  gateway_url: https://gateway.decapbridge.com
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e # Keep your specific URL
+  gateway_url: https://gateway.decapbridge.com # Keep your specific URL
 
-  # Quickly see who did what (optional)
+  # Commit messages (optional, keep existing if you like them)
   commit_messages:
     create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
     update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
@@ -17,47 +17,50 @@ backend:
     deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
-# Better Decap + Bridge logo (optional)
-logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+# --- General CMS Settings ---
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg # Optional
+site_url: https://mittel.reiseburo.workers.dev # Optional: Replace with your actual site URL if different
 
-# Add site links in DecapCMS (optional)
-site_url: https://mittel.reiseburo.workers.dev
+# --- Media Handling ---
+media_folder: "public/uploads" # Store uploaded media here (relative to root)
+public_folder: "/uploads" # Public path to access media
 
-media_folder: "public/uploads" # Location where uploaded media files will be stored (relative to root)
-public_folder: "/uploads" # The public URL path for accessing media files
-
+# --- Collections Definition ---
 collections:
-  - name: "feed" # Used in routes, e.g., /admin/collections/feed
-    label: "Feed Entries" # Used in the UI
-    folder: "src/content/feed" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
-    fields: # The fields for each document, usually in front matter
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
-      - { label: "Layout", name: "layout", widget: "hidden", default: "@/layouts/BlogPost.astro" } # Can be removed if not needed
+  - name: "feed" # Matches the key in src/content/config.ts
+    label: "Feed Entries" # UI Label
+    folder: "src/content/feed" # Path where content files are stored
+    create: true # Allow creating new entries
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
+    # Define the fields for the frontmatter, matching src/content/config.ts schema
+    fields:
+      - { label: "Title", name: "title", widget: "string" } # Matches schema: title: z.string()
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false } # Matches schema: date: z.date().optional()
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false } # Matches schema: thumbnail: z.string().optional()
+      # --- Content Blocks Field ---
       - label: "Content Blocks"
-        name: "contentBlocks"
+        name: "contentBlocks" # Matches schema: contentBlocks: z.array(...)
         widget: "list"
-        typeKey: type        # <<< THIS LINE IS ADDED/ENSURED
-        types:
+        typeKey: type # Crucial: Links 'name' below to 'type' property in data & schema
+        types: # Define the different block types allowed in the list
+          # --- Two Column Block Type ---
           - label: "Two Column Block"
-            name: "twoColumn"         # This name matches the type value
+            name: "twoColumn" # MUST match z.literal('twoColumn') in schema
             widget: "object"
             fields:
-              - { label: "Left Column (Markdown)", name: "left", widget: "markdown" }
-              - { label: "Right Column (Markdown)", name: "right", widget: "markdown" }
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false } # Matches schema: left: z.string().optional()
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false } # Matches schema: right: z.string().optional()
+          # --- Full Width Image Block Type ---
           - label: "Full Width Image"
-            name: "fullWidthImage"    # This name matches the type value
+            name: "fullWidthImage" # MUST match z.literal('fullWidthImage') in schema
             widget: "object"
             fields:
-              - { label: "Image", name: "image", widget: "image" }
-              - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Image", name: "image", widget: "image" } # Matches schema: image: z.string()
+              - { label: "Alt Text", name: "alt", widget: "string", required: false } # Matches schema: alt: z.string().optional()
+          # --- Full Width Embed Block Type ---
           - label: "Full Width Embed"
-            name: "fullWidthEmbed"    # This name matches the type value
+            name: "fullWidthEmbed" # MUST match z.literal('fullWidthEmbed') in schema
             widget: "object"
             fields:
-              - { label: "Embed Code (HTML)", name: "embedCode", widget: "text" }
-      # Removed the 'body' field as content is now structured in contentBlocks
-      # - { label: "Body", name: "body", widget: "markdown" }
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" } # Matches schema: embedCode: z.string()
+    # No 'body' field needed here, as content is handled by contentBlocks

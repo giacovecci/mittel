@@ -162,9 +162,7 @@ const overviewItems = feedEntries.map(entry => ({
     }
 </style>
 
-{/* Script remains unchanged - keep your existing <script> block */}
 <script>
-   // --- KEEP YOUR EXISTING SCRIPT HERE ---
     document.addEventListener('DOMContentLoaded', () => {
         // Get elements
         const mainElement = document.getElementById('main-content');
@@ -199,7 +197,8 @@ const overviewItems = feedEntries.map(entry => ({
         }
 
         function setMainView(view: 'feed' | 'overview'): void {
-            mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible'); // Use non-null assertion
+            // Use non-null assertion since we checked mainElement exists
+            mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible');
 
             if (view === 'overview') {
                 mainElement!.classList.add('overview-active');
@@ -212,7 +211,8 @@ const overviewItems = feedEntries.map(entry => ({
                     mainElement!.classList.add('info-visible');
                     setActiveButton(infoBtn);
                 } else {
-                    setActiveButton(feedBtn); // Default to feed button active
+                    // Check if feedBtn exists before setting it active
+                    if(feedBtn) setActiveButton(feedBtn); // Default to feed button active
                 }
             }
             console.log(`Main view set to: ${view}`);
@@ -221,8 +221,10 @@ const overviewItems = feedEntries.map(entry => ({
         function toggleMobileInfoFeed(showInfo: boolean): void {
             if (!isMobileView()) return;
             currentMobileInfoVisible = showInfo;
-            mainElement!.classList.toggle('info-visible', showInfo); // Use non-null assertion
+            // Use non-null assertion since we checked mainElement exists
+            mainElement!.classList.toggle('info-visible', showInfo);
 
+            // Check if buttons exist before setting active
             setActiveButton(showInfo ? infoBtn : feedBtn);
             console.log(`Mobile info visibility toggled: ${showInfo}`);
 
@@ -232,50 +234,63 @@ const overviewItems = feedEntries.map(entry => ({
         }
 
         // --- Event Listeners ---
-        overviewBtn.addEventListener('click', () => { setMainView('overview'); });
-        feedBtn.addEventListener('click', () => {
-            setMainView('feed');
-            if (isMobileView()) { toggleMobileInfoFeed(false); }
-        });
-        infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); });
+        // Check if buttons exist before adding listeners
+        if (overviewBtn) {
+            overviewBtn.addEventListener('click', () => { setMainView('overview'); });
+        }
+        if (feedBtn) {
+            feedBtn.addEventListener('click', () => {
+                setMainView('feed');
+                if (isMobileView()) { toggleMobileInfoFeed(false); }
+            });
+        }
+        if (infoBtn) {
+            infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); });
+        }
 
         // Ensure the event listener for grid items uses the correct selector and attribute
-        overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
-            if (event.target instanceof Element) {
-                // Ensure GridItem.astro's clickable element (likely <a>) has class 'grid-item' and 'data-target-id' attribute
-                const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                 if (gridItemLink && gridItemLink.dataset.targetId) { // Check dataset.targetId exists
-                     event.preventDefault();
-                     const targetId = gridItemLink.dataset.targetId; // e.g., "project-alpha"
+        // Check if overviewGridWrapper exists before adding listener
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (event.target instanceof Element) {
+                    // Ensure GridItem.astro's clickable element (likely <a>) has class 'grid-item' and 'data-target-id' attribute
+                    const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                     if (gridItemLink && gridItemLink.dataset.targetId) { // Check dataset.targetId exists
+                         event.preventDefault();
+                         const targetId = gridItemLink.dataset.targetId; // e.g., "project-alpha"
 
-                     // Find the feed entry article by its ID
-                     const targetFeedElement = document.getElementById(targetId); // This ID must match the <article id={entry.slug}> in FeedEntry.astro
+                         // Find the feed entry article by its ID
+                         const targetFeedElement = document.getElementById(targetId); // This ID must match the <article id={entry.slug}> in FeedEntry.astro
 
-                     if (targetFeedElement) {
-                         setMainView('feed');
-                         if (isMobileView()) { toggleMobileInfoFeed(false); }
-                         requestAnimationFrame(() => {
-                            // Scroll the FEED COLUMN container, not the element itself directly into view if it has padding etc.
-                            // Or use scrollIntoView if the container scrolls properly
-                             targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                         if (targetFeedElement) {
+                             setMainView('feed');
+                             if (isMobileView()) { toggleMobileInfoFeed(false); }
+                             requestAnimationFrame(() => {
+                                // Scroll the FEED COLUMN container, not the element itself directly into view if it has padding etc.
+                                // Or use scrollIntoView if the container scrolls properly
+                                 targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                            // Alternative: scroll feed container
-                            // const feedContainer = document.getElementById('feed-content');
-                            // const offsetTop = targetFeedElement.offsetTop;
-                            // feedContainer?.scrollTo({ top: offsetTop - 20, behavior: 'smooth'}); // Adjust offset as needed
-                         });
-                     } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
-                 } else if (gridItemLink) {
-                      console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
-                 }
-            }
-        });
+                                // Alternative: scroll feed container
+                                // const feedContainer = document.getElementById('feed-content');
+                                // const offsetTop = targetFeedElement.offsetTop;
+                                // feedContainer?.scrollTo({ top: offsetTop - 20, behavior: 'smooth'}); // Adjust offset as needed
+                             });
+                         } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
+                     } else if (gridItemLink) {
+                          console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
+                     }
+                }
+            });
+        } else {
+             console.error("Overview grid wrapper not found, click listener not attached.");
+        }
+
 
         // --- Initial Setup ---
         console.log("Initializing view...");
         setMainView('feed');
         if (isMobileView()) { toggleMobileInfoFeed(false); }
-        else { setActiveButton(feedBtn); }
+        else { setActiveButton(feedBtn); } // Check if feedBtn exists
         console.log("Portfolio script initialized successfully.");
 
     }); // End DOMContentLoaded
