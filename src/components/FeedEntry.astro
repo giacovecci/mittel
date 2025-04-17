@@ -204,19 +204,28 @@ function parseMarkdown(markdownString?: string): string {
          text-align: center;
      }
 
-
-    /* Full Width Embed Block */
-    .block-full-width-embed > * { /* Target potentially injected elements */
+     /* Full Width Embed Block */
+    .block-full-width-embed {
+         width: 100%;
+         max-width: 100%;
+         overflow: hidden; /* Keep overflow hidden */
+         /* Removed position relative, height 0, padding-bottom */
+    }
+    .block-full-width-embed > * {
+        /* This rule might not be needed if iframe rule is specific enough, but keep for now */
         max-width: 100%;
     }
-    /* Style common embed elements */
-    .block-full-width-embed iframe,
-    .block-full-width-embed video {
-        display: block; /* Ensure block display */
-        width: 100%;
-        aspect-ratio: 16 / 9; /* Default aspect ratio */
+    /* Style common embed elements with INCREASED SPECIFICITY + !important */
+    article.feed-entry .block-full-width-embed iframe,
+    article.feed-entry .block-full-width-embed video {
+        display: block !important;
+        width: 100% !important;      /* Force width */
+        max-width: 100% !important; /* Force max-width */
+        height: auto !important;     /* Force height auto */
+        aspect-ratio: 16 / 9;        /* Rely on aspect-ratio */
         border: none;
-        background-color: var(--color-border-light); /* Placeholder background */
+        background-color: var(--color-border-light);
+        /* Removed position absolute, top, left */
     }
 
     .block-unknown p {

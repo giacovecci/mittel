@@ -119,8 +119,8 @@ const overviewItems = feedEntries.map(entry => ({
             display: block; /* Stack everything */
             height: auto; /* Allow content height */
             overflow-y: visible; /* Let body scroll */
-            /* --- Add top/bottom padding to main container --- */
-            padding: 1rem var(--content-padding-x); /* Adjust 1rem as needed */
+            /* --- Revert padding on main (only keep horizontal if needed) --- */
+             padding: 0 var(--content-padding-x-mobile); /* Example: 0 top/bottom */
             position: relative;
             transform: none;
         }
@@ -130,11 +130,10 @@ const overviewItems = feedEntries.map(entry => ({
             width: 100%;
             height: auto;
             overflow-y: visible;
-            padding: 0; /* Keep internal padding reset */
-            /* --- Remove specific margin-top logic --- */
-            /* Spacing is now handled by main's padding-top */
-            /* Optionally add margin-bottom for spacing between sections if multiple could be visible */
-            margin-bottom: 1.5rem; /* Example spacing below each section */
+            padding: 0; /* Ensure no internal padding */
+            /* --- Apply margin-top based on DevTools test --- */
+            margin-top: 3.25rem;
+            margin-bottom: 1.5rem; /* Keep existing bottom margin */
         }
         /* Ensure last element has no bottom margin */
         #info-content:last-child,
