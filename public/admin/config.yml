@@ -19,6 +19,8 @@ backend:
 
 # Better Decap + Bridge logo (optional)
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+
+# Add site links in DecapCMS (optional)
 site_url: https://mittel.reiseburo.workers.dev
 
 media_folder: "public/uploads" # Location where uploaded media files will be stored (relative to root)
@@ -34,25 +36,28 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
-      - { label: "Layout", name: "layout", widget: "hidden", default: "@/layouts/BlogPost.astro" } # Assuming a layout might be needed later
+      - { label: "Layout", name: "layout", widget: "hidden", default: "@/layouts/BlogPost.astro" } # Can be removed if not needed
       - label: "Content Blocks"
         name: "contentBlocks"
         widget: "list"
+        typeKey: type        # <<< THIS LINE IS ADDED/ENSURED
         types:
           - label: "Two Column Block"
-            name: "twoColumn"
+            name: "twoColumn"         # This name matches the type value
             widget: "object"
             fields:
               - { label: "Left Column (Markdown)", name: "left", widget: "markdown" }
               - { label: "Right Column (Markdown)", name: "right", widget: "markdown" }
           - label: "Full Width Image"
-            name: "fullWidthImage"
+            name: "fullWidthImage"    # This name matches the type value
             widget: "object"
             fields:
               - { label: "Image", name: "image", widget: "image" }
               - { label: "Alt Text", name: "alt", widget: "string" }
           - label: "Full Width Embed"
-            name: "fullWidthEmbed"
+            name: "fullWidthEmbed"    # This name matches the type value
             widget: "object"
             fields:
               - { label: "Embed Code (HTML)", name: "embedCode", widget: "text" }
+      # Removed the 'body' field as content is now structured in contentBlocks
+      # - { label: "Body", name: "body", widget: "markdown" }
