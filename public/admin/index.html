@@ -21,8 +21,25 @@
 
   <!-- Custom Preview Registration Script -->
   <script type="module">
-    // Placeholder for preview registration code (added later)
-    console.log("Admin HTML loaded. Linking to /admin-preview.css. Preview registration script placeholder ready.");
+    // This script runs in the browser within the /admin/ page
+
+    // Get reference to the CMS object (`CMS` is usually global)
+    const CMS = window.CMS;
+
+    // Import the Astro component for the preview
+    // IMPORTANT: Adjust the path if your component is located differently
+    // The path MUST start with '/' and be relative to the project root from the browser's perspective
+    import FeedEntryPreview from '/src/cms-previews/FeedEntryPreview.astro';
+
+    if (CMS && FeedEntryPreview) {
+      // Register the preview component for the 'feed' collection
+      CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+      console.log("Feed entry preview template registered successfully.");
+    } else {
+      console.error("CMS or FeedEntryPreview component not found. Preview registration failed.");
+      if (!CMS) console.error("CMS object is missing.");
+      if (!FeedEntryPreview) console.error("FeedEntryPreview component failed to import. Check path and component file.");
+    }
   </script>
 </body>
 </html>
