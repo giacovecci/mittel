@@ -20,7 +20,6 @@ contentBlocks:
       Andererseits handelt es sich um eine jüngere Variante von *Haginric*,[\[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der sich aus den Elementen *hag* „Zaun“, „Gehege“, „Anlage“, „Weide“[\[6]](https://de.wikipedia.org/wiki/Heinrich#cite_note-6) und *rik* „mächtig“, „reich“, „ausgezeichnet“[\[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammensetzt.[\[7]](https://de.wikipedia.org/wiki/Heinrich#cite_note-7)
   - type: fullWidthImage
     image: /uploads/2025-01-11-dsc01066.jpg
-  - type: twoColumn
   - type: fullWidthEmbed
     embedCode: <iframe
       src="https://www.youtube.com/embed/3aRRYQEb99s?si=OLsFXHhkA10BcwZh"
