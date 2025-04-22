@@ -104,13 +104,3 @@ button { cursor: pointer; }
     /* Example mobile heading adjustment if needed */
     /* h3 { font-size: 1.2em; } */
 }
-
-/* Add this block AFTER pasting your global.css content */
-
-/* Ensure the wrapper itself has some base styles */
-.feed-entry-preview-wrapper {
-    background-color: var(--color-background, white);
-    font-family: var(--font-family-base, 'Inter', sans-serif);
-    line-height: var(--line-height-base, 1.6);
-    color: var(--color-text-primary, #333);
-}
