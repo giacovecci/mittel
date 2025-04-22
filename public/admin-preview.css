@@ -1,126 +1,20 @@
 /* public/admin-preview.css */
 
-/* Import the original global styles */
+/* Import the original global styles - THIS IS NOW THE PRIMARY METHOD */
 @import "../src/styles/global.css"; /* Adjust path if needed! */
 
+/*
+   Overrides removed for now.
+   If styles still don't apply correctly after this change,
+   we might need to add VERY specific rules back here,
+   or investigate CSS variable scope issues.
+*/
 
-/* --- Add overrides with increased specificity for the preview --- */
-
-/* Ensure the wrapper itself has a base */
+/* Ensure the wrapper itself has some base styles */
+/* These might be needed if variables don't cascade properly */
 .feed-entry-preview-wrapper {
-    background-color: var(--color-background, white); /* Default background */
-    /* You might need to re-declare font variables if they don't cascade */
+    background-color: var(--color-background, white);
     font-family: var(--font-family-base, 'Inter', sans-serif);
     line-height: var(--line-height-base, 1.6);
     color: var(--color-text-primary, #333);
-}
-
-/* Target elements specifically INSIDE the preview wrapper */
-.feed-entry-preview-wrapper .feed-entry {
-   /* Re-apply styles that might be missing */
-   margin-bottom: 0; /* Remove extra margin if wrapper has padding */
-   padding-bottom: var(--spacing-md, 1rem);
-   scroll-margin-top: 2rem; /* May not be relevant in preview */
-}
-
-.feed-entry-preview-wrapper .feed-entry h3 {
-    margin-top: 0;
-    margin-bottom: var(--spacing-xxs, 0.25rem);
-    font-weight: var(--font-weight-unified, 600); /* Example */
-    font-size: 1.1em;
-    line-height: 1.3;
-    font-family: inherit; /* Inherit from wrapper */
-    color: var(--color-text-primary, #333);
-}
-
- .feed-entry-preview-wrapper .feed-entry-date {
-    display: block;
-    font-size: var(--font-size-sm, 0.9em);
-    color: var(--color-text-secondary, #777);
-    margin-bottom: var(--spacing-md, 1rem);
-    font-family: inherit; /* Inherit from wrapper */
-}
-
-.feed-entry-preview-wrapper .feed-entry-blocks {
-    margin-top: var(--spacing-lg, 1.5rem);
-}
-
-.feed-entry-preview-wrapper .content-block {
-    margin-bottom: var(--spacing-lg, 1.5rem);
-}
- .feed-entry-preview-wrapper .content-block:last-child {
-    margin-bottom: 0;
-}
-
-/* --- Crucial: Target block types within the wrapper --- */
-
-.feed-entry-preview-wrapper .block-two-column {
-    display: flex !important; /* Force flex display */
-    gap: var(--feed-entry-column-gap, var(--spacing-lg, 1.5rem));
-}
-.feed-entry-preview-wrapper .block-two-column .column {
-    flex: 1;
-    min-width: 0;
-    font-family: inherit; /* Inherit from wrapper */
-}
- /* Apply base text styles within columns */
-.feed-entry-preview-wrapper .block-two-column .column p {
-    line-height: var(--line-height-unified, 1.6);
-    margin-bottom: var(--spacing-sm, 0.75rem);
-    font-family: inherit; /* Inherit from wrapper */
-    color: var(--color-text-primary, #333);
-}
-/* Add other styles for h1-h6, ul, ol, blockquote within columns if needed */
-
-
-.feed-entry-preview-wrapper .block-full-width-image img,
-.feed-entry-preview-wrapper .block-full-width-image picture {
-    /* Styles already applied inline by 'h' function, but can refine here */
-    border-radius: var(--border-radius-sm);
-}
-
-
-.feed-entry-preview-wrapper .block-full-width-embed {
-     width: 100%;
-     max-width: 100%;
-     overflow: hidden;
-     background-color: var(--color-border-light);
-}
-
-/* Ensure iframe styles apply within preview */
-.feed-entry-preview-wrapper .block-full-width-embed iframe,
-.feed-entry-preview-wrapper .block-full-width-embed video {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16 / 9;
-    border: none;
-    margin: 0;
-}
-
-.feed-entry-preview-wrapper .entry-separator {
-    border: none;
-    border-top: var(--line-thickness, 1px) solid var(--color-border, #ccc);
-    margin-top: var(--spacing-xl, 2rem);
-}
-
-/* Re-declare any necessary CSS variables if they aren't cascading */
-.feed-entry-preview-wrapper {
-  --color-text-primary: #333;
-  --color-text-secondary: #777;
-  --color-border-light: #eee;
-  --color-border: #ccc;
-  --color-background: white;
-  --font-family-base: 'Inter', sans-serif;
-  /* Add other variables used by your components */
-  --spacing-xxs: 0.25rem;
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 0.75rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --border-radius-sm: 4px;
-  --line-height-base: 1.6;
-  --font-weight-unified: 600;
 }
