@@ -21,6 +21,10 @@ backend:
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg # Optional
 site_url: https://mittel.reiseburo.workers.dev # Optional: Replace with your actual site URL if different
 
+# === ADD THIS LINE ===
+publish_mode: editorial_workflow
+# =====================
+
 # --- Media Handling ---
 media_folder: "public/uploads" # Store uploaded media here (relative to root)
 public_folder: "/uploads" # Public path to access media
