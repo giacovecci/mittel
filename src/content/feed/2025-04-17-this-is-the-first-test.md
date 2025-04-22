@@ -21,7 +21,7 @@ contentBlocks:
   - type: fullWidthImage
     image: /uploads/2025-01-11-dsc01066.jpg
   - type: fullWidthEmbed
-    embedCode: <iframe width="560" height="315"
+    embedCode: <iframe 
       src="https://www.youtube.com/embed/3aRRYQEb99s?si=OLsFXHhkA10BcwZh"
       title="YouTube video player" frameborder="0" allow="accelerometer;
       autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;

@@ -1,14 +1,10 @@
 ---
-// src/components/FeedEntry.astro
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { marked } from 'marked';
 
-// --- Define the type for a single content block based on the collection schema ---
-// This extracts the type of the items within the 'contentBlocks' array
-type ContentBlock = CollectionEntry<'feed'>['data']['contentBlocks'][number];
+type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
 
-// --- Component Props ---
 interface Props {
     entry: CollectionEntry<'feed'>;
 }
@@ -16,7 +12,6 @@ interface Props {
 const { entry } = Astro.props;
 const { slug, data } = entry;
 
-// --- Date Formatting ---
 const formattedDate = data.date
     ? new Date(data.date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -25,15 +20,10 @@ const formattedDate = data.date
     })
     : null;
 
-// --- Helper Functions ---
-function isValidImageSource(src: any): src is string {
-    return typeof src === 'string' && src.trim() !== '';
-}
-
 function parseMarkdown(markdownString?: string): string {
     if (!markdownString) return '';
     try {
-        const htmlResult = marked.parse(markdownString) as string;
+        const htmlResult = String(marked.parse(markdownString));
         return htmlResult;
     } catch (e) {
         console.error("Error parsing Markdown:", e);
@@ -42,20 +32,15 @@ function parseMarkdown(markdownString?: string): string {
 }
 ---
 <article class="feed-entry" id={slug}>
-    {/* --- Entry Header --- */}
     <h3>{data.title || 'Untitled Entry'}</h3>
     {formattedDate && (
         <time class="feed-entry-date" datetime={data.date?.toISOString()}>{formattedDate}</time>
     )}
 
-    {/* --- Content Block Rendering --- */}
     <div class="feed-entry-blocks">
         {data.contentBlocks && data.contentBlocks.length > 0 ? (
-            // Add the explicit type 'ContentBlock' to the 'block' parameter
             data.contentBlocks.map((block: ContentBlock) => {
-                // --- Use block.type (from discriminated union) to determine rendering ---
                 switch (block.type) {
-                    // --- Two Column Block ---
                     case 'twoColumn':
                         return (
                             <div class="content-block block-two-column">
@@ -68,58 +53,49 @@ function parseMarkdown(markdownString?: string): string {
                             </div>
                         );
 
-                    // --- Full Width Image Block ---
                     case 'fullWidthImage':
-                        const imagePath = block.image;
-                        const altText = block.alt || '';
-
-                        return isValidImageSource(imagePath) ? (
+                        return (
                             <div class="content-block block-full-width-image">
-                                {/* Re-verified <Image> syntax: width/height expect numbers */}
                                 <Image
-                                    src={imagePath}
-                                    alt={altText}
+                                    src={block.image}
+                                    alt={block.alt || ''}
                                     width={1200}
                                     height={900}
                                     format="webp"
+                                    quality={80}
                                     loading="lazy"
                                     densities={[1, 1.5, 2]}
                                 />
                             </div>
-                        ) : (
-                             <div class="content-block block-missing-image">
-                                 <p><em>Image not available ({imagePath || 'path missing'})</em></p>
-                             </div>
                         );
 
-                    // --- Full Width Embed Block ---
                     case 'fullWidthEmbed':
                         return block.embedCode ? (
-                            <div class="content-block block-full-width-embed" set:html={block.embedCode}>
-                                {/* Raw HTML injected */}
-                            </div>
+                            <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
                         ) : null;
 
-                    // --- Fallback for Unknown Blocks ---
                     default:
-                        console.warn("Unsupported content block type found:", block);
-                        return (
-                            <div class="content-block block-unknown">
-                                <p><em>Unsupported content block type.</em></p>
-                            </div>
-                        );
+                        const exhaustiveCheck: never = block;
+                        console.warn("Unsupported content block type found:", exhaustiveCheck);
+                         return (
+                             <div class="content-block block-unknown">
+                                 <p><em>Unsupported content block type encountered.</em></p>
+                             </div>
+                         );
                 }
             })
         ) : (
-            <p><em>No content blocks found for this entry.</em></p>
+             entry.body ? (
+                 <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
+             ) : (
+                 <p><em>No content found for this entry.</em></p>
+             )
         )}
     </div>
-    {/* --- End Content Block Rendering --- */}
 
     <hr class="entry-separator" />
 </article>
 
-{/* Styles remain the same - No changes needed here */}
 <style>
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
@@ -128,14 +104,14 @@ function parseMarkdown(markdownString?: string): string {
     .feed-entry {
         margin-bottom: var(--spacing-xl);
         padding-bottom: var(--spacing-md);
-        scroll-margin-top: 2rem; /* Adjust based on sticky header height */
+        scroll-margin-top: 2rem;
     }
 
     .feed-entry h3 {
         margin-top: 0;
         margin-bottom: var(--spacing-xxs);
         font-weight: var(--font-weight-unified);
-        font-size: 1.1em; /* Consider using clamp() or responsive units */
+        font-size: 1.1em;
         line-height: 1.3;
     }
 
@@ -157,26 +133,26 @@ function parseMarkdown(markdownString?: string): string {
         margin-bottom: 0;
     }
 
-    /* Two Column Block */
     .block-two-column {
         display: flex;
         gap: var(--feed-entry-column-gap);
     }
     .block-two-column .column {
         flex: 1;
-        min-width: 0; /* Prevents overflow issues */
+        min-width: 0;
     }
     .block-two-column .column > *:first-child { margin-top: 0; }
     .block-two-column .column > *:last-child { margin-bottom: 0; }
-    .block-two-column .column p { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
-     .block-two-column .column h1,
-     .block-two-column .column h2,
-     .block-two-column .column h3,
-     .block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
-     .block-two-column .column ul,
-     .block-two-column .column ol { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
-     .block-two-column .column li > p { margin-bottom: var(--spacing-xxs); }
-     .block-two-column .column blockquote {
+
+    .block-two-column .column :global(p) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+     .block-two-column .column :global(h1),
+     .block-two-column .column :global(h2),
+     .block-two-column .column :global(h3),
+     .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+     .block-two-column .column :global(ul),
+     .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
+     .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
+     .block-two-column .column :global(blockquote) {
          margin-left: var(--spacing-sm);
          padding-left: var(--spacing-md);
          border-left: 3px solid var(--color-border-light);
@@ -186,14 +162,13 @@ function parseMarkdown(markdownString?: string): string {
      }
 
 
-    /* Full Width Image Block */
     .block-full-width-image img,
-    .block-full-width-image picture { /* Target generated elements */
+    .block-full-width-image picture {
         display: block;
         width: 100%;
-        height: auto; /* Maintain aspect ratio */
+        height: auto;
         border-radius: var(--border-radius-sm);
-        background-color: var(--color-border-light); /* Placeholder background */
+        background-color: var(--color-border-light);
     }
      .block-missing-image p {
          font-style: italic;
@@ -204,29 +179,63 @@ function parseMarkdown(markdownString?: string): string {
          text-align: center;
      }
 
-     /* Full Width Embed Block */
-    .block-full-width-embed {
+
+     .block-full-width-embed {
          width: 100%;
          max-width: 100%;
-         overflow: hidden; /* Keep overflow hidden */
-         /* Removed position relative, height 0, padding-bottom */
+         overflow: hidden;
+         background-color: var(--color-border-light);
     }
-    .block-full-width-embed > * {
-        /* This rule might not be needed if iframe rule is specific enough, but keep for now */
-        max-width: 100%;
-    }
-    /* Style common embed elements with INCREASED SPECIFICITY + !important */
-    article.feed-entry .block-full-width-embed iframe,
-    article.feed-entry .block-full-width-embed video {
+
+    .block-full-width-embed :global(iframe),
+    .block-full-width-embed :global(video) {
         display: block !important;
-        width: 100% !important;      /* Force width */
-        max-width: 100% !important; /* Force max-width */
-        height: auto !important;     /* Force height auto */
-        aspect-ratio: 16 / 9;        /* Rely on aspect-ratio */
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
         border: none;
-        background-color: var(--color-border-light);
-        /* Removed position absolute, top, left */
+        margin: 0;
     }
+
+    .markdown-content :global(p),
+    .markdown-content :global(ul),
+    .markdown-content :global(ol),
+    .markdown-content :global(blockquote) {
+         line-height: var(--line-height-unified);
+         margin-bottom: var(--spacing-sm);
+    }
+    .markdown-content :global(h1),
+    .markdown-content :global(h2),
+    .markdown-content :global(h3),
+    .markdown-content :global(h4) {
+        margin-top: var(--spacing-lg);
+        margin-bottom: var(--spacing-xs);
+        line-height: 1.2;
+    }
+     .markdown-content :global(ul),
+     .markdown-content :global(ol) {
+         padding-left: var(--spacing-lg);
+     }
+     .markdown-content :global(li) > :global(p) {
+         margin-bottom: var(--spacing-xxs);
+     }
+     .markdown-content :global(blockquote) {
+          margin-left: var(--spacing-sm);
+          padding-left: var(--spacing-md);
+          border-left: 3px solid var(--color-border-light);
+          color: var(--color-text-secondary);
+          font-style: italic;
+     }
+     .markdown-content :global(img) {
+         max-width: 100%;
+         height: auto;
+         display: block;
+         margin-top: var(--spacing-md);
+         margin-bottom: var(--spacing-md);
+         border-radius: var(--border-radius-sm);
+     }
+
 
     .block-unknown p {
         font-style: italic;
@@ -241,12 +250,11 @@ function parseMarkdown(markdownString?: string): string {
         margin-top: var(--spacing-xl);
     }
 
-    /* --- Mobile Styles --- */
     @media (max-width: 768px) {
         .feed-entry {
             margin-bottom: var(--spacing-lg);
             padding-bottom: var(--spacing-sm);
-            scroll-margin-top: calc(var(--header-height-estimate-mobile-px) + 1rem); /* Adjust if header height changes */
+            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 60px) + 1rem);
         }
         .feed-entry-blocks {
             margin-top: var(--spacing-md);
@@ -254,13 +262,10 @@ function parseMarkdown(markdownString?: string): string {
         .content-block {
             margin-bottom: var(--spacing-md);
         }
-
-        /* Stack two columns on mobile */
         .block-two-column {
             flex-direction: column;
-            gap: var(--spacing-md); /* Add gap between stacked columns */
+            gap: var(--spacing-md);
         }
-
         .entry-separator {
             margin-top: var(--spacing-lg);
         }
