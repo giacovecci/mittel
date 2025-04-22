@@ -6,18 +6,18 @@ contentBlocks:
   - type: twoColumn
     left: "![](/uploads/screenshot-2025-03-02-142044.png)"
     right: >-
-      ### Herkunft und Bedeutung
+      #### Herkunft und Bedeutung
 
 
       Für den [althochdeutschen](https://de.wikipedia.org/wiki/Althochdeutsche_Sprache) Namen Heinrich kommen zwei Herleitungen in Frage:
 
       \
 
-      Einerseits handelt es sich um eine jüngere Variante von *Heimric*,[\[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der auf den Namen *Haimirich* zurückgeht.[\[2]](https://de.wikipedia.org/wiki/Heinrich#cite_note-2) Dieser setzt sich aus den Elementen *heim* „Haus“, „Zuhause“, „Welt“[\[3]](https://de.wikipedia.org/wiki/Heinrich#cite_note-3) und *rik* „mächtig“, „reich“, „ausgezeichnet“[\[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammen.[\[5]](https://de.wikipedia.org/wiki/Heinrich#cite_note-5)
+      Einerseits handelt es sich um eine jüngere Variante von *Heimric*,\[[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der auf den Namen *Haimirich* zurückgeht.\[[2]](https://de.wikipedia.org/wiki/Heinrich#cite_note-2) Dieser setzt sich aus den Elementen *heim* „Haus“, „Zuhause“, „Welt“\[[3]](https://de.wikipedia.org/wiki/Heinrich#cite_note-3) und *rik* „mächtig“, „reich“, „ausgezeichnet“\[[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammen.\[[5]](https://de.wikipedia.org/wiki/Heinrich#cite_note-5)
 
       \
 
-      Andererseits handelt es sich um eine jüngere Variante von *Haginric*,[\[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der sich aus den Elementen *hag* „Zaun“, „Gehege“, „Anlage“, „Weide“[\[6]](https://de.wikipedia.org/wiki/Heinrich#cite_note-6) und *rik* „mächtig“, „reich“, „ausgezeichnet“[\[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammensetzt.[\[7]](https://de.wikipedia.org/wiki/Heinrich#cite_note-7)
+      Andererseits handelt es sich um eine jüngere Variante von *Haginric*,\[[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der sich aus den Elementen *hag* „Zaun“, „Gehege“, „Anlage“, „Weide“\[[6]](https://de.wikipedia.org/wiki/Heinrich#cite_note-6) und *rik* „mächtig“, „reich“, „ausgezeichnet“\[[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammensetzt.\[[7]](https://de.wikipedia.org/wiki/Heinrich#cite_note-7)
   - type: fullWidthImage
     image: /uploads/2025-01-11-dsc01066.jpg
   - type: twoColumn
