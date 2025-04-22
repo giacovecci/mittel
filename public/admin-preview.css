@@ -4,7 +4,7 @@
 @import "../src/styles/global.css"; /* Adjust path if needed! */
 
 
-/* --- Add OVERRIDES with increased specificity for the preview --- */
+/* --- Add overrides with increased specificity for the preview --- */
 
 /* Ensure the wrapper itself has a base */
 .feed-entry-preview-wrapper {
