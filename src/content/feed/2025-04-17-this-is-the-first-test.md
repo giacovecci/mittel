@@ -20,15 +20,32 @@ contentBlocks:
       Andererseits handelt es sich um eine jüngere Variante von *Haginric*,[\[1]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:0-1) der sich aus den Elementen *hag* „Zaun“, „Gehege“, „Anlage“, „Weide“[\[6]](https://de.wikipedia.org/wiki/Heinrich#cite_note-6) und *rik* „mächtig“, „reich“, „ausgezeichnet“[\[4]](https://de.wikipedia.org/wiki/Heinrich#cite_note-:1-4) zusammensetzt.[\[7]](https://de.wikipedia.org/wiki/Heinrich#cite_note-7)
   - type: fullWidthImage
     image: /uploads/2025-01-11-dsc01066.jpg
+  - type: twoColumn
   - type: fullWidthEmbed
-    embedCode: <iframe 
+    embedCode: <iframe
       src="https://www.youtube.com/embed/3aRRYQEb99s?si=OLsFXHhkA10BcwZh"
       title="YouTube video player" frameborder="0" allow="accelerometer;
       autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
       web-share" referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen></iframe>
   - type: twoColumn
-    left: "![](/uploads/signal-2024-01-11-164636.jpeg)"
+    left: >-
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
+      dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies
+      nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+      Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
+      enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum
+      felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus
+      elementum semper nisi. Aenean vulputate eleifend tellus. \
+
+      \
+
+      Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. \
+
+      \
+
+      Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
     right: Critical analysis of the two most powerful new models behind ChatGPT, o3
       and o4-mini. Not just the system cards, benchmarks, and my own tests, but
       some you may not have seen before. Yes, they can whip up amazing front-end
