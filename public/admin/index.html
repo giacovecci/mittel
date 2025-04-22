@@ -5,9 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Content Manager</title>
+
+  <!-- Link to your global styles for the preview -->
+  <!-- Make sure the path '/global.css' correctly points to your global CSS file -->
+  <link rel="stylesheet" href="/global.css">
+
+  <!-- Optional: Add specific CSS overrides for the admin UI or preview pane here if needed -->
+  <style>
+    /* Example: Slightly adjust preview pane background */
+    /* #nc-root > div > section > div > div > div:last-child {
+      background-color: #f9f9f9;
+    } */
+  </style>
+
 </head>
 <body>
-  <!-- Decap CMS Core Script -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!-- Decap CMS Core Script - Updated URL to ensure v3.1+ -->
+  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+
+  <!-- Custom Preview Registration Script -->
+  <script type="module">
+    // This script runs in the browser within the /admin/ page
+
+    // NOTE: Because we are using git-gateway with DecapBridge,
+    // we typically don't need to explicitly import or initialize CMS here.
+    // Decap CMS should initialize automatically from the script tag above.
+
+    // We will import and register our preview component here in a later step.
+    // Example structure (currently commented out):
+    //
+    // import CMS from "https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"; // Need CMS object reference
+    // import FeedEntryPreview from '/src/cms-previews/FeedEntryPreview.astro'; // Adjust path if needed
+    // CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+
+    console.log("Admin HTML loaded. Preview registration script placeholder ready.");
+  </script>
 </body>
 </html>
