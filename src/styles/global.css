@@ -104,6 +104,12 @@ button:hover { color: var(--color-text-hover); }
 button.active { color: var(--color-text-hover); }
 button { cursor: pointer; }
 
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+  /* Optional: Add font-weight if needed, e.g. */
+  /* font-weight: var(--font-weight-bold); */
+}
 
 /* ================================== */
 /* --- GLOBAL MOBILE OVERRIDES --- */
