@@ -35,6 +35,11 @@ button { background: none; border: none; padding: 0; cursor: pointer; color: inh
   --color-border-light: #444; /* Example: Slightly lighter border */
   --border-radius-sm: 4px; /* Example: Small border radius */
   --color-background-muted: #1a1a1a; /* Example: Darker background */
+        
+  /* Add these two lines inside the :root block in global.css */
+  --color-surface-light: #2a2a2a; /* Light surface for grid items etc */
+  --color-surface-light-hover: #383838; /* Hover state for light surface */
+
 /* Also, move the RGB variable here from StaticInfo.astro */
   --color-text-unified-rgb: 204, 204, 204; /* Corresponds to #ccc */
 
@@ -110,4 +115,17 @@ button { cursor: pointer; }
     }
     /* Example mobile heading adjustment if needed */
     /* h3 { font-size: 1.2em; } */
+  }
+
+  
+/* ===================================================== */
+/* --- Font Size Adjustment for Landscape Mobile/Tablet --- */
+/* ===================================================== */
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      /* Apply a smaller fixed or clamped font size */
+      font-size: 0.8rem; /* Example: Adjust as needed (e.g., 14px, 0.85rem) */
+      /* You could also use clamp here if preferred: */
+      /* font-size: clamp(0.8rem, 0.75rem + 0.15vw, 0.95rem); */
+  }
 }

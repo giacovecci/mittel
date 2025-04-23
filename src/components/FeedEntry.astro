@@ -97,14 +97,16 @@ function parseMarkdown(markdownString?: string): string {
 </article>
 
 <style>
+    /* --- Keep existing desktop styles --- */
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        /* These variables should be defined in global.css */
     }
 
     .feed-entry {
         margin-bottom: var(--spacing-xl);
         padding-bottom: var(--spacing-md);
-        scroll-margin-top: 2rem;
+        scroll-margin-top: 2rem; /* Desktop scroll margin */
     }
 
     .feed-entry h3 {
@@ -117,8 +119,8 @@ function parseMarkdown(markdownString?: string): string {
 
     .feed-entry-date {
         display: block;
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
+        font-size: 0.9em;
+        color: var(--color-text-secondary); /* Use variable */
         margin-bottom: var(--spacing-md);
     }
 
@@ -144,7 +146,13 @@ function parseMarkdown(markdownString?: string): string {
     .block-two-column .column > *:first-child { margin-top: 0; }
     .block-two-column .column > *:last-child { margin-bottom: 0; }
 
-    .block-two-column .column :global(p) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+    /* Using :global() for nested markdown elements */
+    .block-two-column .column :global(p),
+    .block-two-column .column :global(li),
+    .block-two-column .column :global(dt),
+    .block-two-column .column :global(dd) {
+        line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em;
+    }
      .block-two-column .column :global(h1),
      .block-two-column .column :global(h2),
      .block-two-column .column :global(h3),
@@ -155,22 +163,21 @@ function parseMarkdown(markdownString?: string): string {
      .block-two-column .column :global(blockquote) {
          margin-left: var(--spacing-sm);
          padding-left: var(--spacing-md);
-         border-left: 3px solid var(--color-border-light);
-         color: var(--color-text-secondary);
+         border-left: 3px solid var(--color-border-light); /* Use variable */
+         color: var(--color-text-secondary); /* Use variable */
          font-style: italic;
          margin-bottom: var(--spacing-sm);
      }
-
 
     .block-full-width-image img,
     .block-full-width-image picture {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: var(--border-radius-sm);
-        background-color: var(--color-border-light);
+        border-radius: var(--border-radius-sm); /* Use variable */
+        background-color: var(--color-border-light); /* Use variable */
     }
-     .block-missing-image p {
+     .block-missing-image p { /* Style for missing image placeholder */
          font-style: italic;
          color: var(--color-text-secondary);
          background-color: var(--color-background-muted);
@@ -179,14 +186,12 @@ function parseMarkdown(markdownString?: string): string {
          text-align: center;
      }
 
-
      .block-full-width-embed {
          width: 100%;
          max-width: 100%;
          overflow: hidden;
-         background-color: var(--color-border-light);
+         background-color: var(--color-border-light); /* Use variable */
     }
-
     .block-full-width-embed :global(iframe),
     .block-full-width-embed :global(video) {
         display: block !important;
@@ -198,6 +203,7 @@ function parseMarkdown(markdownString?: string): string {
         margin: 0;
     }
 
+    /* Styles for Markdown rendered directly from entry.body */
     .markdown-content :global(p),
     .markdown-content :global(ul),
     .markdown-content :global(ol),
@@ -223,8 +229,8 @@ function parseMarkdown(markdownString?: string): string {
      .markdown-content :global(blockquote) {
           margin-left: var(--spacing-sm);
           padding-left: var(--spacing-md);
-          border-left: 3px solid var(--color-border-light);
-          color: var(--color-text-secondary);
+          border-left: 3px solid var(--color-border-light); /* Use variable */
+          color: var(--color-text-secondary); /* Use variable */
           font-style: italic;
      }
      .markdown-content :global(img) {
@@ -233,28 +239,29 @@ function parseMarkdown(markdownString?: string): string {
          display: block;
          margin-top: var(--spacing-md);
          margin-bottom: var(--spacing-md);
-         border-radius: var(--border-radius-sm);
+         border-radius: var(--border-radius-sm); /* Use variable */
      }
-
 
     .block-unknown p {
         font-style: italic;
-        color: var(--color-text-secondary);
-        border: 1px dashed var(--color-border);
+        color: var(--color-text-secondary); /* Use variable */
+        border: 1px dashed var(--color-border); /* Use variable */
         padding: var(--spacing-sm);
     }
 
     .entry-separator {
         border: none;
-        border-top: var(--line-thickness) solid var(--color-border);
+        border-top: var(--line-thickness) solid var(--color-border); /* Use variable */
         margin-top: var(--spacing-xl);
     }
 
+    /* --- MOBILE STYLES --- */
     @media (max-width: 768px) {
         .feed-entry {
             margin-bottom: var(--spacing-lg);
             padding-bottom: var(--spacing-sm);
-            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 60px) + 1rem);
+            /* --- UPDATED scroll-margin-top (Significantly Increased) --- */
+            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); /* Increased extra space to 6rem */
         }
         .feed-entry-blocks {
             margin-top: var(--spacing-md);
@@ -268,6 +275,9 @@ function parseMarkdown(markdownString?: string): string {
         }
         .entry-separator {
             margin-top: var(--spacing-lg);
+        }
+        .feed-entry-date {
+             font-size: 0.85em;
         }
     }
 </style>

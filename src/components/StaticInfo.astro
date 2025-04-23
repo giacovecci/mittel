@@ -12,44 +12,47 @@ const introText = "Good that you're here. I'll gladly help you out with a variet
 </div>
 
 <style>
+    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
     .static-info-wrapper {
         display: flex;
+        flex-direction: row; /* Default: side-by-side */
         gap: var(--column-gap-desktop); /* Use layout variable */
-        height: 100%; /* Optional: Tries to fill parent */
+        height: 100%;
     }
     .static-column {
         flex-basis: 0;
         flex-grow: 1;
-        min-width: 0; /* Prevent content push */
+        min-width: 0;
     }
     .static-column p {
         margin-top: 0;
-        /* Use global line-height */
         line-height: var(--line-height-unified);
-        /* Color should be inherited from body, but can be explicit */
-        /* color: var(--color-text-unified); */
     }
     .placeholder-visual {
         width: 100%;
-        min-height: 200px; /* Keep min-height for now */
-        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1); /* Use text color with alpha */
+        min-height: 200px;
+        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.9em; /* Relative size */
-        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6); /* Lighter text color */
-        border: var(--line-thickness) dashed var(--color-border); /* Use variables */
-        padding: var(--spacing-md); /* Add some padding */
+        font-size: 0.9em;
+        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6);
+        border: var(--line-thickness) dashed var(--color-border);
+        padding: var(--spacing-md);
     }
+    /* Ensure RGB var is defined globally */
 
-    /* --- Mobile Adjustments for Static Info (If Needed) --- */
-    @media (max-width: 768px) {
+    /* ================================== */
+    /* --- MOBILE - PORTRAIT ONLY --- */
+    /* ================================== */
+    @media (max-width: 768px) and (orientation: portrait) {
         .static-info-wrapper {
-             flex-direction: column; /* Stack columns */
-             gap: var(--spacing-lg); /* Adjust vertical gap */
+             flex-direction: column; /* Stack columns in portrait */
+             gap: var(--spacing-lg);
         }
         .placeholder-visual {
-            min-height: 150px; /* Maybe smaller on mobile */
+            min-height: 150px;
         }
     }
+     /* --- NO specific landscape override needed, uses default --- */
 </style>

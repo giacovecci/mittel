@@ -18,70 +18,65 @@ const itemLink = `#${item.id}`;
 </a>
 
 <style>
-    /* Define a slightly lighter surface color for items */
-    :root {
-        --color-surface-light: #2a2a2a; /* Fallback */
-        --color-surface-light-hover: #383838; /* Fallback */
-        /* You might want to define these based on your --color-background in global.css later */
-         /* Example: --color-surface-light: color-mix(in srgb, var(--color-background) 85%, white 15%); */
-         /* Example: --color-surface-light-hover: color-mix(in srgb, var(--color-background) 75%, white 25%); */
-    }
+    /* Ensure variables used below are defined in global.css */
 
     .grid-item {
         display: block;
         text-decoration: none;
-        color: inherit; /* Inherit main text color */
+        color: inherit;
         text-align: center;
-        background-color: var(--color-surface-light); /* Use variable */
-        padding: var(--spacing-xs); /* Use spacing variable */
-        border: var(--line-thickness) solid var(--color-border); /* Use variables */
+        /* --- RESTORED BACKGROUND and BORDER --- */
+        background-color: var(--color-surface-light);
+        border: var(--line-thickness) solid var(--color-border);
+        padding: var(--spacing-xs); /* Keep padding */
+        /* --- RESTORED TRANSITION --- */
         transition: background-color 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+        overflow: hidden; /* Keep overflow hidden */
     }
 
     .grid-item-thumbnail {
         aspect-ratio: 1 / 1;
-        /* Slightly lighter than item background */
-        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1);
-        margin-bottom: var(--spacing-xs); /* Use spacing variable */
+        background-color: rgba(var(--color-text-unified-rgb), 0.1);
+        margin-bottom: var(--spacing-xs);
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden; /* Prevent image overflow */
-        border: 1px solid rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.2); /* Subtle inner border */
+        overflow: hidden;
+        /* Removed internal border, main border is on .grid-item */
+        /* border: 1px solid rgba(var(--color-text-unified-rgb), 0.2); */
+        width: 100%;
     }
      .grid-item-thumbnail .placeholder-text {
         font-size: 0.8em;
-        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6); /* Lighter text */
+        color: rgba(var(--color-text-unified-rgb), 0.6);
      }
 
     .grid-item-thumbnail img {
         display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Cover the area, crop if needed */
+        object-fit: cover;
     }
 
     .grid-item-label {
-        font-size: 0.9em; /* Relative size */
+        font-size: 0.9em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: var(--color-text-unified); /* Use global text color */
-        padding: 0 var(--spacing-xxs); /* Add tiny horizontal padding */
+        color: var(--color-text-unified);
+        padding: 0 var(--spacing-xxs);
+        display: block;
+        width: 100%;
     }
 
+    /* --- RESTORED HOVER STYLE --- */
     .grid-item:hover {
         background-color: var(--color-surface-light-hover); /* Use variable */
-        /* Optionally change border on hover */
-        /* border-color: var(--color-accent); */
+        /* border-color: var(--color-accent); */ /* Keep optional border commented */
     }
 
-    /* Add RGB version of text color if not already globally defined */
-    :root {
-        --color-text-unified-rgb: 204, 204, 204; /* Assuming #ccc */
-    }
-
-     /* --- Mobile Adjustments for Grid Item --- */
+     /* --- Mobile Adjustments --- */
      @media (max-width: 768px) {
         .grid-item {
             padding: var(--spacing-xxs);
@@ -93,5 +88,4 @@ const itemLink = `#${item.id}`;
             font-size: 0.85em;
         }
      }
-
 </style>
