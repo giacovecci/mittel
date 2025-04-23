@@ -7,7 +7,7 @@ _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
 contentBlocks:
   - type: twoColumn
     left: >-
-      I accompanied Samira Atei, a foreign correspondent for the Belgian daily
+      I accompanied Samira Ataei, a foreign correspondent for the Belgian daily
       De Standaard, on an assignment covering the flooding in the Polish region
       of Lower Silesia.
 
@@ -19,5 +19,5 @@ contentBlocks:
     right: |-
       <span class="accent-text">Client:</span> De Standaard
 
-      <span class="accent-text">Reporter:</span> Samira Atei
+      <span class="accent-text">Reporter:</span> Samira Ataei
 ---
