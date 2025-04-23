@@ -30,6 +30,14 @@ button { background: none; border: none; padding: 0; cursor: pointer; color: inh
   --color-border: #555555;
   --line-thickness: 2px;
 
+  /* Add these inside the :root { ... } block in global.css */
+  --color-text-secondary: #aaa; /* Example: Lighter grey */
+  --color-border-light: #444; /* Example: Slightly lighter border */
+  --border-radius-sm: 4px; /* Example: Small border radius */
+  --color-background-muted: #1a1a1a; /* Example: Darker background */
+/* Also, move the RGB variable here from StaticInfo.astro */
+  --color-text-unified-rgb: 204, 204, 204; /* Corresponds to #ccc */
+
   /* Accent for Hover/Active */
   --color-accent: #e70221;
   --color-text-hover: var(--color-accent);
@@ -84,7 +92,6 @@ p, li, dt, dd, span, label {
     line-height: inherit;
     margin-bottom: var(--spacing-sm);
 }
-*:last-child { margin-bottom: 0; } /* Applies too broadly, use with caution or more specific selectors */
 
 /* 4. Basic Link & Button Hover Styling */
 a:hover,
