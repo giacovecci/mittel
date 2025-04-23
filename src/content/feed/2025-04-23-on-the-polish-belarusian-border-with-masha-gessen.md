@@ -1,5 +1,5 @@
 ---
-title: On the Polish-Belarusian border with Masha Gessen
+title: On the Polish-Belarusian border with the NYT
 date: 2024-11-06T01:01:00.000Z
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
