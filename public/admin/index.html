@@ -53,6 +53,44 @@
             console.error("Error registering preview style:", error);
         }
         // --- End of stylesheet registration ---
+
+                // --- Register Accent Text Editor Component ---
+                try {
+            CMS.registerEditorComponent({
+                id: "accent-text", // Unique ID for the component
+                label: "Accent",   // Label for the button in the editor toolbar
+                // Optional: You could try finding a suitable icon name if desired
+                // icon: "font", // Example: check Decap/Material icon names
+                pattern: /<span class="accent-text">(.*?)<\/span>/, // Regex to find existing spans
+                
+                // Called when the editor finds text matching the pattern.
+                // It extracts the raw text content from within the span.
+                fromBlock: function (match) {
+                    return match[1]; 
+                },
+
+                // Called when applying the format to selected text.
+                // It wraps the given text ('content') in the desired span.
+                toBlock: function (content) {
+                    return `<span class="accent-text">${content}</span>`;
+                },
+
+                // Defines how the content should be represented or previewed.
+                // For inline elements, often similar to toBlock. 
+                // Ensures the preview pane *within the editor* can also show it (if styles apply).
+                toPreview: function (content) {
+                     // You can simply return the same structure, relying on preview CSS
+                     return `<span class="accent-text">${content}</span>`;
+                     // Or use the 'h' helper if complex rendering is needed:
+                     // const h = window.h; 
+                     // return h('span', {className: 'accent-text'}, content);
+                }
+            });
+            console.log("Accent Text editor component registered.");
+        } catch (error) {
+            console.error("Error registering Accent Text editor component:", error);
+        }
+        // --- End of Accent Text Editor Component ---
         
         // --- Define the Feed Entry Preview Function ---
         const FeedEntryPreview = (props) => {
