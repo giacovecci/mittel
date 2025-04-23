@@ -1,12 +1,12 @@
 ---
 title: On the Polish-Belarusian border with the NYT
 date: 2024-11-06T01:01:00.000Z
-thumbnail: /uploads/img_20241103_065343.jpg
+thumbnail: /uploads/nyt-2411-thumb.jpg
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
 contentBlocks:
   - type: fullWidthImage
-    image: /uploads/img_20241101_213816.jpg
+    image: /uploads/nyt-2411-main.jpg
     left: >-
       I worked for the New York Times Opinion Audio team, accompanying Masha
       Gessen in their reporting in Poland.
