@@ -18,13 +18,13 @@ contentBlocks:
 
       Team highlights included: presenting the evening programme from inside the Reichstag building; following a provocative far-right demonstration, and the clashes with counter-protesters; running vox pops on Sonnenallee, in the heart of Berlin's multiethnic Neukölln district and among the patrons of Berlin Philharmonic; accessing AfD's parliamentary whip, Dr Berndt Baumann.
     right: |-
-      <span class="accent-text">Client:</span>
+      <span class="accent-text">Client:</span> Channel 4 News
 
-      <span class="accent-text">Producer:</span>
+      <span class="accent-text">Producer:</span> Simon Stanleigh
 
-      <span class="accent-text">
+      <span class="accent-text">Presenter:</span> Matt Frei
 
-      <span class="accent-text">
+      <span class="accent-text">Camera:</span> Wil Davies
   - type: fullWidthEmbed
     embedCode: <iframe width="560" height="315"
       src="https://www.youtube.com/embed/RLBPB523xhs?si=NiTu4hUngg7EI-HA"
