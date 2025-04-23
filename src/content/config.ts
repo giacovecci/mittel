@@ -26,6 +26,7 @@ const feedCollection = defineCollection({
     type: 'content', // Default type for Markdown files with frontmatter
     schema: z.object({
         title: z.string(), // Mandatory title
+        _styling_note: z.string().optional(),
         date: z.date().optional(), // Optional publish date
         thumbnail: z.string().optional(), // Optional path to thumbnail image for overview grid
         // Define contentBlocks as an array containing a union of the block schemas

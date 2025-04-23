@@ -41,6 +41,16 @@ collections:
       - { label: "Title", name: "title", widget: "string" } # Matches schema: title: z.string()
       - { label: "Publish Date", name: "date", widget: "datetime", required: false } # Matches schema: date: z.date().optional()
       - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false } # Matches schema: thumbnail: z.string().optional()
+      # Add this new field block:
+      - label: "Styling Note"
+        name: "_styling_note" # Leading underscore often indicates meta/non-data field
+        widget: markdown
+        default: "Use `<span class=\"accent-text\">Your Text Here</span>` within Markdown fields to make text red."
+        required: false
+        # Optional: Hide from summary list view if desired
+        summary: "" # An empty summary might hide it from the entry list
+        # Note: True 'readonly' isn't a standard widget option, 
+        # but 'default' + instructing not to edit serves the purpose.
       # --- Content Blocks Field ---
       - label: "Content Blocks"
         name: "contentBlocks" # Matches schema: contentBlocks: z.array(...)
