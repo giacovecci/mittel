@@ -8,15 +8,21 @@ import FeedEntry from '../components/FeedEntry.astro';
 import OverviewGrid from '../components/OverviewGrid.astro';
 import type { CollectionEntry } from 'astro:content';
 
-const feedEntries: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
 
-// Optional: Sort entries by date
-// feedEntries.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+// --- CHANGE: Uncommented the sorting line below ---
+// Sort entries by date (newest first). Added safety checks for missing dates.
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA; // Sorts descending (newest first)
+});
+// --- END CHANGE ---
 
 const overviewItems = feedEntries.map(entry => ({
     id: entry.slug,
     title: entry.data.title || 'Untitled',
-    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', // Ensure a fallback image path if needed
     altText: entry.data.title || 'Feed item thumbnail'
 }));
 ---
@@ -42,6 +48,7 @@ const overviewItems = feedEntries.map(entry => ({
     </main>
 </BaseLayout>
 
+{/* --- Keep existing <style> and <script> blocks unchanged --- */}
 <style>
     /* --- Base Variables --- */
     :root {
