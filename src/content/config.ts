@@ -1,48 +1,64 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
 
-// Define the schema for the 'twoColumn' block type
 const twoColumnBlockSchema = z.object({
-    type: z.literal('twoColumn'), // Matches the 'name' in config.yml types list
-    left: z.string().optional(), // Markdown content for left column
-    right: z.string().optional(), // Markdown content for right column
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional(),
 });
 
-// Define the schema for the 'fullWidthImage' block type
 const fullWidthImageBlockSchema = z.object({
-    type: z.literal('fullWidthImage'), // Matches the 'name' in config.yml types list
-    image: z.string(), // Path to the image (string expected from CMS)
-    alt: z.string().optional(), // Alt text for the image
+    type: z.literal('fullWidthImage'),
+    image: z.string(),
+    alt: z.string().optional(),
 });
 
-// Define the schema for the 'fullWidthEmbed' block type
 const fullWidthEmbedBlockSchema = z.object({
-    type: z.literal('fullWidthEmbed'), // Matches the 'name' in config.yml types list
-    embedCode: z.string(), // Raw HTML embed code
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string(),
 });
 
-// Define the main 'feed' collection
+// --- ADDED: Schema for Full Width Text Block ---
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string(), // Markdown content
+});
+// --- END ADDED ---
+
+// --- ADDED: Schema for Horizontal Gallery Block ---
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(), // Path to the image
+            alt: z.string().optional(), // Alt text
+        })
+    ).optional(), // Allow the gallery to be empty
+});
+// --- END ADDED ---
+
 const feedCollection = defineCollection({
-    type: 'content', // Default type for Markdown files with frontmatter
+    type: 'content',
     schema: z.object({
-        title: z.string(), // Mandatory title
-        _styling_note: z.string().optional(),
-        date: z.date().optional(), // Optional publish date
-        thumbnail: z.string().optional(), // Optional path to thumbnail image for overview grid
-        // Define contentBlocks as an array containing a union of the block schemas
+        title: z.string(),
+        // If you had the optional _styling_note before, keep it, otherwise omit it
+        // _styling_note: z.string().optional(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(),
         contentBlocks: z.array(
             z.discriminatedUnion('type', [
                 twoColumnBlockSchema,
                 fullWidthImageBlockSchema,
                 fullWidthEmbedBlockSchema,
+                // --- ADDED: Include new schemas in the union ---
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+                // --- END ADDED ---
             ])
-        ).optional(), // Make the whole blocks array optional, or default to empty array
-        // Note: The 'layout' field from your config.yml is often not needed here
-        // unless you specifically use it in Astro's logic. Astro handles layouts separately.
+        ).optional(),
     }),
 });
 
-// Export a single 'collections' object to register our collection(s)
 export const collections = {
     'feed': feedCollection,
 };

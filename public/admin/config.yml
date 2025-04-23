@@ -1,14 +1,10 @@
 # public/admin/config.yml
-
-# --- Backend Configuration (Keep Existing) ---
 backend:
   name: git-gateway
   repo: giacovecci/mittel # Make sure this is your correct repo
   branch: main
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e # Keep your specific URL
   gateway_url: https://gateway.decapbridge.com # Keep your specific URL
-
-  # Commit messages (optional, keep existing if you like them)
   commit_messages:
     create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
     update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
@@ -17,64 +13,62 @@ backend:
     deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
-# --- General CMS Settings ---
-logo_url: https://decapbridge.com/decapcms-with-bridge.svg # Optional
-site_url: https://mittel.reiseburo.workers.dev # Optional: Replace with your actual site URL if different
-
-# === ADD THIS LINE ===
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.reiseburo.workers.dev # Optional: Replace if different
 publish_mode: editorial_workflow
-# =====================
 
-# --- Media Handling ---
-media_folder: "public/uploads" # Store uploaded media here (relative to root)
-public_folder: "/uploads" # Public path to access media
+media_folder: "public/uploads"
+public_folder: "/uploads"
 
-# --- Collections Definition ---
 collections:
-  - name: "feed" # Matches the key in src/content/config.ts
-    label: "Feed Entries" # UI Label
-    folder: "src/content/feed" # Path where content files are stored
-    create: true # Allow creating new entries
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
-    # Define the fields for the frontmatter, matching src/content/config.ts schema
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" } # Matches schema: title: z.string()
-      - { label: "Publish Date", name: "date", widget: "datetime", required: false } # Matches schema: date: z.date().optional()
-      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false } # Matches schema: thumbnail: z.string().optional()
-      # Add this new field block:
-      - label: "Styling Note"
-        name: "_styling_note" # Leading underscore often indicates meta/non-data field
-        widget: markdown
-        default: "Use `<span class=\"accent-text\">Your Text Here</span>` within Markdown fields to make text red."
-        required: false
-        # Optional: Hide from summary list view if desired
-        summary: "" # An empty summary might hide it from the entry list
-        # Note: True 'readonly' isn't a standard widget option, 
-        # but 'default' + instructing not to edit serves the purpose.
-      # --- Content Blocks Field ---
+      - { label: "Title", name: "title", widget: "string" }
+      # Omit _styling_note field unless you explicitly want it back
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
       - label: "Content Blocks"
-        name: "contentBlocks" # Matches schema: contentBlocks: z.array(...)
+        name: "contentBlocks"
         widget: "list"
-        typeKey: type # Crucial: Links 'name' below to 'type' property in data & schema
-        types: # Define the different block types allowed in the list
-          # --- Two Column Block Type ---
+        typeKey: type
+        types:
           - label: "Two Column Block"
-            name: "twoColumn" # MUST match z.literal('twoColumn') in schema
+            name: "twoColumn"
             widget: "object"
             fields:
-              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false } # Matches schema: left: z.string().optional()
-              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false } # Matches schema: right: z.string().optional()
-          # --- Full Width Image Block Type ---
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
           - label: "Full Width Image"
-            name: "fullWidthImage" # MUST match z.literal('fullWidthImage') in schema
+            name: "fullWidthImage"
             widget: "object"
             fields:
-              - { label: "Image", name: "image", widget: "image" } # Matches schema: image: z.string()
-              - { label: "Alt Text", name: "alt", widget: "string", required: false } # Matches schema: alt: z.string().optional()
-          # --- Full Width Embed Block Type ---
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", required: false }
           - label: "Full Width Embed"
-            name: "fullWidthEmbed" # MUST match z.literal('fullWidthEmbed') in schema
+            name: "fullWidthEmbed"
             widget: "object"
             fields:
-              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" } # Matches schema: embedCode: z.string()
-    # No 'body' field needed here, as content is handled by contentBlocks
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
+          # --- ADDED: Full Width Text Block Type ---
+          - label: "Full Width Text"
+            name: "fullWidthText"
+            widget: "object"
+            fields:
+              - { label: "Text Content", name: "text", widget: "markdown" }
+          # --- END ADDED ---
+          # --- ADDED: Horizontal Gallery Block Type ---
+          - label: "Horizontal Gallery"
+            name: "horizontalGallery"
+            widget: "object"
+            fields:
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                fields:
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          # --- END ADDED ---

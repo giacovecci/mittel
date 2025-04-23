@@ -75,11 +75,12 @@ function parseMarkdown(markdownString?: string): string {
                         ) : null;
 
                     default:
-                        const exhaustiveCheck: never = block;
-                        console.warn("Unsupported content block type found:", exhaustiveCheck);
+                        // Log if an unexpected block type is encountered
+                        console.warn("Unsupported content block type found:", block?.type || block); // <-- MODIFIED LINE
                          return (
                              <div class="content-block block-unknown">
-                                 <p><em>Unsupported content block type encountered.</em></p>
+                                 {/* Updated message for clarity */}
+                                 <p><em>Unsupported block type: {block?.type || 'Unknown'}. Check config and component.</em></p>
                              </div>
                          );
                 }
