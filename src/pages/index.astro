@@ -179,95 +179,127 @@ const overviewItems = feedEntries.map(entry => ({
         const infoContent = document.getElementById('info-content');
         const feedContent = document.getElementById('feed-content');
 
+        // --- Existing View Switching Logic ---
         if (!mainElement || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper || !infoContent || !feedContent) {
             console.error("Essential elements missing, script cannot run. Check IDs in index.astro HTML.");
             return;
         }
-
         const MOBILE_BREAKPOINT = 768;
         let currentMobileInfoVisible = false;
-
-        function isMobileView(): boolean {
-            return window.innerWidth <= MOBILE_BREAKPOINT;
-        }
-
-        function setActiveButton(activeBtn: HTMLButtonElement | null): void {
+        function isMobileView(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+        function setActiveButton(activeBtn: HTMLButtonElement | null): void { /* ... keep existing ... */
             [infoBtn, feedBtn, overviewBtn].forEach(btn => {
-                if (btn) {
-                    btn.classList.toggle('active', btn === activeBtn);
-                }
+                if (btn) { btn.classList.toggle('active', btn === activeBtn); }
             });
         }
-
-        function setMainView(view: 'feed' | 'overview'): void {
-            mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible');
-
-            if (view === 'overview') {
-                mainElement!.classList.add('overview-active');
-                setActiveButton(overviewBtn);
-                currentMobileInfoVisible = false;
-            } else {
-                mainElement!.classList.add('feed-active');
-                if (isMobileView() && currentMobileInfoVisible) {
-                    mainElement!.classList.add('info-visible');
-                    setActiveButton(infoBtn);
-                } else {
-                    if(feedBtn) setActiveButton(feedBtn);
-                }
-            }
+        function setMainView(view: 'feed' | 'overview'): void { /* ... keep existing ... */
+             mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible');
+             if (view === 'overview') {
+                 mainElement!.classList.add('overview-active');
+                 setActiveButton(overviewBtn);
+                 currentMobileInfoVisible = false;
+             } else {
+                 mainElement!.classList.add('feed-active');
+                 if (isMobileView() && currentMobileInfoVisible) {
+                     mainElement!.classList.add('info-visible');
+                     setActiveButton(infoBtn);
+                 } else {
+                     if (feedBtn) setActiveButton(feedBtn);
+                 }
+             }
         }
-
-        function toggleMobileInfoFeed(showInfo: boolean): void {
+        function toggleMobileInfoFeed(showInfo: boolean): void { /* ... keep existing ... */
             if (!isMobileView()) return;
             currentMobileInfoVisible = showInfo;
             mainElement!.classList.toggle('info-visible', showInfo);
             setActiveButton(showInfo ? infoBtn : feedBtn);
-
-            if (mainElement!.classList.contains('overview-active')) {
-                setMainView('feed');
-            }
+            if (mainElement!.classList.contains('overview-active')) { setMainView('feed'); }
         }
-
-        if (overviewBtn) {
-            overviewBtn.addEventListener('click', () => { setMainView('overview'); });
-        }
-        if (feedBtn) {
-            feedBtn.addEventListener('click', () => {
-                setMainView('feed');
-                if (isMobileView()) { toggleMobileInfoFeed(false); }
-            });
-        }
-        if (infoBtn) {
-            infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); });
-        }
-
-        if (overviewGridWrapper) {
-            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
-                if (event.target instanceof Element) {
-                    const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                     if (gridItemLink && gridItemLink.dataset.targetId) {
-                         event.preventDefault();
-                         const targetId = gridItemLink.dataset.targetId;
-                         const targetFeedElement = document.getElementById(targetId);
-
-                         if (targetFeedElement) {
-                             setMainView('feed');
-                             if (isMobileView()) { toggleMobileInfoFeed(false); }
-                             requestAnimationFrame(() => {
-                                 targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                             });
-                         } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
-                     } else if (gridItemLink) {
-                          console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
-                     }
-                }
-            });
-        } else {
-             console.error("Overview grid wrapper not found, click listener not attached.");
-        }
-
+        if (overviewBtn) { overviewBtn.addEventListener('click', () => { setMainView('overview'); }); }
+        if (feedBtn) { feedBtn.addEventListener('click', () => { setMainView('feed'); if (isMobileView()) { toggleMobileInfoFeed(false); } }); }
+        if (infoBtn) { infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); }); }
+        if (overviewGridWrapper) { overviewGridWrapper.addEventListener('click', (event: MouseEvent) => { /* ... keep existing ... */
+             if (event.target instanceof Element) {
+                 const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                  if (gridItemLink && gridItemLink.dataset.targetId) {
+                      event.preventDefault();
+                      const targetId = gridItemLink.dataset.targetId;
+                      const targetFeedElement = document.getElementById(targetId);
+                      if (targetFeedElement) {
+                          setMainView('feed');
+                          if (isMobileView()) { toggleMobileInfoFeed(false); }
+                          requestAnimationFrame(() => {
+                              targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          });
+                      } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
+                  } else if (gridItemLink) {
+                       console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
+                  }
+             }
+         }); } else { console.error("Overview grid wrapper not found, click listener not attached."); }
         setMainView('feed');
-        if (isMobileView()) { toggleMobileInfoFeed(false); }
-        else { if(feedBtn) setActiveButton(feedBtn); }
+        if (isMobileView()) { toggleMobileInfoFeed(false); } else { if(feedBtn) setActiveButton(feedBtn); }
+        // --- End Existing View Switching Logic ---
+
+
+        // ==========================================
+        // --- NEW: Horizontal Gallery Logic ---
+        // ==========================================
+        const allGalleries = document.querySelectorAll('.block-horizontal-gallery');
+
+        allGalleries.forEach(galleryBlock => {
+            const scrollContainer = galleryBlock.querySelector<HTMLElement>('.gallery-scroll-container');
+            const prevButton = galleryBlock.querySelector<HTMLButtonElement>('.gallery-nav-button.prev');
+            const nextButton = galleryBlock.querySelector<HTMLButtonElement>('.gallery-nav-button.next');
+
+            if (!scrollContainer || !prevButton || !nextButton) {
+                console.warn('Gallery elements missing within a .block-horizontal-gallery:', galleryBlock);
+                return; // Skip this gallery if essential parts are missing
+            }
+
+            // Function to handle scrolling
+            const handleScroll = (direction: 'prev' | 'next') => {
+                if (!scrollContainer) return;
+                const scrollAmount = scrollContainer.clientWidth; // Scroll by the width of the container (since items are 100%)
+                scrollContainer.scrollBy({
+                    left: direction === 'next' ? scrollAmount : -scrollAmount,
+                    behavior: 'smooth'
+                });
+            };
+
+            // Add event listeners
+            prevButton.addEventListener('click', () => handleScroll('prev'));
+            nextButton.addEventListener('click', () => handleScroll('next'));
+
+            // --- Optional: Add logic to hide/show buttons based on scroll position ---
+            const updateButtonState = () => {
+                if (!scrollContainer || !prevButton || !nextButton) return;
+
+                const scrollLeft = scrollContainer.scrollLeft;
+                const scrollWidth = scrollContainer.scrollWidth;
+                const clientWidth = scrollContainer.clientWidth;
+                const tolerance = 5; // Pixels tolerance for scroll end checks
+
+                // Hide Prev button if at the beginning
+                prevButton.classList.toggle('hidden', scrollLeft <= tolerance);
+
+                // Hide Next button if at the end
+                nextButton.classList.toggle('hidden', scrollLeft >= scrollWidth - clientWidth - tolerance);
+            };
+
+            // Initial check
+            updateButtonState();
+
+            // Update on scroll
+            scrollContainer.addEventListener('scroll', updateButtonState, { passive: true });
+
+             // Update on resize (important if container size changes)
+             // Use a ResizeObserver for better performance than window resize listener
+             const resizeObserver = new ResizeObserver(updateButtonState);
+             resizeObserver.observe(scrollContainer);
+
+        });
+        // --- End New Gallery Logic ---
+
     });
 </script>
