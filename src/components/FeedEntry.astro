@@ -45,7 +45,11 @@ function parseMarkdown(markdownString?: string): string {
 
     <div class="feed-entry-blocks">
         {data.contentBlocks && data.contentBlocks.length > 0 ? (
-            data.contentBlocks.map((block: ContentBlock) => {
+            data.contentBlocks.map((block: ContentBlock, index: number) => {
+                const galleryId = `gallery-${slug}-${index}`;
+                const prevBtnId = `gallery-prev-${slug}-${index}`;
+                const nextBtnId = `gallery-next-${slug}-${index}`;
+
                 switch (block.type) {
                     case 'twoColumn':
                         return (
@@ -60,7 +64,6 @@ function parseMarkdown(markdownString?: string): string {
                         );
 
                     case 'fullWidthImage':
-                        // CORRECTED: Removed comments
                         return block.image ? (
                             <div class="content-block block-full-width-image">
                                 <Image
@@ -87,29 +90,37 @@ function parseMarkdown(markdownString?: string): string {
                         ) : null;
 
                     case 'horizontalGallery':
-                        // CORRECTED: Removed comments
-                        return block.images && block.images.length > 0 ? (
+                         return (
                             <div class="content-block block-horizontal-gallery">
-                                <div class="gallery-scroll-container">
-                                    {block.images.map(img => (
-                                        img.image ? (
-                                            <div class="gallery-item">
-                                                <Image
-                                                    src={img.image}
-                                                    alt={img.alt || ''}
-                                                    width={400}
-                                                    height={300}
-                                                    format="webp"
-                                                    quality={75}
-                                                    loading="lazy"
-                                                    densities={[1, 1.5]}
-                                                />
-                                            </div>
-                                        ) : null
-                                    ))}
+                                <div class="gallery-scroll-container" id={galleryId}>
+                                    {block.images && block.images.length > 0 ? (
+                                        block.images.map(img => (
+                                            img.image ? (
+                                                <div class="gallery-item">
+                                                    {/* --- CAREFULLY CORRECTED IMAGE ATTRIBUTES --- */}
+                                                    <Image
+                                                        src={img.image}
+                                                        alt={img.alt || ''}
+                                                        width={800}
+                                                        height={600}
+                                                        format="webp"
+                                                        quality={75}
+                                                        loading="lazy"
+                                                        densities={[1, 1.5]}
+                                                    />
+                                                    {/* --- END CORRECTIONS --- */}
+                                                </div>
+                                            ) : null
+                                        ))
+                                    ) : (
+                                        <div class="gallery-item placeholder"><p><em>No images in gallery.</em></p></div>
+                                    )}
                                 </div>
+                                <button type="button" class="gallery-nav-button prev" id={prevBtnId} data-target={`#${galleryId}`} aria-label="Previous image">‹</button>
+                                <button type="button" class="gallery-nav-button next" id={nextBtnId} data-target={`#${galleryId}`} aria-label="Next image">›</button>
                             </div>
-                        ) : null;
+                        );
+
 
                     default:
                         const unknownBlock = block as BaseBlock;
@@ -137,23 +148,12 @@ function parseMarkdown(markdownString?: string): string {
     /* --- Base and Existing Styles --- */
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        --gallery-nav-button-size: 2.5rem;
     }
 
-    .feed-entry {
-        margin-bottom: var(--spacing-xl);
-        padding-bottom: var(--spacing-md);
-        scroll-margin-top: 2rem;
-    }
-
-    .feed-entry h3 {
-        margin-top: 0; margin-bottom: var(--spacing-xxs);
-        font-weight: var(--font-weight-unified); font-size: 1.1em; line-height: 1.3;
-    }
-
-    .feed-entry-date {
-        display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md);
-    }
-
+    .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
+    .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-unified); font-size: 1.1em; line-height: 1.3; }
+    .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
     .feed-entry-blocks { margin-top: var(--spacing-lg); }
     .content-block { margin-bottom: var(--spacing-lg); }
     .content-block:last-child { margin-bottom: 0; }
@@ -163,12 +163,8 @@ function parseMarkdown(markdownString?: string): string {
     .block-two-column .column { flex: 1; min-width: 0; }
     .block-two-column .column > *:first-child { margin-top: 0; }
     .block-two-column .column > *:last-child { margin-bottom: 0; }
-    .block-two-column .column :global(p),
-    .block-two-column .column :global(li),
-    .block-two-column .column :global(dt),
-    .block-two-column .column :global(dd) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; }
-    .block-two-column .column :global(h1), .block-two-column .column :global(h2),
-    .block-two-column .column :global(h3), .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+    .block-two-column .column :global(p), .block-two-column .column :global(li), .block-two-column .column :global(dt), .block-two-column .column :global(dd) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; }
+    .block-two-column .column :global(h1), .block-two-column .column :global(h2), .block-two-column .column :global(h3), .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
     .block-two-column .column :global(ul), .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
     .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
     .block-two-column .column :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
@@ -182,81 +178,128 @@ function parseMarkdown(markdownString?: string): string {
     .block-full-width-embed :global(iframe), .block-full-width-embed :global(video) { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; }
 
     /* Full Width Text */
-    /* Uses .markdown-content styles */
-    .block-full-width-text {
-      /* Add specific overrides if needed, otherwise relies on .markdown-content */
-    }
+    .block-full-width-text {} /* Uses .markdown-content */
 
     /* --- UPDATED: Horizontal Gallery --- */
     .block-horizontal-gallery {
-        overflow: hidden; /* Keep overall block overflow hidden */
+        position: relative; /* Needed for absolute positioning of buttons */
+        overflow: hidden;
     }
     .gallery-scroll-container {
         display: flex;
-        /* Remove gap, items will be full width */
-        /* gap: var(--spacing-sm); */
-        overflow-x: auto; /* Keep horizontal scrolling */
-        padding-bottom: var(--spacing-md); /* Space for scrollbar */
-        scroll-snap-type: x mandatory; /* Keep snap */
+        overflow-x: auto;
+        /* Add padding for scrollbar AND buttons */
+        padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs));
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs));
+        scroll-snap-type: x mandatory;
         scrollbar-width: thin;
         scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-        /* Make container itself non-scrollable vertically if needed, usually handled by parent */
-         max-height: 500px; /* Optional: Set max height for gallery */
-         position: relative; /* For potential future additions like buttons */
+        /* --- SCALING --- */
+        /* Set a max height relative to viewport height */
+        max-height: 70vh; /* Adjust as needed */
+        width: 100%; /* Ensure container tries to fill width */
+        box-sizing: border-box;
+        /* Hide scrollbar visually but allow scrolling */
+       /* scrollbar-width: none; /* Firefox */
+       /* &::-webkit-scrollbar { /* Webkit */
+       /*     display: none; */
+       /* } */
+        /* Clip content to padding box, helps hide buttons spilling out */
+        overflow: clip;
+        /* Center the container if it's narrower than the column (though it usually won't be) */
+         margin-left: auto;
+         margin-right: auto;
     }
+     /* Optional: Custom scrollbar still defined if not hidden */
     .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
     .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
     .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
 
     .gallery-item {
-        /* UPDATED: Make item take full container width */
         flex: 0 0 100%;
-        min-width: 100%; /* Ensure it takes full width */
-        /* Remove fixed width */
-        /* width: 250px; */
+        min-width: 100%;
+        scroll-snap-align: center;
+        /* --- SCALING --- */
+        /* Let height be determined by image aspect ratio and container max-height */
+        height: auto;
+        max-height: 100%; /* Ensure item doesn't exceed container height */
 
-        scroll-snap-align: center; /* UPDATED: Snap to center for better feel */
-        /* scroll-snap-align: start; */
-
-        border-radius: var(--border-radius-sm); /* Keep styling */
-        overflow: hidden; /* Keep overflow hidden */
-        background-color: var(--color-border-light); /* Keep placeholder bg */
-        position: relative; /* For potential content overlay */
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        background-color: var(--color-border-light);
+        position: relative;
+        display: flex; /* Center placeholder text */
+        align-items: center;
+        justify-content: center;
     }
     .gallery-item img, .gallery-item picture {
         display: block;
-        width: 100%; /* Image fills item width */
-        height: auto; /* Maintain aspect ratio defined below */
-        /* UPDATED: Use aspect-ratio for sizing, adjust as needed */
-        aspect-ratio: 4 / 3; /* Example: widescreen-ish */
-        /* aspect-ratio: 4 / 3; */
-        object-fit: contain; /* UPDATED: Use 'contain' to see whole image */
-        /* object-fit: cover; */
+        /* --- SCALING --- */
+        width: auto; /* Let width be determined by aspect ratio and height */
+        max-width: 100%; /* Prevent exceeding item width */
+        height: auto; /* Height adjusts based on container */
+        max-height: 100%; /* Ensure image fits within item bounds */
+
+        aspect-ratio: 4 / 3; /* Your desired aspect ratio */
+        object-fit: contain; /* Fit whole image */
+        margin: 0 auto; /* Center image horizontally if container is wider */
     }
-    /* --- END UPDATED --- */
+     .gallery-item.placeholder p {
+         font-style: italic;
+         color: var(--color-text-secondary);
+         padding: var(--spacing-md);
+     }
+
+    /* --- ADDED: Gallery Navigation Buttons --- */
+    .gallery-nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: var(--gallery-nav-button-size);
+        height: var(--gallery-nav-button-size);
+        font-size: calc(var(--gallery-nav-button-size) * 0.6);
+        line-height: var(--gallery-nav-button-size); /* Center icon vertically */
+        text-align: center;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; /* Reset padding */
+        display: flex; /* Center icon */
+        align-items: center;
+        justify-content: center;
+    }
+    .gallery-nav-button:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    .gallery-nav-button.prev {
+        left: var(--spacing-sm); /* Position from edge */
+    }
+    .gallery-nav-button.next {
+        right: var(--spacing-sm); /* Position from edge */
+    }
+    /* Hide buttons if JS determines they aren't needed */
+    .gallery-nav-button.hidden {
+        display: none;
+    }
+    /* --- END ADDED --- */
 
 
-    /* Fallback Markdown Content (from entry.body or fullWidthText) */
-    .markdown-content :global(p), .markdown-content :global(ul),
-    .markdown-content :global(ol), .markdown-content :global(blockquote) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
-    .markdown-content :global(h1), .markdown-content :global(h2),
-    .markdown-content :global(h3), .markdown-content :global(h4) { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+    /* Fallback Markdown Content */
+    .markdown-content :global(p), .markdown-content :global(ul), .markdown-content :global(ol), .markdown-content :global(blockquote) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+    .markdown-content :global(h1), .markdown-content :global(h2), .markdown-content :global(h3), .markdown-content :global(h4) { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
     .markdown-content :global(ul), .markdown-content :global(ol) { padding-left: var(--spacing-lg); }
     .markdown-content :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
     .markdown-content :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
     .markdown-content :global(img) { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
-    /* Added styles for links inside markdown */
-    .markdown-content :global(a) {
-        color: var(--color-text-hover); /* Use accent color for links */
-        text-decoration: underline;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 2px;
-    }
-    .markdown-content :global(a:hover) {
-        color: var(--color-text-unified); /* Slightly different hover maybe */
-        text-decoration: none;
-    }
-
+    .markdown-content :global(a) { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    .markdown-content :global(a:hover) { color: var(--color-text-unified); text-decoration: none; }
 
     /* Unknown Block */
     .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
@@ -266,10 +309,7 @@ function parseMarkdown(markdownString?: string): string {
 
     /* --- Mobile Styles --- */
     @media (max-width: 768px) {
-        .feed-entry {
-            margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm);
-            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem);
-        }
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); }
         .feed-entry-blocks { margin-top: var(--spacing-md); }
         .content-block { margin-bottom: var(--spacing-md); }
         .block-two-column { flex-direction: column; gap: var(--spacing-md); }
@@ -278,15 +318,23 @@ function parseMarkdown(markdownString?: string): string {
 
         /* --- UPDATED: Mobile Gallery Adjustments --- */
         .gallery-scroll-container {
-            /* Mobile gap is removed as items are 100% width */
-            /* gap: var(--spacing-xs); */
-            padding-bottom: var(--spacing-sm); /* Maybe less padding needed */
-            max-height: 400px; /* Adjust max height for mobile */
+             max-height: 50vh; /* Adjust max height for mobile */
+             /* Reduce padding slightly */
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs));
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs));
         }
-        .gallery-item {
-            /* No width change needed, still 100% */
-            /* width: 200px; */
-             aspect-ratio: 4 / 3; /* Maybe different aspect ratio for mobile */
+        .gallery-item img, .gallery-item picture {
+            aspect-ratio: 4 / 3; /* Keep aspect ratio */
+        }
+        .gallery-nav-button {
+            /* Make buttons slightly smaller on mobile */
+            --gallery-nav-button-size: 2rem;
+        }
+         .gallery-nav-button.prev {
+            left: var(--spacing-xs); /* Position closer to edge */
+        }
+        .gallery-nav-button.next {
+            right: var(--spacing-xs); /* Position closer to edge */
         }
         /* --- END UPDATED --- */
     }
