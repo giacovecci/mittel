@@ -187,38 +187,53 @@ function parseMarkdown(markdownString?: string): string {
       /* Add specific overrides if needed, otherwise relies on .markdown-content */
     }
 
-    /* Horizontal Gallery */
+    /* --- UPDATED: Horizontal Gallery --- */
     .block-horizontal-gallery {
-        overflow: hidden; /* Hide scrollbar track if it overflows */
+        overflow: hidden; /* Keep overall block overflow hidden */
     }
     .gallery-scroll-container {
         display: flex;
-        gap: var(--spacing-sm); /* Gap between gallery items */
-        overflow-x: auto; /* Enable horizontal scrolling */
+        /* Remove gap, items will be full width */
+        /* gap: var(--spacing-sm); */
+        overflow-x: auto; /* Keep horizontal scrolling */
         padding-bottom: var(--spacing-md); /* Space for scrollbar */
-        scroll-snap-type: x mandatory;
+        scroll-snap-type: x mandatory; /* Keep snap */
         scrollbar-width: thin;
         scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        /* Make container itself non-scrollable vertically if needed, usually handled by parent */
+         max-height: 500px; /* Optional: Set max height for gallery */
+         position: relative; /* For potential future additions like buttons */
     }
     .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
     .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
     .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
 
     .gallery-item {
-        flex: 0 0 auto; /* Prevent items from shrinking/growing */
-        width: 250px; /* Example fixed width, adjust as needed */
-        scroll-snap-align: start; /* Snap items to the start */
-        border-radius: var(--border-radius-sm); /* Optional styling */
-        overflow: hidden; /* Ensure image fits rounded corners */
-        background-color: var(--color-border-light); /* Placeholder bg */
+        /* UPDATED: Make item take full container width */
+        flex: 0 0 100%;
+        min-width: 100%; /* Ensure it takes full width */
+        /* Remove fixed width */
+        /* width: 250px; */
+
+        scroll-snap-align: center; /* UPDATED: Snap to center for better feel */
+        /* scroll-snap-align: start; */
+
+        border-radius: var(--border-radius-sm); /* Keep styling */
+        overflow: hidden; /* Keep overflow hidden */
+        background-color: var(--color-border-light); /* Keep placeholder bg */
+        position: relative; /* For potential content overlay */
     }
     .gallery-item img, .gallery-item picture {
         display: block;
-        width: 100%;
-        height: auto; /* Maintain aspect ratio */
-        aspect-ratio: 4 / 3; /* Example aspect ratio, adjust */
-        object-fit: cover; /* Cover the area */
+        width: 100%; /* Image fills item width */
+        height: auto; /* Maintain aspect ratio defined below */
+        /* UPDATED: Use aspect-ratio for sizing, adjust as needed */
+        aspect-ratio: 16 / 10; /* Example: widescreen-ish */
+        /* aspect-ratio: 4 / 3; */
+        object-fit: contain; /* UPDATED: Use 'contain' to see whole image */
+        /* object-fit: cover; */
     }
+    /* --- END UPDATED --- */
 
 
     /* Fallback Markdown Content (from entry.body or fullWidthText) */
@@ -261,8 +276,18 @@ function parseMarkdown(markdownString?: string): string {
         .entry-separator { margin-top: var(--spacing-lg); }
         .feed-entry-date { font-size: 0.85em; }
 
-        /* Mobile Gallery Adjustments */
-        .gallery-scroll-container { gap: var(--spacing-xs); }
-        .gallery-item { width: 200px; } /* Slightly smaller items on mobile */
+        /* --- UPDATED: Mobile Gallery Adjustments --- */
+        .gallery-scroll-container {
+            /* Mobile gap is removed as items are 100% width */
+            /* gap: var(--spacing-xs); */
+            padding-bottom: var(--spacing-sm); /* Maybe less padding needed */
+            max-height: 400px; /* Adjust max height for mobile */
+        }
+        .gallery-item {
+            /* No width change needed, still 100% */
+            /* width: 200px; */
+             aspect-ratio: 4 / 3; /* Maybe different aspect ratio for mobile */
+        }
+        /* --- END UPDATED --- */
     }
 </style>
