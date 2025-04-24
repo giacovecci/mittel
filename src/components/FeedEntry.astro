@@ -149,16 +149,17 @@ function parseMarkdown(markdownString?: string): string {
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
         --gallery-nav-button-size: 2.5rem;
+        /* --- ADDED: Define gap size --- */
+        --gallery-item-gap: var(--spacing-md); /* e.g., 1rem */
     }
 
+    /* ... (keep all styles from .feed-entry down to .block-full-width-text) ... */
     .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
     .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-unified); font-size: 1.1em; line-height: 1.3; }
     .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
     .feed-entry-blocks { margin-top: var(--spacing-lg); }
     .content-block { margin-bottom: var(--spacing-lg); }
     .content-block:last-child { margin-bottom: 0; }
-
-    /* Two Column */
     .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
     .block-two-column .column { flex: 1; min-width: 0; }
     .block-two-column .column > *:first-child { margin-top: 0; }
@@ -168,82 +169,73 @@ function parseMarkdown(markdownString?: string): string {
     .block-two-column .column :global(ul), .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
     .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
     .block-two-column .column :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
-
-    /* Full Width Image */
     .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
     .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
-
-    /* Full Width Embed */
     .block-full-width-embed { width: 100%; max-width: 100%; overflow: hidden; background-color: var(--color-border-light); }
     .block-full-width-embed :global(iframe), .block-full-width-embed :global(video) { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; }
-
-    /* Full Width Text */
     .block-full-width-text {} /* Uses .markdown-content */
+
 
     /* --- UPDATED: Horizontal Gallery --- */
     .block-horizontal-gallery {
-        position: relative; /* Needed for absolute positioning of buttons */
-        overflow: hidden;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
     }
     .gallery-scroll-container {
         display: flex;
-        overflow-x: auto;
-        /* Add padding for scrollbar AND buttons */
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        /* --- ADDED: Gap between flex items --- */
+        gap: var(--gallery-item-gap);
+
+        /* Adjust padding to account for gap AND buttons */
         padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
-        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs));
-        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+
         scroll-snap-type: x mandatory;
+        /* --- ADDED: Scroll padding to offset snap point by gap --- */
+        scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+
         scrollbar-width: thin;
         scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-        /* --- SCALING --- */
-        /* Set a max height relative to viewport height */
-        max-height: 70vh; /* Adjust as needed */
-        width: 100%; /* Ensure container tries to fill width */
+        max-height: 70vh;
+        width: 100%;
         box-sizing: border-box;
-        /* Hide scrollbar visually but allow scrolling */
-       /* scrollbar-width: none; /* Firefox */
-       /* &::-webkit-scrollbar { /* Webkit */
-       /*     display: none; */
-       /* } */
-        /* Clip content to padding box, helps hide buttons spilling out */
-        overflow: clip;
-        /* Center the container if it's narrower than the column (though it usually won't be) */
-         margin-left: auto;
-         margin-right: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
-     /* Optional: Custom scrollbar still defined if not hidden */
+    /* Optional: Custom scrollbar styling */
     .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
     .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
     .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
 
     .gallery-item {
+        /* Keep item itself as 100% of the theoretical *scroll area width* */
         flex: 0 0 100%;
         min-width: 100%;
-        scroll-snap-align: center;
-        /* --- SCALING --- */
-        /* Let height be determined by image aspect ratio and container max-height */
+        scroll-snap-align: center; /* Keep snap to center */
         height: auto;
-        max-height: 100%; /* Ensure item doesn't exceed container height */
-
+        max-height: 100%;
         border-radius: var(--border-radius-sm);
         overflow: hidden;
         background-color: var(--color-border-light);
         position: relative;
-        display: flex; /* Center placeholder text */
+        display: flex;
         align-items: center;
         justify-content: center;
     }
     .gallery-item img, .gallery-item picture {
         display: block;
-        /* --- SCALING --- */
-        width: auto; /* Let width be determined by aspect ratio and height */
-        max-width: 100%; /* Prevent exceeding item width */
-        height: auto; /* Height adjusts based on container */
-        max-height: 100%; /* Ensure image fits within item bounds */
-
-        aspect-ratio: 4 / 3; /* Your desired aspect ratio */
-        object-fit: contain; /* Fit whole image */
-        margin: 0 auto; /* Center image horizontally if container is wider */
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        margin: 0 auto;
     }
      .gallery-item.placeholder p {
          font-style: italic;
@@ -251,47 +243,24 @@ function parseMarkdown(markdownString?: string): string {
          padding: var(--spacing-md);
      }
 
-    /* --- ADDED: Gallery Navigation Buttons --- */
-    .gallery-nav-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: var(--gallery-nav-button-size);
-        height: var(--gallery-nav-button-size);
+    /* --- Gallery Navigation Buttons (Keep as is) --- */
+    .gallery-nav-button { /* ... */
+        position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
+        width: var(--gallery-nav-button-size); height: var(--gallery-nav-button-size);
         font-size: calc(var(--gallery-nav-button-size) * 0.6);
-        line-height: var(--gallery-nav-button-size); /* Center icon vertically */
-        text-align: center;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: opacity 0.2s ease, background-color 0.2s ease;
-        padding: 0; /* Reset padding */
-        display: flex; /* Center icon */
-        align-items: center;
-        justify-content: center;
+        line-height: var(--gallery-nav-button-size); text-align: center;
+        cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; display: flex; align-items: center; justify-content: center;
     }
-    .gallery-nav-button:hover {
-        opacity: 1;
-        background-color: rgba(0, 0, 0, 0.7);
-    }
-    .gallery-nav-button.prev {
-        left: var(--spacing-sm); /* Position from edge */
-    }
-    .gallery-nav-button.next {
-        right: var(--spacing-sm); /* Position from edge */
-    }
-    /* Hide buttons if JS determines they aren't needed */
-    .gallery-nav-button.hidden {
-        display: none;
-    }
-    /* --- END ADDED --- */
+    .gallery-nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+    .gallery-nav-button.prev { left: var(--spacing-sm); }
+    .gallery-nav-button.next { right: var(--spacing-sm); }
+    .gallery-nav-button.hidden { display: none; }
 
 
-    /* Fallback Markdown Content */
+    /* ... (keep remaining styles: .markdown-content, .block-unknown, .entry-separator, @media mobile) ... */
+     /* Fallback Markdown Content */
     .markdown-content :global(p), .markdown-content :global(ul), .markdown-content :global(ol), .markdown-content :global(blockquote) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
     .markdown-content :global(h1), .markdown-content :global(h2), .markdown-content :global(h3), .markdown-content :global(h4) { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
     .markdown-content :global(ul), .markdown-content :global(ol) { padding-left: var(--spacing-lg); }
@@ -300,15 +269,17 @@ function parseMarkdown(markdownString?: string): string {
     .markdown-content :global(img) { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
     .markdown-content :global(a) { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
     .markdown-content :global(a:hover) { color: var(--color-text-unified); text-decoration: none; }
-
     /* Unknown Block */
     .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
-
     /* Separator */
     .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
-
     /* --- Mobile Styles --- */
     @media (max-width: 768px) {
+        /* --- ADDED: Mobile gap size --- */
+        :root {
+             --gallery-item-gap: var(--spacing-sm); /* Smaller gap on mobile */
+        }
+
         .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); }
         .feed-entry-blocks { margin-top: var(--spacing-md); }
         .content-block { margin-bottom: var(--spacing-md); }
@@ -318,24 +289,19 @@ function parseMarkdown(markdownString?: string): string {
 
         /* --- UPDATED: Mobile Gallery Adjustments --- */
         .gallery-scroll-container {
-             max-height: 50vh; /* Adjust max height for mobile */
-             /* Reduce padding slightly */
-             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs));
-             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs));
+             gap: var(--gallery-item-gap); /* Use mobile gap */
+             max-height: 50vh;
+             /* Adjust padding for mobile button size and gap */
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             /* Adjust scroll-padding */
+             scroll-padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
         }
-        .gallery-item img, .gallery-item picture {
-            aspect-ratio: 4 / 3; /* Keep aspect ratio */
-        }
-        .gallery-nav-button {
-            /* Make buttons slightly smaller on mobile */
-            --gallery-nav-button-size: 2rem;
-        }
-         .gallery-nav-button.prev {
-            left: var(--spacing-xs); /* Position closer to edge */
-        }
-        .gallery-nav-button.next {
-            right: var(--spacing-xs); /* Position closer to edge */
-        }
-        /* --- END UPDATED --- */
+        .gallery-item img, .gallery-item picture { aspect-ratio: 4 / 3; }
+        .gallery-nav-button { --gallery-nav-button-size: 2rem; }
+         .gallery-nav-button.prev { left: var(--spacing-xs); }
+         .gallery-nav-button.next { right: var(--spacing-xs); }
     }
+
 </style>
