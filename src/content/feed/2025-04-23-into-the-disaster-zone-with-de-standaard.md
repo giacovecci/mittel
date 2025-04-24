@@ -20,6 +20,13 @@ contentBlocks:
       <span class="accent-text">Client:</span> De Standaard
 
       <span class="accent-text">Reporter:</span> Samira Ataei
+  - type: horizontalGallery
+    images:
+      - image: /uploads/ds-2409-gal2.jpg
+      - image: /uploads/ds-2409-gal1.jpg
+      - image: /uploads/ds-2409-gal3.jpg
+      - image: /uploads/ds-2409-gal5.jpg
+      - image: /uploads/ds-2409-gal4.jpg
   - type: fullWidthText
     text: >-
       Samira's coverage is available here:
