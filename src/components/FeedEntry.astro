@@ -1,8 +1,10 @@
 ---
+// src/components/FeedEntry.astro
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { marked } from 'marked';
 
+type BaseBlock = { type: string };
 type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
 
 interface Props {
@@ -23,8 +25,12 @@ const formattedDate = data.date
 function parseMarkdown(markdownString?: string): string {
     if (!markdownString) return '';
     try {
-        const htmlResult = String(marked.parse(markdownString));
-        return htmlResult;
+        const parsed = marked.parse(markdownString, { gfm: true, breaks: false });
+        const trimmed = String(parsed).trim();
+        if (trimmed && !trimmed.match(/^<(p|h[1-6]|ul|ol|li|blockquote|hr|table|div|pre|figure|img)/i)) {
+           return `<p>${trimmed}</p>`;
+        }
+        return trimmed;
     } catch (e) {
         console.error("Error parsing Markdown:", e);
         return '<p>Error rendering content.</p>';
@@ -54,7 +60,8 @@ function parseMarkdown(markdownString?: string): string {
                         );
 
                     case 'fullWidthImage':
-                        return (
+                        // CORRECTED: Removed comments
+                        return block.image ? (
                             <div class="content-block block-full-width-image">
                                 <Image
                                     src={block.image}
@@ -67,20 +74,49 @@ function parseMarkdown(markdownString?: string): string {
                                     densities={[1, 1.5, 2]}
                                 />
                             </div>
-                        );
+                        ) : <div class="content-block block-missing-image"><p><em>Image missing or path incorrect.</em></p></div>;
 
                     case 'fullWidthEmbed':
                         return block.embedCode ? (
                             <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
                         ) : null;
 
+                    case 'fullWidthText':
+                        return block.text ? (
+                            <div class="content-block block-full-width-text markdown-content" set:html={parseMarkdown(block.text)}></div>
+                        ) : null;
+
+                    case 'horizontalGallery':
+                        // CORRECTED: Removed comments
+                        return block.images && block.images.length > 0 ? (
+                            <div class="content-block block-horizontal-gallery">
+                                <div class="gallery-scroll-container">
+                                    {block.images.map(img => (
+                                        img.image ? (
+                                            <div class="gallery-item">
+                                                <Image
+                                                    src={img.image}
+                                                    alt={img.alt || ''}
+                                                    width={400}
+                                                    height={300}
+                                                    format="webp"
+                                                    quality={75}
+                                                    loading="lazy"
+                                                    densities={[1, 1.5]}
+                                                />
+                                            </div>
+                                        ) : null
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null;
+
                     default:
-                        // Log if an unexpected block type is encountered
-                        console.warn("Unsupported content block type found:", block?.type || block); // <-- MODIFIED LINE
+                        const unknownBlock = block as BaseBlock;
+                        console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
                          return (
                              <div class="content-block block-unknown">
-                                 {/* Updated message for clarity */}
-                                 <p><em>Unsupported block type: {block?.type || 'Unknown'}. Check config and component.</em></p>
+                                 <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
                              </div>
                          );
                 }
@@ -98,187 +134,135 @@ function parseMarkdown(markdownString?: string): string {
 </article>
 
 <style>
-    /* --- Keep existing desktop styles --- */
+    /* --- Base and Existing Styles --- */
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
-        /* These variables should be defined in global.css */
     }
 
     .feed-entry {
         margin-bottom: var(--spacing-xl);
         padding-bottom: var(--spacing-md);
-        scroll-margin-top: 2rem; /* Desktop scroll margin */
+        scroll-margin-top: 2rem;
     }
 
     .feed-entry h3 {
-        margin-top: 0;
-        margin-bottom: var(--spacing-xxs);
-        font-weight: var(--font-weight-unified);
-        font-size: 1.1em;
-        line-height: 1.3;
+        margin-top: 0; margin-bottom: var(--spacing-xxs);
+        font-weight: var(--font-weight-unified); font-size: 1.1em; line-height: 1.3;
     }
 
     .feed-entry-date {
-        display: block;
-        font-size: 0.9em;
-        color: var(--color-accent); /* Use variable */
-        margin-bottom: var(--spacing-md);
+        display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md);
     }
 
-    .feed-entry-blocks {
-        margin-top: var(--spacing-lg);
-    }
+    .feed-entry-blocks { margin-top: var(--spacing-lg); }
+    .content-block { margin-bottom: var(--spacing-lg); }
+    .content-block:last-child { margin-bottom: 0; }
 
-    .content-block {
-        margin-bottom: var(--spacing-lg);
-    }
-    .content-block:last-child {
-        margin-bottom: 0;
-    }
-
-    .block-two-column {
-        display: flex;
-        gap: var(--feed-entry-column-gap);
-    }
-    .block-two-column .column {
-        flex: 1;
-        min-width: 0;
-    }
+    /* Two Column */
+    .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+    .block-two-column .column { flex: 1; min-width: 0; }
     .block-two-column .column > *:first-child { margin-top: 0; }
     .block-two-column .column > *:last-child { margin-bottom: 0; }
-
-    /* Using :global() for nested markdown elements */
     .block-two-column .column :global(p),
     .block-two-column .column :global(li),
     .block-two-column .column :global(dt),
-    .block-two-column .column :global(dd) {
-        line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em;
-    }
-     .block-two-column .column :global(h1),
-     .block-two-column .column :global(h2),
-     .block-two-column .column :global(h3),
-     .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
-     .block-two-column .column :global(ul),
-     .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
-     .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
-     .block-two-column .column :global(blockquote) {
-         margin-left: var(--spacing-sm);
-         padding-left: var(--spacing-md);
-         border-left: 3px solid var(--color-border-light); /* Use variable */
-         color: var(--color-text-secondary); /* Use variable */
-         font-style: italic;
-         margin-bottom: var(--spacing-sm);
-     }
+    .block-two-column .column :global(dd) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; }
+    .block-two-column .column :global(h1), .block-two-column .column :global(h2),
+    .block-two-column .column :global(h3), .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+    .block-two-column .column :global(ul), .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
+    .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
+    .block-two-column .column :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
 
-    .block-full-width-image img,
-    .block-full-width-image picture {
+    /* Full Width Image */
+    .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+    .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+
+    /* Full Width Embed */
+    .block-full-width-embed { width: 100%; max-width: 100%; overflow: hidden; background-color: var(--color-border-light); }
+    .block-full-width-embed :global(iframe), .block-full-width-embed :global(video) { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; }
+
+    /* Full Width Text */
+    /* Uses .markdown-content styles */
+    .block-full-width-text {
+      /* Add specific overrides if needed, otherwise relies on .markdown-content */
+    }
+
+    /* Horizontal Gallery */
+    .block-horizontal-gallery {
+        overflow: hidden; /* Hide scrollbar track if it overflows */
+    }
+    .gallery-scroll-container {
+        display: flex;
+        gap: var(--spacing-sm); /* Gap between gallery items */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        padding-bottom: var(--spacing-md); /* Space for scrollbar */
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+    }
+    .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
+    .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+    .gallery-item {
+        flex: 0 0 auto; /* Prevent items from shrinking/growing */
+        width: 250px; /* Example fixed width, adjust as needed */
+        scroll-snap-align: start; /* Snap items to the start */
+        border-radius: var(--border-radius-sm); /* Optional styling */
+        overflow: hidden; /* Ensure image fits rounded corners */
+        background-color: var(--color-border-light); /* Placeholder bg */
+    }
+    .gallery-item img, .gallery-item picture {
         display: block;
         width: 100%;
-        height: auto;
-        border-radius: var(--border-radius-sm); /* Use variable */
-        background-color: var(--color-border-light); /* Use variable */
-    }
-     .block-missing-image p { /* Style for missing image placeholder */
-         font-style: italic;
-         color: var(--color-text-secondary);
-         background-color: var(--color-background-muted);
-         padding: var(--spacing-md);
-         border-radius: var(--border-radius-sm);
-         text-align: center;
-     }
-
-     .block-full-width-embed {
-         width: 100%;
-         max-width: 100%;
-         overflow: hidden;
-         background-color: var(--color-border-light); /* Use variable */
-    }
-    .block-full-width-embed :global(iframe),
-    .block-full-width-embed :global(video) {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 16 / 9;
-        border: none;
-        margin: 0;
+        height: auto; /* Maintain aspect ratio */
+        aspect-ratio: 4 / 3; /* Example aspect ratio, adjust */
+        object-fit: cover; /* Cover the area */
     }
 
-    /* Styles for Markdown rendered directly from entry.body */
-    .markdown-content :global(p),
-    .markdown-content :global(ul),
-    .markdown-content :global(ol),
-    .markdown-content :global(blockquote) {
-         line-height: var(--line-height-unified);
-         margin-bottom: var(--spacing-sm);
-    }
-    .markdown-content :global(h1),
-    .markdown-content :global(h2),
-    .markdown-content :global(h3),
-    .markdown-content :global(h4) {
-        margin-top: var(--spacing-lg);
-        margin-bottom: var(--spacing-xs);
-        line-height: 1.2;
-    }
-     .markdown-content :global(ul),
-     .markdown-content :global(ol) {
-         padding-left: var(--spacing-lg);
-     }
-     .markdown-content :global(li) > :global(p) {
-         margin-bottom: var(--spacing-xxs);
-     }
-     .markdown-content :global(blockquote) {
-          margin-left: var(--spacing-sm);
-          padding-left: var(--spacing-md);
-          border-left: 3px solid var(--color-border-light); /* Use variable */
-          color: var(--color-text-secondary); /* Use variable */
-          font-style: italic;
-     }
-     .markdown-content :global(img) {
-         max-width: 100%;
-         height: auto;
-         display: block;
-         margin-top: var(--spacing-md);
-         margin-bottom: var(--spacing-md);
-         border-radius: var(--border-radius-sm); /* Use variable */
-     }
 
-    .block-unknown p {
-        font-style: italic;
-        color: var(--color-text-secondary); /* Use variable */
-        border: 1px dashed var(--color-border); /* Use variable */
-        padding: var(--spacing-sm);
+    /* Fallback Markdown Content (from entry.body or fullWidthText) */
+    .markdown-content :global(p), .markdown-content :global(ul),
+    .markdown-content :global(ol), .markdown-content :global(blockquote) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+    .markdown-content :global(h1), .markdown-content :global(h2),
+    .markdown-content :global(h3), .markdown-content :global(h4) { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+    .markdown-content :global(ul), .markdown-content :global(ol) { padding-left: var(--spacing-lg); }
+    .markdown-content :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
+    .markdown-content :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+    .markdown-content :global(img) { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+    /* Added styles for links inside markdown */
+    .markdown-content :global(a) {
+        color: var(--color-text-hover); /* Use accent color for links */
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+    }
+    .markdown-content :global(a:hover) {
+        color: var(--color-text-unified); /* Slightly different hover maybe */
+        text-decoration: none;
     }
 
-    .entry-separator {
-        border: none;
-        border-top: var(--line-thickness) solid var(--color-border); /* Use variable */
-        margin-top: var(--spacing-xl);
-    }
 
-    /* --- MOBILE STYLES --- */
+    /* Unknown Block */
+    .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+
+    /* Separator */
+    .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+
+    /* --- Mobile Styles --- */
     @media (max-width: 768px) {
         .feed-entry {
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-sm);
-            /* --- UPDATED scroll-margin-top (Significantly Increased) --- */
-            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); /* Increased extra space to 6rem */
+            margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm);
+            scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem);
         }
-        .feed-entry-blocks {
-            margin-top: var(--spacing-md);
-        }
-        .content-block {
-            margin-bottom: var(--spacing-md);
-        }
-        .block-two-column {
-            flex-direction: column;
-            gap: var(--spacing-md);
-        }
-        .entry-separator {
-            margin-top: var(--spacing-lg);
-        }
-        .feed-entry-date {
-             font-size: 0.85em;
-        }
+        .feed-entry-blocks { margin-top: var(--spacing-md); }
+        .content-block { margin-bottom: var(--spacing-md); }
+        .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        .entry-separator { margin-top: var(--spacing-lg); }
+        .feed-entry-date { font-size: 0.85em; }
+
+        /* Mobile Gallery Adjustments */
+        .gallery-scroll-container { gap: var(--spacing-xs); }
+        .gallery-item { width: 200px; } /* Slightly smaller items on mobile */
     }
 </style>
