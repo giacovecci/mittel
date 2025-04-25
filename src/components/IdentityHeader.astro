@@ -1,0 +1,53 @@
+---
+// src/components/IdentityHeader.astro
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer | videojournalist | researcher";
+---
+<div class="identity-header-wrapper">
+    <span class="identity-site-name-text">{siteName}</span>
+    <span class="identity-tagline">{tagline}</span>
+</div>
+
+<style>
+    .identity-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        /* --- Alignment: TOP --- */
+        align-items: flex-start;
+        justify-content: flex-start; /* Align to top */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%; /* Fill parent height */
+        box-sizing: border-box;
+        font-size: inherit; /* Inherit base size (1.5em on desktop) */
+        padding-left: 0; /* Padding is on parent grid area */
+        padding-right: var(--header-internal-padding); /* Space before divider */
+    }
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0;
+        font-size: 1.1em;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-text-secondary);
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+    }
+
+     @media (max-width: 768px) {
+         .identity-header-wrapper {
+             font-size: inherit;
+             height: auto; /* Let parent control height */
+             padding: 0.3rem 0; /* Padding on parent */
+             justify-content: flex-start; /* Ensure top alignment */
+             align-items: flex-start;
+         }
+         .identity-site-name-text { font-size: 1em; }
+         .identity-tagline { font-size: 0.6em; }
+     }
+</style>

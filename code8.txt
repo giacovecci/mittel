@@ -1,0 +1,413 @@
+---
+// src/components/Header.astro (Right Side Only)
+const contactEmail = "hey@mittel.tv";
+---
+<div class="main-header-wrapper">
+    {/* --- Desktop Feed Button --- */}
+    <div class="header-sub-col feed-button-desktop-container">
+        <button type="button" id="feed-view-btn" class="desktop-only">
+            Feed
+        </button>
+    </div>
+
+    {/* --- Overview Button --- */}
+    <div class="header-sub-col overview-button-container">
+        <button type="button" id="overview-view-btn">
+           <span class="arrow mobile-only">→</span> Overview
+        </button>
+    </div>
+
+    {/* --- Contact Button (Changed from <a>) --- */}
+    <div class="header-contact-item">
+        <button type="button" id="contact-link"> {/* << CHANGED from <a> */}
+           <span class="arrow mobile-only">→</span> Contact
+        </button>
+    </div>
+
+    {/* --- Mobile Info Button --- */}
+    <div class="header-sub-col info-button-mobile-container">
+        <button type="button" id="info-view-btn" class="mobile-only">
+            <span class="arrow">→</span> Info
+        </button>
+    </div>
+</div>
+
+{/* --- Styles --- */}
+<style>
+    /* ================================== */
+    /* --- Base Component Styles --- */
+    /* ================================== */
+    .main-header-wrapper {
+        display: flex;
+        justify-content: space-between; /* <<< CORRECT: Parent distributes children */
+        align-items: baseline; /* Align children based on their text baseline */
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+    }
+
+    /* --- Styling for the CONTAINER divs holding buttons --- */
+    /* Defines how each container behaves */
+    .main-header-wrapper > div {
+        box-sizing: border-box;
+        text-align: center; /* Fallback alignment */
+        flex-basis: auto; /* Allow natural width */
+        /* flex-grow: 0; */ /* Don't allow growth */
+        /* flex-shrink: 1; */ /* Allow shrinking */
+        display: flex; /* Make container a flexbox... */
+        align-items: baseline; /* ...to align the button inside based on text */
+        justify-content: center; /* <<< CORRECTED: Center button within container (or flex-start/end) */
+    }
+     /* Override for contact button CONTAINER - Desktop */
+     /* Align the button inside this specific container to the right */
+     .header-contact-item {
+        justify-content: flex-end;
+        text-align: right; /* Keep text-align for fallback */
+     }
+
+    /* --- UNIFIED STYLING for ALL Buttons inside the wrapper --- */
+    .main-header-wrapper button {
+        display: inline-block;
+        padding: 2px 0; /* Keep minimal vertical padding */
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+        line-height: 1.3; /* <<< CORRECTED: Restore sensible line-height */
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    /* --- Arrow Styling (Common) --- */
+    .arrow {
+        display: inline-block;
+        margin-right: 0.4em;
+     }
+
+    /* ================================== */
+    /* --- Visibility Toggles --- */
+    /* ================================== */
+    .mobile-only { display: none !important; }
+    .desktop-only { display: inline-block !important; }
+    .info-button-mobile-container { display: none !important; }
+
+
+    /* ================================== */
+    /* --- MOBILE SPECIFIC OVERRIDES --- */
+    /* ================================== */
+    @media (max-width: 768px) {
+        /* Mobile styles for the main wrapper */
+        .main-header-wrapper {
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-start;
+            gap: 0px; /* Keep zero gap */
+            height: 100%;
+            padding: 0;
+        }
+
+        /* Mobile styles for the CONTAINER divs */
+        .main-header-wrapper > div {
+             flex-basis: auto;
+             flex-grow: 0;
+             flex-shrink: 1;
+            width: auto;
+            text-align: right;
+             display: block; /* Keep as block */
+             margin-bottom: 0;
+             /* Remove desktop flex alignment */
+             /* justify-content: center; */
+             /* align-items: baseline; */
+        }
+
+        /* --- Mobile Ordering and Visibility --- */
+        .feed-button-desktop-container { display: none !important; order: 99; }
+        .info-button-mobile-container { display: block !important; order: 1; }
+        .overview-button-container { display: block !important; order: 2; }
+        .header-contact-item { display: block !important; order: 3; }
+
+        .mobile-only { display: inline-block !important; }
+        .desktop-only { display: none !important; }
+
+        /* Mobile specific styles for the BUTTONS inside */
+        .main-header-wrapper button {
+             width: auto;
+             /* Use consistent padding with desktop unified rule */
+             padding: 2px 0;
+             line-height: 1.3; /* Ensure mobile uses correct line-height too */
+        }
+    } /* End Mobile Media Query */
+
+</style>
+
+{/* --- Script to handle Contact Button click --- */}
+<script define:vars={{ contactEmail }}>
+    const contactButton = document.getElementById('contact-link');
+    if (contactButton) {
+        contactButton.addEventListener('click', () => {
+            // Construct the mailto link and navigate to it
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    } else {
+        console.error("Contact button (#contact-link) not found.");
+    }
+</script>---
+// src/layouts/BaseLayout.astro
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; /* Keep */
+    
+       :root {
+          /* Keep variables */
+          --scrollbar-track-color: #222;
+          --scrollbar-thumb-color: #555;
+          --scrollbar-width: 8px;
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
+          --header-area-height: 90px;
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          /* Mobile specific */
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+       }
+    
+        html {
+            height: 100%; box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+    
+        body {
+            background-color: var(--color-background);
+            margin: 0;
+            overscroll-behavior: none;
+            min-height: 100%;
+            height: 100%; /* Needed for desktop grid */
+            overflow: hidden; /* Hide body overflow needed for desktop grid */
+            position: relative;
+        }
+    
+        /* --- Base #app-container styles --- */
+        #app-container {
+            height: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+    
+        /* --- Base styles for direct children (can be overridden) --- */
+        #app-container > div {
+             box-sizing: border-box;
+             /* Default display will be handled by mode (desktop/mobile) */
+        }
+    
+        /* ================================== */
+        /* --- DESKTOP LAYOUT (GRID) --- */
+        /* ================================== */
+        @media (min-width: 769px) {
+            body { overflow: hidden; } /* Ensure hidden */
+    
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns:
+                    var(--desktop-content-padding) /* Left gutter */
+                    var(--desktop-identity-width)   /* Col 2: Identity Header / Info */
+                    var(--desktop-divider-width)    /* Col 3: Divider */
+                    var(--desktop-main-header-width) /* Col 4: Main Header / Feed */
+                    var(--desktop-content-padding); /* Right gutter */
+                grid-template-rows:
+                    var(--header-area-height)      /* Row 1: Headers */
+                    1fr;                            /* Row 2: Content */
+                height: 100vh;
+                overflow: hidden;
+            }
+    
+            /* --- Grid Area Assignments (Direct Children) --- */
+            #app-container.is-desktop > #identity-header-area,
+            #app-container.is-desktop > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                display: flex !important; /* Use flex for internal alignment */
+                align-items: center; font-size: 1.5em;
+                z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height); /* Explicit height */
+            }
+            #app-container.is-desktop > #identity-header-area { grid-column: 2 / 3; justify-content: flex-start; padding-right: var(--spacing-md); }
+            #app-container.is-desktop > #main-header-area { grid-column: 4 / 5; justify-content: space-between; padding-left: var(--spacing-md); }
+    
+            #app-container.is-desktop > #divider-area {
+                grid-column: 3 / 4; grid-row: 1 / 3; /* Span both rows */
+                background-color: var(--color-background);
+                z-index: 10; position: relative; display: block;
+            }
+            #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+            }
+    
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 2 / 3; grid-row: 2 / 3; position: relative;
+                overflow: hidden; padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom);
+                display: block;
+            }
+            #app-container.is-desktop > #feed-content-area {
+                grid-column: 4 / 5; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom);
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                display: block;
+            }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+    
+            #app-container.is-desktop > #overview-content-area {
+                grid-column: 2 / 5; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                display: none; /* Hidden by default */
+            }
+    
+             /* --- Desktop View Switching Logic --- */
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+    
+            #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+            #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+            #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+            #app-container.is-desktop.view-overview > #divider-area { display: none; }
+    
+            /* Hide mobile-specific elements if any were added back */
+            /* #app-container.is-desktop > #mobile-header-row { display: none; } */ /* No longer exists */
+    
+        } /* End of desktop media query */
+    
+    
+       
+/* ================================== */
+    /* --- MOBILE LAYOUT (FLEXBOX) --- */
+    /* ================================== */
+    @media (max-width: 768px) {
+        body {
+            height: auto; overflow: visible; /* Allow body scroll */
+        }
+         /* Use Flexbox, arrange items using order and wrap */
+         #app-container.is-mobile {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            align-items: flex-start;
+            height: auto; overflow: visible; position: static;
+        }
+
+        /* --- Mobile Item Ordering and Styling --- */
+
+        /* Headers: Order 1 & 2, 50% width, STICKY, Fixed Height */
+        #app-container.is-mobile > #identity-header-area,
+        #app-container.is-mobile > #main-header-area {
+             order: 1;
+             width: 50%;
+             display: flex !important; /* Ensure flex is active */
+             height: 15vh; /* Keep explicit height */
+             padding-top: 0;
+             padding-bottom: 0;
+             /* --- Sticky Behavior (Ensure applied) --- */
+             position: sticky;
+             top: 0;
+             background-color: var(--color-background); /* Ensure opaque background */
+             z-index: 100; /* Ensure above content */
+             /* --- Border --- */
+             border-bottom: var(--line-thickness) solid var(--color-border);
+             /* --- Font Size --- */
+             font-size: var(--font-size-mobile-header-responsive);
+             /* Reset desktop styles */
+             grid-column: auto; grid-row: auto; overflow: visible;
+             max-height: none;
+        }
+         #app-container.is-mobile > #identity-header-area {
+            /* --- Align Internal Content to Top --- */
+            align-items: flex-start; /* CHANGED from center */
+            justify-content: flex-start;
+            padding-left: var(--mobile-content-padding-x);
+            padding-right: calc(var(--mobile-content-padding-x) / 2);
+            order: 1;
+         }
+         #app-container.is-mobile > #main-header-area {
+             /* --- Keep Internal Content Centered Vertically --- */
+             overflow: hidden;
+             align-items: flex-start; /* Keep as center */
+             justify-content: flex-end; /* Keep outer alignment right */
+             padding-top: 0;
+             padding-left: calc(var(--mobile-content-padding-x) / 2);
+             padding-right: var(--mobile-content-padding-x);
+             order: 2;
+         }
+
+
+        /* Divider: Hide on mobile */
+        #app-container.is-mobile > #divider-area {
+            order: 3; display: none;
+         }
+
+        /* Content Areas: Order 4, full width, below headers */
+        #app-container.is-mobile > #info-content-area,
+        #app-container.is-mobile > #feed-content-area,
+        #app-container.is-mobile > #overview-content-area {
+             order: 4;
+             width: 100%;
+             grid-column: auto; grid-row: auto; position: static; overflow: visible;
+             border: none; max-height: none;
+             padding: var(--spacing-lg) var(--mobile-content-padding-x);
+             display: none; /* Controlled by view classes */
+        }
+
+        /* --- Mobile View Switching Logic --- */
+        #app-container.is-mobile.view-feed > #feed-content-area { display: block; }
+        #app-container.is-mobile.view-info > #info-content-area { display: block; }
+        #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+
+    } /* End of mobile media query */
+
+    
+    
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        {/* Headers - Direct Children */}
+        <div id="identity-header-area"><slot name="identity-header" /></div>
+        <div id="main-header-area"><slot name="main-header" /></div>
+
+        {/* Divider - Direct Child */}
+        <div id="divider-area"></div>
+
+        {/* Content Areas - Direct Children */}
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div>
+        <div id="overview-content-area"><slot name="overview-content" />
+
+        {/* The old #mobile-header-row element is completely removed */}
+    </div>
+    {/* Script lives in index.astro */}
+</body>
+</html>

@@ -1,0 +1,158 @@
+---
+// src/cms-previews/FeedEntryPreview.astro
+// This component renders the live preview in the Decap CMS UI.
+// It receives data from the CMS editor as props.
+
+// Import necessary types or helpers if needed (e.g., for date formatting)
+// Note: We can't use Astro's <Image> component here as it runs client-side.
+// We'll use standard <img> tags.
+// We'll need a client-side markdown parser for markdown content.
+
+import { marked } from 'marked'; // Import client-side markdown parser
+
+// Define the expected props based on CMS fields for 'feed' collection
+interface PreviewProps {
+  entry: {
+    getIn: (path: string[], defaultValue?: any) => any; // Decap CMS helper to get data
+  };
+  widgetFor: (field: string) => any; // Decap CMS helper (less common for previews)
+  widgetsFor: (field: string) => any[]; // Decap CMS helper for list items
+  getAsset: (path: string) => { url: string; toString: () => string }; // Decap CMS helper for assets/images
+}
+
+const { entry, getAsset } = Astro.props as PreviewProps;
+
+// --- Extract data using entry.getIn ---
+// Provide default values to prevent errors if fields are empty initially
+const title = entry.getIn(['data', 'title'], 'Untitled Entry');
+const dateValue = entry.getIn(['data', 'date'], null);
+const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
+const contentBlocks = entry.getIn(['data', 'contentBlocks'], []); // Get the raw list/map data
+
+// --- Process Data ---
+const formattedDate = dateValue
+    ? new Date(dateValue).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : null;
+
+// Process thumbnail path using getAsset
+const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
+
+// Helper to safely parse markdown client-side
+function parseMarkdownClient(markdownString?: string): string {
+    if (!markdownString) return '';
+    try {
+        // Ensure marked output is treated as a string
+        const htmlResult = String(marked.parse(markdownString));
+        return htmlResult;
+    } catch (e) {
+        console.error("Error parsing Markdown in preview:", e);
+        return '<p><em>Error rendering markdown preview.</em></p>';
+    }
+}
+
+// Helper function to render an image block
+function renderImage(blockData: any) {
+    const rawImagePath = blockData.get('image'); // Use .get() for map-like access
+    const altText = blockData.get('alt') || '';
+    const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
+
+    if (!imageUrl) {
+        return '<div class="content-block block-missing-image"><p><em>Image preview not available (path missing or invalid).</em></p></div>';
+    }
+
+    // Note: Use standard <img> tag for preview
+    return `
+        <div class="content-block block-full-width-image">
+            <img src="${imageUrl}" alt="${altText}" style="display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light);" />
+        </div>
+    `;
+}
+---
+
+{/* This is the HTML structure for the preview pane */}
+{/* Apply classes that match your actual FeedEntry component for styling */}
+<article class="feed-entry">
+  <h3>{title}</h3>
+  {formattedDate && (
+    <time class="feed-entry-date">{formattedDate}</time>
+  )}
+
+  {/* Preview for Thumbnail (if exists) */}
+  {thumbnailUrl && (
+    <div class="thumbnail" style="margin-bottom: 1.5rem; background-color: var(--color-border-light);">
+      <img src={thumbnailUrl} alt={`Thumbnail for ${title}`} style="display: block; width: 100%; height: auto; max-width: 100%; object-fit: cover;" />
+    </div>
+  )}
+
+  {/* --- Content Block Preview Rendering --- */}
+  <div class="feed-entry-blocks">
+    {Array.isArray(contentBlocks) && contentBlocks.length > 0 ? (
+       contentBlocks.map((block) => {
+         // block is likely an Immutable.js Map here
+         const blockType = block?.get('type'); // Get type using .get()
+
+         switch (blockType) {
+            case 'twoColumn':
+                const leftContent = block?.get('left');
+                const rightContent = block?.get('right');
+                return (
+                    <div class="content-block block-two-column">
+                        {leftContent && (
+                            <div class="column left-column" set:html={parseMarkdownClient(leftContent)}></div>
+                        )}
+                        {rightContent && (
+                            <div class="column right-column" set:html={parseMarkdownClient(rightContent)}></div>
+                        )}
+                    </div>
+                );
+            case 'fullWidthImage':
+                // Use the helper function to render the image HTML string
+                return <Fragment set:html={renderImage(block)} />;
+
+            case 'fullWidthEmbed':
+                 const embedCode = block?.get('embedCode');
+                 return embedCode ? (
+                     <div class="content-block block-full-width-embed" set:html={embedCode}>
+                         {/* Raw HTML injected. Note: iframe CSS from global.css SHOULD apply if linked correctly */}
+                     </div>
+                 ) : null;
+
+            default:
+                console.warn("Unsupported block type in preview:", blockType);
+                return (
+                     <div class="content-block block-unknown">
+                         <p><em>Unsupported block preview for type: {blockType || 'Unknown'}</em></p>
+                     </div>
+                 );
+         }
+       })
+    ) : (
+       <p><em>No content blocks added yet.</em></p>
+    )}
+  </div>
+
+  {/* Separator not strictly needed in preview, but can add for visual consistency */}
+  <hr class="entry-separator" />
+</article>
+
+{/* We rely on the global CSS linked in admin/index.html for styling */}
+{/* Avoid adding component-specific styles here unless absolutely necessary */}
+<style is:global>
+  /* Add any minor PREVIEW-SPECIFIC overrides here if the global styles aren't enough */
+  /* For example, forcing a background color if the global one relies on layout context */
+  .feed-entry {
+    padding: 1rem; /* Ensure some padding in the preview pane */
+    background-color: var(--color-background, white); /* Example fallback */
+  }
+  /* Ensure markdown columns have styles applied */
+  .block-two-column .column p { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+  .block-two-column .column h1,
+  .block-two-column .column h2,
+  .block-two-column .column h3,
+  .block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+  /* Add other markdown element styles if needed */
+</style>

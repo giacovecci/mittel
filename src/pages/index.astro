@@ -2,341 +2,191 @@
 // src/pages/index.astro
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
 import Header from '../components/Header.astro';
 import StaticInfo from '../components/StaticInfo.astro';
 import FeedEntry from '../components/FeedEntry.astro';
 import OverviewGrid from '../components/OverviewGrid.astro';
 import type { CollectionEntry } from 'astro:content';
 
+// Data Fetching
 const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
-
-// --- CHANGE: Uncommented the sorting line below ---
-// Sort entries by date (newest first). Added safety checks for missing dates.
 const feedEntries = feedEntriesFetched.sort((a, b) => {
     const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
     const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
-    return dateB - dateA; // Sorts descending (newest first)
+    return dateB - dateA;
 });
-// --- END CHANGE ---
-
 const overviewItems = feedEntries.map(entry => ({
     id: entry.slug,
     title: entry.data.title || 'Untitled',
-    imageUrl: entry.data.thumbnail || '/placeholder.jpg', // Ensure a fallback image path if needed
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
     altText: entry.data.title || 'Feed item thumbnail'
 }));
 ---
 <BaseLayout title="Żakowiecki | fixer supreme XD">
-    <Header />
 
-    <main id="main-content" class="feed-active">
-        <div class="vertical-divider"></div>
+    {/* Slot for Identity Header */}
+    <div slot="identity-header">
+        <IdentityHeader />
+    </div>
 
-        <aside id="info-content" class="left-column">
-            <StaticInfo />
-        </aside>
+    {/* Slot for Main Header (Nav/Contact) */}
+    <div slot="main-header">
+        <Header />
+    </div>
 
-        <section id="feed-content" class="right-column">
-            {feedEntries.map(entry => (
-                <FeedEntry entry={entry} />
-            ))}
-        </section>
+    {/* Slot for Info Content Area */}
+    <div slot="info-content" id="info-content-wrapper"> {/* Use wrapper ID if needed */}
+        <StaticInfo />
+    </div>
 
-        <div id="overview-content">
+    {/* Slot for Feed Content Area */}
+    <section slot="feed-content" id="feed-content-wrapper"> {/* Use wrapper ID if needed */}
+        {feedEntries.map(entry => (
+            <FeedEntry entry={entry} />
+        ))}
+    </section>
+
+    {/* Slot for Overview Content Area */}
+    <div slot="overview-content" id="overview-content-wrapper"> {/* Use wrapper ID if needed */}
+        <div id="overview-grid-wrapper">
             <OverviewGrid items={overviewItems} />
         </div>
-    </main>
+    </div>
+
 </BaseLayout>
 
-{/* --- Keep existing <style> and <script> blocks unchanged --- */}
-<style>
-    /* --- Base Variables --- */
-    :root {
-        --content-padding-x: 1.25rem;
-        --column-gap: 1.25rem;
-        --header-height-estimate-desktop: 3.5rem;
-        --header-height-estimate-mobile-px: 92px;
-        --mobile-content-top-margin: 6rem; /* Default mobile margin */
-        --scrollbar-track-color: #222;
-        --scrollbar-thumb-color: #555;
-        --scrollbar-width: 8px;
-        --desktop-main-padding-top: 2rem;
-        --desktop-main-padding-bottom: 1.25rem;
-        --content-padding-x-mobile: var(--spacing-md); /* Ensure mobile padding is defined */
-    }
-
-    /* --- DESKTOP / DEFAULT STYLES --- */
-    main {
-        padding: var(--desktop-main-padding-top) var(--content-padding-x) var(--desktop-main-padding-bottom);
-        position: relative; box-sizing: border-box;
-        height: calc(100vh - var(--header-height-estimate-desktop) - var(--desktop-main-padding-top) - var(--desktop-main-padding-bottom));
-        overflow: hidden; display: flex; gap: var(--column-gap);
-    }
-    #info-content { display: block; width: 50%; overflow: hidden; padding-right: calc(var(--column-gap) / 2); }
-    #feed-content { display: block; width: 50%; overflow-y: auto; padding-left: calc(var(--column-gap) / 2); scroll-behavior: smooth; }
-    #overview-content { display: none; width: 100%; height: 100%; overflow-y: auto; }
-    main.overview-active { display: block; }
-    main.overview-active #info-content, main.overview-active #feed-content { display: none; }
-    main.overview-active #overview-content { display: block; }
-    main.overview-active .vertical-divider { display: none; }
-    .vertical-divider {
-        position: absolute; top: var(--desktop-main-padding-top); bottom: var(--desktop-main-padding-bottom);
-        left: 50%; transform: translateX(-50%); width: 0.125rem; background-color: #ccc; z-index: 999;
-    }
-    #feed-content, #overview-content {
-        scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-    }
-    #feed-content::-webkit-scrollbar, #overview-content::-webkit-scrollbar { width: var(--scrollbar-width); }
-    #feed-content::-webkit-scrollbar-track, #overview-content::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
-    #feed-content::-webkit-scrollbar-thumb, #overview-content::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
-
-    /* ================================== */
-    /* --- MOBILE - PORTRAIT ONLY --- */
-    /* ================================== */
-    @media (max-width: 768px) and (orientation: portrait) {
-        main {
-            /* --- Apply stacking for PORTRAIT mobile --- */
-            display: block; height: auto; overflow-y: visible;
-            padding: 0 var(--content-padding-x-mobile);
-            position: relative; transform: none;
-        }
-        #info-content, #feed-content, #overview-content {
-            width: 100%; height: auto; overflow-y: visible; padding: 0;
-            margin-top: var(--mobile-content-top-margin); /* Keep large margin for stacked */
-            margin-bottom: 1.5rem;
-        }
-        #info-content:last-child, #feed-content:last-child, #overview-content:last-child {
-            margin-bottom: 0;
-        }
-        /* Visibility rules remain same for portrait mobile */
-        main.feed-active #info-content { display: none; }
-        main.feed-active #feed-content { display: block; }
-        main.feed-active #overview-content { display: none; }
-        main.overview-active #info-content, main.overview-active #feed-content { display: none; }
-        main.overview-active #overview-content { display: block; }
-        main.info-visible #info-content { display: block; }
-        main.info-visible #feed-content { display: none; }
-        main.info-visible #overview-content { display: none; }
-        .vertical-divider { display: none; } /* Hide divider in portrait */
-    }
-
-    /* ================================== */
-    /* --- MOBILE - LANDSCAPE --- */
-    /* --- Keep desktop-like layout but adjust padding/margins --- */
-    /* ================================== */
-    @media (max-width: 768px) and (orientation: landscape) {
-         /* --- NEW: Define reduced top padding for narrow landscape --- */
-         :root { /* Define within this scope */
-             --narrow-landscape-main-padding-top: var(--spacing-sm); /* e.g., 0.75rem */
-         }
-
-         main {
-             display: flex;
-             /* --- Use REDUCED top padding --- */
-             padding-top: var(--narrow-landscape-main-padding-top);
-             /* Keep original horizontal/bottom padding */
-             padding-left: var(--content-padding-x);
-             padding-right: var(--content-padding-x);
-             padding-bottom: var(--desktop-main-padding-bottom);
-             /* --- Adjust height calculation for REDUCED top padding --- */
-             height: calc(100vh - var(--header-height-estimate-desktop) - var(--narrow-landscape-main-padding-top) - var(--desktop-main-padding-bottom));
-             gap: var(--column-gap);
-         }
-          /* Keep desktop widths/display */
-         #info-content { display: block; width: 50%; overflow: hidden; padding-right: calc(var(--column-gap) / 2); margin: 0; }
-         #feed-content { display: block; width: 50%; overflow-y: auto; padding-left: calc(var(--column-gap) / 2); scroll-behavior: smooth; margin: 0; }
-         #overview-content { display: none; width: 100%; height: 100%; overflow-y: auto; margin: 0; }
-
-          /* Keep desktop visibility rules */
-         main.overview-active { display: block; }
-         main.overview-active #info-content, main.overview-active #feed-content { display: none; }
-         main.overview-active #overview-content { display: block; }
-         main.overview-active .vertical-divider { display: none; }
-
-         .vertical-divider {
-             display: block;
-              /* --- Adjust divider position for REDUCED top padding --- */
-             top: var(--narrow-landscape-main-padding-top);
-             bottom: var(--desktop-main-padding-bottom);
-         }
-         main.overview-active .vertical-divider { display: none; }
-
-         main.feed-active #info-content { display: block; }
-         main.feed-active #feed-content { display: block; }
-         main.feed-active #overview-content { display: none; }
-     }
-
-</style>
-
+{/* --- Script for View Switching --- */}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const mainElement = document.getElementById('main-content');
+        // Selectors (Keep as before)
+        const appContainer = document.getElementById('app-container');
+        const identityHeaderArea = document.getElementById('identity-header-area');
+        const mainHeaderArea = document.getElementById('main-header-area');
+        const dividerArea = document.getElementById('divider-area');
+        const infoContentArea = document.getElementById('info-content-area');
+        const feedContentArea = document.getElementById('feed-content-area');
+        const overviewContentArea = document.getElementById('overview-content-area');
         const infoBtn = document.getElementById('info-view-btn') as HTMLButtonElement | null;
         const feedBtn = document.getElementById('feed-view-btn') as HTMLButtonElement | null;
         const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
         const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
-        const infoContent = document.getElementById('info-content');
-        const feedContent = document.getElementById('feed-content');
 
-        // --- Existing View Switching Logic ---
-        if (!mainElement || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper || !infoContent || !feedContent) {
-            console.error("Essential elements missing, script cannot run. Check IDs in index.astro HTML.");
-            return;
+        // Null Check (Keep as before)
+        if (!appContainer || !identityHeaderArea || !mainHeaderArea || !dividerArea || !infoContentArea || !feedContentArea || !overviewContentArea || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper) {
+            console.error("Essential elements missing for view switching script."); return;
         }
+
         const MOBILE_BREAKPOINT = 768;
-        let currentMobileInfoVisible = false;
-        function isMobileView(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+        function isDesktop(): boolean { return !isMobile(); }
+
         function setActiveButton(activeBtn: HTMLButtonElement | null): void {
             [infoBtn, feedBtn, overviewBtn].forEach(btn => {
                 if (btn) { btn.classList.toggle('active', btn === activeBtn); }
             });
         }
-        function setMainView(view: 'feed' | 'overview'): void {
-             mainElement!.classList.remove('feed-active', 'overview-active', 'info-visible');
-             if (view === 'overview') {
-                 mainElement!.classList.add('overview-active');
-                 setActiveButton(overviewBtn);
-                 currentMobileInfoVisible = false;
-             } else {
-                 mainElement!.classList.add('feed-active');
-                 if (isMobileView() && currentMobileInfoVisible) {
-                     mainElement!.classList.add('info-visible');
-                     setActiveButton(infoBtn);
-                 } else {
-                     if (feedBtn) setActiveButton(feedBtn);
-                 }
-             }
-        }
-        function toggleMobileInfoFeed(showInfo: boolean): void {
-            if (!isMobileView()) return;
-            currentMobileInfoVisible = showInfo;
-            mainElement!.classList.toggle('info-visible', showInfo);
-            setActiveButton(showInfo ? infoBtn : feedBtn);
-            if (mainElement!.classList.contains('overview-active')) { setMainView('feed'); }
-        }
-        if (overviewBtn) { overviewBtn.addEventListener('click', () => { setMainView('overview'); }); }
-        if (feedBtn) { feedBtn.addEventListener('click', () => { setMainView('feed'); if (isMobileView()) { toggleMobileInfoFeed(false); } }); }
-        if (infoBtn) { infoBtn.addEventListener('click', () => { toggleMobileInfoFeed(true); }); }
-        if (overviewGridWrapper) { overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
-             if (event.target instanceof Element) {
-                 const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                  if (gridItemLink && gridItemLink.dataset.targetId) {
-                      event.preventDefault();
-                      const targetId = gridItemLink.dataset.targetId;
-                      const targetFeedElement = document.getElementById(targetId);
-                      if (targetFeedElement) {
-                          setMainView('feed');
-                          if (isMobileView()) { toggleMobileInfoFeed(false); }
-                          requestAnimationFrame(() => {
-                              targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          });
-                      } else { console.error(`Target element #${targetId} not found. Check FeedEntry ID.`); }
-                  } else if (gridItemLink) {
-                       console.error("Grid item link clicked, but missing 'data-target-id'. Check GridItem.astro.");
-                  }
-             }
-         }); } else { console.error("Overview grid wrapper not found, click listener not attached."); }
-        setMainView('feed');
-        if (isMobileView()) { toggleMobileInfoFeed(false); } else { if(feedBtn) setActiveButton(feedBtn); }
-        // --- End Existing View Switching Logic ---
 
-
-        // ==========================================
-        // --- DEBUG: Horizontal Gallery Logic ---
-        // ==========================================
-        console.log("Initializing gallery logic..."); // DEBUG
-        const allGalleries = document.querySelectorAll('.block-horizontal-gallery');
-        console.log(`Found ${allGalleries.length} galleries.`); // DEBUG
-
-        allGalleries.forEach((galleryBlock, index) => {
-            console.log(`Setting up gallery ${index}...`); // DEBUG
-            const scrollContainer = galleryBlock.querySelector<HTMLElement>('.gallery-scroll-container');
-            const prevButton = galleryBlock.querySelector<HTMLButtonElement>('.gallery-nav-button.prev');
-            const nextButton = galleryBlock.querySelector<HTMLButtonElement>('.gallery-nav-button.next');
-
-            if (!scrollContainer || !prevButton || !nextButton) {
-                console.warn(`Gallery elements missing within gallery block ${index}:`, galleryBlock);
-                return; // Skip this gallery if essential parts are missing
+        function setMainView(view: 'feed' | 'overview' | 'info'): void {
+            // (Keep the setMainView function exactly as it was in the previous step)
+            console.log("%cSetting view:", "color: blue; font-weight: bold;", view, "isMobile:", isMobile());
+            if (!appContainer) return;
+            appContainer.classList.remove('view-feed', 'view-overview', 'view-info', 'is-mobile', 'is-desktop');
+            const elementsToReset = [
+                identityHeaderArea, mainHeaderArea, dividerArea,
+                infoContentArea, feedContentArea, overviewContentArea
+            ];
+            elementsToReset.forEach(el => { if (el) { el.style.display = ''; } });
+            if (isMobile()) { appContainer.classList.add('is-mobile'); } else { appContainer.classList.add('is-desktop'); }
+            if (view === 'overview') {
+                console.log("  Applying OVERVIEW class...");
+                appContainer.classList.add('view-overview');
+                setActiveButton(overviewBtn);
+            } else if (view === 'info' && isMobile()) {
+                console.log("  Applying INFO class (Mobile)...");
+                appContainer.classList.add('view-info');
+                setActiveButton(infoBtn);
+            } else {
+                console.log("  Applying FEED class (Default/Desktop)...");
+                appContainer.classList.add('view-feed');
+                setActiveButton(feedBtn);
             }
+            console.log("Current appContainer classes:", appContainer.className);
+        }
 
-            console.log(`Gallery ${index}: Found container:`, scrollContainer); // DEBUG
-            console.log(`Gallery ${index}: Found prev button:`, prevButton); // DEBUG
-            console.log(`Gallery ${index}: Found next button:`, nextButton); // DEBUG
+        // Event Listeners (Keep view switching listeners as before)
+        overviewBtn.addEventListener('click', () => setMainView('overview'));
+        feedBtn.addEventListener('click', () => setMainView('feed'));
+        infoBtn.addEventListener('click', () => { if (isMobile()) { setMainView('info'); } else { setMainView('feed'); } });
 
-            // Function to handle scrolling
-            const handleScroll = (direction: 'prev' | 'next') => {
-                if (!scrollContainer) return;
-                const scrollAmount = scrollContainer.clientWidth;
-                console.log(`Gallery ${index}: handleScroll called. Direction: ${direction}, scrollAmount (clientWidth): ${scrollAmount}`); // DEBUG
-                console.log(`Gallery ${index}: Current scrollLeft: ${scrollContainer.scrollLeft}`); // DEBUG
-                scrollContainer.scrollBy({
-                    left: direction === 'next' ? scrollAmount : -scrollAmount,
-                    behavior: 'smooth'
-                });
-                 // Log scroll position *after* initiating scroll (might not be updated immediately)
-                 // Use a slight delay to check the position after the smooth scroll potentially starts
-                setTimeout(() => {
-                   console.log(`Gallery ${index}: scrollLeft after scrollBy call (delayed): ${scrollContainer.scrollLeft}`); // DEBUG
-                }, 100); // Adjust delay if needed
-            };
 
-            // Add event listeners
-            prevButton.addEventListener('click', () => {
-                console.log(`Gallery ${index}: Prev button clicked.`); // DEBUG
-                handleScroll('prev');
+        // --- UPDATED Grid Click Logic ---
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                console.log("Overview grid clicked.");
+                if (event.target instanceof Element) {
+                    const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                    // Ensure feedContentArea exists before proceeding
+                    if (gridItemLink && gridItemLink.dataset.targetId && feedContentArea) {
+                        event.preventDefault();
+                        const targetId = gridItemLink.dataset.targetId;
+                        console.log("Target ID from grid item:", targetId);
+
+                        // 1. Switch view first
+                        setMainView('feed');
+
+                        // 2. Wait for rendering and scroll
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                // --- Use document.getElementById() ---
+                                const targetFeedElement = document.getElementById(targetId);
+
+                                // --- Check if found AND is within feedContentArea ---
+                                if (targetFeedElement && feedContentArea.contains(targetFeedElement)) {
+                                     // Optional: Check class for extra safety, though ID should be unique
+                                     if (targetFeedElement.classList.contains('feed-entry')) {
+                                        console.log("Target feed element found by ID:", targetFeedElement); // DEBUG
+                                        targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        console.log("scrollIntoView called."); // DEBUG
+                                     } else {
+                                         console.warn(`Element with ID '${targetId}' found, but lacks 'feed-entry' class.`);
+                                         // Still try to scroll? Decide based on strictness needed.
+                                         // targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                     }
+                                } else if (targetFeedElement) {
+                                    // Found element by ID, but it's not in the feed area (shouldn't happen with Astro slugs)
+                                    console.error(`Element ID '${targetId}' found, but not within #feed-content-area.`);
+                                } else {
+                                    // Element not found anywhere
+                                    console.error(`Target element with ID '${targetId}' not found in the document.`);
+                                }
+                            }, 100); // Keep delay for now, seems reasonable
+                        });
+                    } else if (gridItemLink) {
+                        console.error("Grid item link missing 'data-target-id'.");
+                    } else if (!feedContentArea) {
+                         console.error("Feed content area not found for scrolling.");
+                    }
+                }
             });
-            nextButton.addEventListener('click', () => {
-                console.log(`Gallery ${index}: Next button clicked.`); // DEBUG
-                handleScroll('next');
-            });
+        }
 
-            // --- Optional: Add logic to hide/show buttons based on scroll position ---
-            const updateButtonState = () => {
-                if (!scrollContainer || !prevButton || !nextButton) return;
-
-                const scrollLeft = scrollContainer.scrollLeft;
-                const scrollWidth = scrollContainer.scrollWidth;
-                const clientWidth = scrollContainer.clientWidth;
-                const tolerance = 5; // Pixels tolerance for scroll end checks
-
-                // DEBUG Log values used for button state
-                // console.log(`Gallery ${index}: updateButtonState - scrollLeft: ${scrollLeft}, scrollWidth: ${scrollWidth}, clientWidth: ${clientWidth}`);
-
-                // Hide Prev button if at the beginning
-                const isAtStart = scrollLeft <= tolerance;
-                prevButton.classList.toggle('hidden', isAtStart);
-                // console.log(`Gallery ${index}: Prev button ${isAtStart ? 'hidden' : 'shown'}`); // DEBUG
-
-                // Hide Next button if at the end
-                const isAtEnd = scrollLeft >= scrollWidth - clientWidth - tolerance;
-                nextButton.classList.toggle('hidden', isAtEnd);
-                 // console.log(`Gallery ${index}: Next button ${isAtEnd ? 'hidden' : 'shown'}`); // DEBUG
-
-                 // ADDED DEBUG: Check if scrolling should even be possible
-                 if (scrollWidth <= clientWidth + tolerance) {
-                     console.log(`Gallery ${index}: Content not wide enough to scroll (scrollWidth: ${scrollWidth}, clientWidth: ${clientWidth}). Hiding both buttons.`); // DEBUG
-                     prevButton.classList.add('hidden');
-                     nextButton.classList.add('hidden');
-                 }
-            };
-
-            // Initial check
-            console.log(`Gallery ${index}: Performing initial button state check.`); // DEBUG
-            updateButtonState();
-
-            // Update on scroll
-            scrollContainer.addEventListener('scroll', updateButtonState, { passive: true });
-
-             // Update on resize (important if container size changes)
-             const resizeObserver = new ResizeObserver(() => {
-                 // console.log(`Gallery ${index}: Resize observed, updating button state.`); // DEBUG (Can be noisy)
-                 updateButtonState();
-             });
-             resizeObserver.observe(scrollContainer);
-
+        // Initial View & Resize Handling (Keep as before)
+        console.log("Initializing view...");
+        setMainView('feed');
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                console.log(`Resize detected: Switched state. Resetting view to feed.`);
+                setMainView('feed');
+                wasMobile = isNowMobile;
+            }
         });
-        console.log("Gallery logic initialization complete."); // DEBUG
-        // --- End Gallery Logic ---
+        resizeObserver.observe(document.body);
 
+        // Gallery Logic (Keep as is)
+        // ...
     });
 </script>

@@ -1,0 +1,386 @@
+---
+// src/layouts/BaseLayout.astro
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; /* Keep */
+
+       :root {
+          /* Keep variables */
+          --scrollbar-track-color: #222;
+          --scrollbar-thumb-color: #555;
+          --scrollbar-width: 8px;
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
+          --header-area-height: 90px;
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          /* Mobile specific */
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 15vh; /* Use variable */
+       }
+
+        html {
+            height: 100%; box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            background-color: var(--color-background);
+            margin: 0;
+            overscroll-behavior: none;
+            min-height: 100%;
+            height: 100%; /* Needed for desktop grid */
+            overflow: hidden; /* Hide body overflow needed for desktop grid */
+            position: relative;
+        }
+
+        /* --- Base #app-container styles --- */
+        #app-container {
+            height: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- Base styles for direct children (can be overridden) --- */
+        #app-container > div {
+             box-sizing: border-box;
+        }
+
+        /* ================================== */
+        /* --- DESKTOP LAYOUT (GRID) --- */
+        /* ================================== */
+        @media (min-width: 769px) {
+            body { overflow: hidden; } /* Ensure hidden */
+
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns:
+                    var(--desktop-content-padding) /* Left gutter */
+                    var(--desktop-identity-width)   /* Col 2 */
+                    var(--desktop-divider-width)    /* Col 3 */
+                    var(--desktop-main-header-width) /* Col 4 */
+                    var(--desktop-content-padding); /* Right gutter */
+                grid-template-rows:
+                    var(--header-area-height)      /* Row 1 */
+                    1fr;                            /* Row 2 */
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            /* --- Grid Area Assignments --- */
+            #app-container.is-desktop > #identity-header-area,
+            #app-container.is-desktop > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                font-size: 1.5em;
+                z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height);
+                padding: 0 var(--spacing-md); /* Consistent padding */
+            }
+            #app-container.is-desktop > #identity-header-area {
+                 grid-column: 2 / 3;
+                 justify-content: flex-start; /* Align slotted content left */
+            }
+            #app-container.is-desktop > #main-header-area {
+                 grid-column: 4 / 5;
+                 /* REMOVED justify-content: space-between; Let child wrapper handle internal spacing */
+                 justify-content: stretch; /* Or flex-start; make the child fill the width */
+            }
+
+            #app-container.is-desktop > #divider-area {
+                grid-column: 3 / 4; grid-row: 1 / 3;
+                background-color: var(--color-background); /* Should this be --color-border? */
+                z-index: 10; position: relative; display: block;
+            }
+            #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+            }
+
+            /* --- Content Areas --- */
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 2 / 3; grid-row: 2 / 3; position: relative;
+                overflow: hidden; padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom);
+                display: block;
+            }
+            #app-container.is-desktop > #feed-content-area {
+                grid-column: 4 / 5; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom);
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                display: block;
+            }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+            #app-container.is-desktop > #overview-content-area {
+                grid-column: 2 / 5; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                display: none; /* Hidden by default */
+            }
+
+             /* --- Desktop View Switching Logic --- */
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+
+            #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+            #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+            #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+            #app-container.is-desktop.view-overview > #divider-area { display: none; }
+
+        } /* End of desktop media query */
+
+
+        /* ================================== */
+        /* --- MOBILE LAYOUT (FLEXBOX) --- */
+        /* ================================== */
+        @media (max-width: 768px) {
+            body {
+                height: auto; overflow: visible;
+            }
+            #app-container.is-mobile {
+                display: flex;
+                flex-wrap: wrap;
+                flex-direction: row;
+                align-items: flex-start;
+                height: auto; overflow: visible; position: static;
+            }
+
+            /* Mobile Headers */
+            #app-container.is-mobile > #identity-header-area,
+            #app-container.is-mobile > #main-header-area {
+                 order: 1;
+                 width: 50%;
+                 display: flex !important;
+                 height: var(--mobile-header-height); /* Use variable */
+                 padding-top: 0;
+                 padding-bottom: 0;
+                 position: relative; /* No longer sticky */
+                 top: auto;
+                 background-color: var(--color-background);
+                 z-index: auto;
+                 border-bottom: var(--line-thickness) solid var(--color-border);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 grid-column: auto; grid-row: auto; overflow: hidden; /* Use hidden based on prev step */
+                 max-height: none;
+            }
+             #app-container.is-mobile > #identity-header-area {
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding-left: var(--mobile-content-padding-x);
+                padding-right: calc(var(--mobile-content-padding-x) / 2);
+                order: 1;
+             }
+             #app-container.is-mobile > #main-header-area {
+                 align-items: flex-start;
+                 justify-content: flex-end;
+                 padding-left: calc(var(--mobile-content-padding-x) / 2);
+                 padding-right: var(--mobile-content-padding-x);
+                 order: 2;
+             }
+
+            /* Mobile Divider */
+            #app-container.is-mobile > #divider-area { order: 3; display: none; }
+
+            /* Mobile Content Areas */
+            #app-container.is-mobile > #info-content-area,
+            #app-container.is-mobile > #feed-content-area,
+            #app-container.is-mobile > #overview-content-area {
+                 order: 4; width: 100%;
+                 grid-column: auto; grid-row: auto; position: static; overflow: visible;
+                 border: none; max-height: none;
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none;
+            }
+
+            /* Mobile View Switching */
+            #app-container.is-mobile.view-feed > #feed-content-area { display: block; }
+            #app-container.is-mobile.view-info > #info-content-area { display: block; }
+            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+
+        } /* End of mobile media query */
+
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        {/* Headers - Direct Children */}
+        <div id="identity-header-area"><slot name="identity-header" /></div>
+        <div id="main-header-area"><slot name="main-header" /></div>
+
+        {/* Divider - Direct Child */}
+        <div id="divider-area"></div>
+
+        {/* Content Areas - Direct Children */}
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div>
+        <div id="overview-content-area"><slot name="overview-content" />
+
+    </div>
+    {/* Script lives in index.astro */}
+</body>
+</html>/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Default/Desktop responsive size */
+  --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
+  /* Mobile Responsive Sizes */
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  /* Set the default weight variable */
+  --font-weight-unified: var(--font-weight-regular); /* Default to Regular */
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204; /* Corresponds to #ccc */
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  /* --- ADDED: Global Desktop Column Split --- */
+  --desktop-info-column-width: 33.33%; /* Approx 1/3 */
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); /* Approx 2/3 */
+}
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  /* Apply default font weight (now 400) */
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Default heading/paragraph styles */
+h1, h2, h3, h4, h5, h6 {
+  /* Ensure headings use bold weight */
+  font-weight: var(--font-weight-bold); /* 700 */
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+h3 { font-size: 1.1em; }
+
+p, li, dt, dd, span, label {
+  /* Inherit weight (defaults to body's 400) */
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* --- Header Text Weights --- */
+/* Apply specific weights to header elements as needed */
+.header-site-name-text {
+    font-weight: var(--font-weight-bold); /* Keep site name bold (700) */
+}
+/* If tagline, nav buttons, contact link need specific weights, add rules here: */
+/* Example: */
+/* .header-nav button, .header-contact-item a { */
+/*     font-weight: var(--font-weight-medium); /* 500 */
+/* } */
+
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover,
+button:hover { color: var(--color-text-hover); }
+button.active { color: var(--color-text-hover); }
+button { cursor: pointer; }
+
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+  /* Optional: font-weight: var(--font-weight-bold); */
+}
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+    /* h3 { font-size: 1.2em; } */
+  }
+
+
+/* ===================================================== */
+/* --- Font Size Adjustment for Landscape Mobile/Tablet --- */
+/* ===================================================== */
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      font-size: 0.8rem;
+  }
+}
