@@ -13,7 +13,7 @@ contentBlocks:
     right: >-
       <span class="accent-text">Responsibilities:</span> Subject and character
       research, field production, logistics, fact-checking, translations
-      (on-shoot and edit)
+      (on-shoot and edit), BTS photography
 
       \
 
