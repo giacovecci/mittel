@@ -2,7 +2,7 @@
 backend:
   name: git-gateway
   repo: giacovecci/mittel # Make sure this is your correct repo
-  branch: main
+  branch: adam-feedback-2
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e # Keep your specific URL
   gateway_url: https://gateway.decapbridge.com # Keep your specific URL
   commit_messages:

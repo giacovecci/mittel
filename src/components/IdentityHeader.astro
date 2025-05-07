@@ -1,7 +1,7 @@
 ---
 // src/components/IdentityHeader.astro
 const siteName = "Piotr Żakowiecki";
-const tagline = "field producer | videojournalist | researcher";
+const tagline = "field producer | researcher | videojournalist";
 ---
 <div class="identity-header-wrapper">
     <span class="identity-site-name-text">{siteName}</span>
@@ -22,6 +22,7 @@ const tagline = "field producer | videojournalist | researcher";
         font-size: inherit; /* Inherit base size (1.5em on desktop) */
         padding-left: 0; /* Padding is on parent grid area */
         padding-right: var(--header-internal-padding); /* Space before divider */
+        text-align: left;
     }
     .identity-site-name-text {
         display: inline-block;
@@ -29,6 +30,7 @@ const tagline = "field producer | videojournalist | researcher";
         font-weight: var(--font-weight-bold);
         margin-bottom: 0;
         font-size: 1.1em;
+        text-align: left;
     }
     .identity-tagline {
         display: block;
@@ -37,6 +39,7 @@ const tagline = "field producer | videojournalist | researcher";
         font-weight: var(--font-weight-regular);
         line-height: inherit;
         margin: 0;
+        text-align: left;
     }
 
      @media (max-width: 768px) {

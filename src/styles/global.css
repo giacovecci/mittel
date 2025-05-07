@@ -98,6 +98,12 @@ p, li, dt, dd, span, label {
   font-size: inherit;
   line-height: inherit;
   margin-bottom: var(--spacing-sm);
+  text-align: justify; /* <<< ADD THIS LINE */
+  /* Optional, but recommended for better justification: */
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto; /* For older Firefox */
+  -ms-hyphens: auto; /* For IE/Edge */
+  hyphens: auto;
 }
 
 /* --- Header Text Weights --- */
