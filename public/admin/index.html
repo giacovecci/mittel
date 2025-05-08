@@ -27,132 +27,173 @@
   <!-- Decap CMS Core Script -->
   <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
 
-  <!-- Custom Preview Registration Script -->
-  <script type="module">
-    console.log("Admin script started.");
-
-    if (typeof marked === 'undefined') {
-      console.error("Marked library not loaded!");
-    } else {
-        console.log("Marked library loaded.");
-    }
-
-    const CMS = window.CMS;
-    const h = window.h;
-
-    if (!CMS || !h) {
-        console.error("CMS object or h function not found. Preview registration failed.");
-    } else {
-        console.log("CMS object and h function found.");
-
-        // --- Register the stylesheet DIRECTLY for the preview pane ---
-        try {
-            CMS.registerPreviewStyle('/admin-preview.css'); // Use the stable path
-            console.log("Registered preview style: /admin-preview.css");
-        } catch (error) {
-            console.error("Error registering preview style:", error);
+    <!-- Custom Preview Registration Script -->
+    <script type="module">
+        console.log("Admin script started.");
+    
+        // Make sure Marked is loaded before proceeding
+        if (typeof marked === 'undefined') {
+          console.error("Marked library not loaded!");
+          // Maybe display an error or stop?
+        } else {
+            console.log("Marked library loaded.");
+            // Optional: Configure marked if needed
+            // marked.setOptions({ gfm: true, breaks: true });
         }
-        // --- End of stylesheet registration ---
-      
-        // --- Define the Feed Entry Preview Function ---
-        const FeedEntryPreview = (props) => {
-            // console.log("FeedEntryPreview props:", props); // Debug: See what props are passed
-            const { entry, getAsset } = props;
-            if (!entry || !entry.getIn) {
-                console.error("Invalid 'entry' object in preview props:", entry);
-                return h('div', {}, 'Error: Invalid data received for preview.');
+    
+        // Get CMS and h (hyperscript) function from global scope
+        const CMS = window.CMS;
+        const h = window.h || window.React.createElement; // Use React.createElement as fallback if h isn't defined
+    
+        if (!CMS || !h) {
+            console.error("CMS object or h function not found. Preview registration failed.");
+        } else {
+            console.log("CMS object and h function found.");
+    
+            // --- Register the stylesheet DIRECTLY for the preview pane ---
+            try {
+                // Use a root-relative path assuming admin.html is in /public/admin/
+                CMS.registerPreviewStyle('/admin-preview.css');
+                console.log("Registered preview style: /admin-preview.css");
+            } catch (error) {
+                console.error("Error registering preview style:", error);
             }
-
-            // --- Extract Data ---
-            const title = entry.getIn(['data', 'title'], 'Untitled Entry');
-            const dateValue = entry.getIn(['data', 'date'], null);
-            const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
-            const contentBlocksData = entry.getIn(['data', 'contentBlocks'], null); // Get Immutable List/Map or null
-
-            // --- Process Data ---
-            const formattedDate = dateValue
-                ? new Date(dateValue).toLocaleDateString('en-US', {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                  })
-                : null;
-            const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
-
-            // Helper to parse markdown
-            function parseMarkdownClient(markdownString) {
-                if (!markdownString || typeof marked === 'undefined') return '';
-                try {
-                    return marked.parse(markdownString);
-                } catch (e) {
-                    console.error("Markdown preview parsing error:", e);
-                    return '<p><em>Error parsing markdown</em></p>';
+    
+            // --- Define the Feed Entry Preview Function ---
+            const FeedEntryPreview = (props) => {
+                // console.log("FeedEntryPreview props:", props); // Debug: See what props are passed
+                const { entry, getAsset } = props;
+                if (!entry || !entry.getIn) {
+                    console.error("Invalid 'entry' object in preview props:", entry);
+                    return h('div', {}, 'Error: Invalid data received for preview.');
                 }
-            }
-
-            // --- Render Content Blocks ---
-            let blockElements = [];
-            if (contentBlocksData && typeof contentBlocksData.map === 'function') { // Check if it's map-able (Immutable List)
-                blockElements = contentBlocksData.map((block) => {
-                    if (!block || typeof block.get !== 'function') return null; // Check if block is valid (Immutable Map)
-
-                    const blockType = block.get('type');
-                    switch (blockType) {
-                        case 'twoColumn':
-                            const leftContent = block.get('left');
-                            const rightContent = block.get('right');
-                            return h('div', { className: 'content-block block-two-column' },
-                                leftContent ? h('div', { className: 'column left-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(leftContent) } }) : null,
-                                rightContent ? h('div', { className: 'column right-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(rightContent) } }) : null
-                            );
-                        case 'fullWidthImage':
-                            const rawImagePath = block.get('image');
-                            const altText = block.get('alt') || '';
-                            const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
-                            return h('div', { className: 'content-block block-full-width-image' },
-                                imageUrl ? h('img', { src: imageUrl, alt: altText, style: { display: 'block', width: '100%', height: 'auto', borderRadius: 'var(--border-radius-sm)', backgroundColor: 'var(--color-border-light)' } }) : h('p', {}, 'Image not available')
-                            );
-                        case 'fullWidthEmbed':
-                            const embedCode = block.get('embedCode');
-                            return h('div', { className: 'content-block block-full-width-embed', dangerouslySetInnerHTML: { __html: embedCode || '' } });
-                        default:
-                            return h('div', { className: 'content-block block-unknown' },
-                                h('p', {}, h('em', {}, `Unsupported block preview: ${blockType || 'Unknown'}`))
-                            );
+    
+                // --- Extract Data ---
+                const title = entry.getIn(['data', 'title'], 'Untitled Entry');
+                const dateValue = entry.getIn(['data', 'date'], null);
+                const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
+                const contentBlocksData = entry.getIn(['data', 'contentBlocks'], null); // Get Immutable List/Map or null
+    
+                // --- Process Data ---
+                const formattedDate = dateValue
+                    ? new Date(dateValue).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                      })
+                    : null;
+                const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
+    
+                // Helper to parse markdown client-side
+                function parseMarkdownClient(markdownString) {
+                    if (!markdownString || typeof marked === 'undefined') return '';
+                    try {
+                        // Use marked.parse() which replaced marked()
+                        return marked.parse(markdownString);
+                    } catch (e) {
+                        console.error("Markdown preview parsing error:", e);
+                        return '<p><em>Error parsing markdown</em></p>';
                     }
-                }).filter(el => el !== null); // Filter out any nulls from invalid blocks
-            } else {
-                 blockElements = [h('p', {}, h('em', {}, 'No content blocks added yet.'))];
+                }
+    
+                // --- Render Content Blocks ---
+                let blockElements = [];
+                if (contentBlocksData && typeof contentBlocksData.map === 'function') {
+                    blockElements = contentBlocksData.map((block, index) => { // Added index for key
+                        if (!block || typeof block.get !== 'function') return null;
+    
+                        const blockType = block.get('type');
+                        const key = `${blockType}-${index}`; // Simple key for React
+    
+                        switch (blockType) {
+                            case 'twoColumn':
+                                const leftContent = block.get('left');
+                                const rightContent = block.get('right');
+                                return h('div', { key: key, className: 'content-block block-two-column' },
+                                    leftContent ? h('div', { className: 'column left-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(leftContent) } }) : null,
+                                    rightContent ? h('div', { className: 'column right-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(rightContent) } }) : null
+                                );
+                            case 'fullWidthImage':
+                                const rawImagePath = block.get('image');
+                                const altText = block.get('alt') || '';
+                                const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
+                                return h('div', { key: key, className: 'content-block block-full-width-image' },
+                                    imageUrl ? h('img', { src: imageUrl, alt: altText, style: { display: 'block', width: '100%', height: 'auto', borderRadius: 'var(--border-radius-sm)', backgroundColor: 'var(--color-border-light)' } }) : h('p', {}, 'Image not available')
+                                );
+                            case 'fullWidthEmbed':
+                                const embedCode = block.get('embedCode');
+                                // Basic sanitization attempt - VERY basic, might need a proper library for safety
+                                const sanitizedEmbedCode = embedCode ? embedCode.replace(/<script.*?>.*?<\/script>/gi, '<!-- Script removed for preview safety -->') : '';
+                                return h('div', { key: key, className: 'content-block block-full-width-embed', dangerouslySetInnerHTML: { __html: sanitizedEmbedCode || '' } });
+    
+                            // +++ ADDED CASE FOR fullWidthText +++
+                            case 'fullWidthText':
+                                const textContent = block.get('text');
+                                return h('div', { key: key, className: 'content-block block-full-width-text markdown-content', /* Add markdown-content class if your CSS uses it */
+                                    dangerouslySetInnerHTML: { __html: parseMarkdownClient(textContent || '') }
+                                 });
+    
+                            // +++ ADDED CASE FOR horizontalGallery (Basic Preview) +++
+                            case 'horizontalGallery':
+                                 const imagesData = block.get('images');
+                                 let galleryImages = [];
+                                 if (imagesData && typeof imagesData.map === 'function') {
+                                     galleryImages = imagesData.map((imgData, imgIndex) => {
+                                         if (!imgData || typeof imgData.get !== 'function') return null;
+                                         const imgRawPath = imgData.get('image');
+                                         const imgAlt = imgData.get('alt') || '';
+                                         const imgUrl = imgRawPath ? getAsset(imgRawPath)?.url || imgRawPath : null;
+                                         return imgUrl ? h('img', {
+                                             key: `gallery-${index}-img-${imgIndex}`,
+                                             src: imgUrl,
+                                             alt: imgAlt,
+                                             style: { height: '100px', width: 'auto', marginRight: '10px', objectFit: 'cover', border: '1px solid #eee' } // Simple inline style for preview
+                                         }) : null;
+                                     }).filter(img => img !== null);
+                                 }
+                                 return h('div', { key: key, className: 'content-block block-horizontal-gallery-preview', style: { overflowX: 'auto', whiteSpace: 'nowrap', padding: '10px', border: '1px dashed #ccc', margin: '5px 0' } },
+                                     galleryImages.length > 0 ? galleryImages : h('p', {}, h('em', {}, 'No images in gallery.'))
+                                 );
+    
+                            default:
+                                console.warn(`Unsupported block type encountered in preview: ${blockType}`); // Log warning
+                                return h('div', { key: key, className: 'content-block block-unknown', style: { padding: '10px', border: '1px solid red', margin: '5px 0', color: 'red' } },
+                                    h('p', {}, h('em', {}, `Unsupported block preview: ${blockType || 'Unknown'}`))
+                                );
+                        }
+                    }).filter(el => el !== null);
+                } else {
+                     blockElements = [h('p', { key: 'no-blocks' }, h('em', {}, 'No content blocks added yet.'))];
+                }
+    
+    
+                // --- Assemble Preview using h() ---
+                // Use a wrapper div matching the structure in your preview CSS
+                return h('div', { className: 'feed-entry-preview-wrapper' },
+                    h('article', { className: 'feed-entry' },
+                        // Title
+                        h('h3', {}, title),
+                        // Date
+                        formattedDate ? h('time', { className: 'feed-entry-date' }, formattedDate) : null,
+                        // Thumbnail (basic preview)
+                        thumbnailUrl ? h('div', { className: 'thumbnail-preview', style: { marginBottom: '1.5rem', backgroundColor: 'var(--color-border-light)' } },
+                            h('img', { src: thumbnailUrl, alt: `Thumbnail for ${title}`, style: { display: 'block', width: '100%', height: 'auto', maxWidth: '100%', objectFit: 'cover' } })
+                        ) : null,
+                        // Content Blocks
+                        h('div', { className: 'feed-entry-blocks' }, blockElements), // Pass array directly
+                        // Separator
+                        h('hr', { className: 'entry-separator' })
+                    )
+                );
+            }; // End of FeedEntryPreview function definition
+    
+            // --- Register the Preview Template ---
+            try {
+                CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+                console.log("Feed entry preview template registered successfully.");
+            } catch (error) {
+                 console.error("Error registering preview template:", error);
             }
-
-
-            // --- Assemble Preview using h() ---
-            // Wrap everything in a div to apply padding/background safely
-            return h('div', { className: 'feed-entry-preview-wrapper' },
-                h('article', { className: 'feed-entry' },
-                    // Title
-                    h('h3', {}, title),
-                    // Date
-                    formattedDate ? h('time', { className: 'feed-entry-date' }, formattedDate) : null,
-                    // Thumbnail
-                    thumbnailUrl ? h('div', { className: 'thumbnail', style: { marginBottom: '1.5rem', backgroundColor: 'var(--color-border-light)' } },
-                        h('img', { src: thumbnailUrl, alt: `Thumbnail for ${title}`, style: { display: 'block', width: '100%', height: 'auto', maxWidth: '100%', objectFit: 'cover' } })
-                    ) : null,
-                    // Content Blocks
-                    h('div', { className: 'feed-entry-blocks' }, ...blockElements), // Spread the array of block elements
-                    // Separator
-                    h('hr', { className: 'entry-separator' })
-                )
-            );
-        }; // End of FeedEntryPreview function definition
-
-        // --- Register the Preview Component ---
-        try {
-            CMS.registerPreviewTemplate('feed', FeedEntryPreview);
-            console.log("Feed entry preview template (JS function) registered successfully.");
-        } catch (error) {
-             console.error("Error registering preview template:", error);
-        }
-
-    } // End of CMS/h check
-  </script>
+    
+        } // End of CMS/h check
+      </script>
 </body>
 </html>
