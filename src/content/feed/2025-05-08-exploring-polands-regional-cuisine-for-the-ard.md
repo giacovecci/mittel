@@ -39,7 +39,7 @@ contentBlocks:
 
       * co-managing logistics
 
-      * translating interviews (on location) and copy
+      * translating interviews (on location and in post)
 
       * shooting BTS
 
