@@ -1,8 +1,8 @@
 ---
 introText: >-
-  <span class="accent-text">Good that you're here.</span> My name is Piotr and
-  I'm a multi-skilled media professional with experience in video, audio and
-  print journalism, and documentary production.
+  Good that you're here. My name is Piotr and I'm a multi-skilled media
+  professional with experience in video, audio and print journalism, and
+  documentary production.
 
 
   I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. 
