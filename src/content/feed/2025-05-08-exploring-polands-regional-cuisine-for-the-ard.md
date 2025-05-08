@@ -45,7 +45,12 @@ contentBlocks:
 
       * post-production fact-checking and liaising with the characters
   - type: fullWidthText
-    text: "The documentary is a part of series produced by Alpha Container Pictures,
-      available here:
-      https://www.ardmediathek.de/sendung/Y3JpZDovL3N3ci5kZS9zZGIvc3RJZC8xNzMw"
+    text: >-
+      <span class="accent-text">Personal note:</span> I was extremely happy with
+      how the piece came together - all of our characters were amazing, very
+      open and generous with access, while the team did a top job of making them
+      look and sound their best.
+
+
+      The documentary is a part of series produced by Alpha Container Pictures, available here: https://www.ardmediathek.de/sendung/Y3JpZDovL3N3ci5kZS9zZGIvc3RJZC8xNzMw
 ---
