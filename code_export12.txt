@@ -1,0 +1,58 @@
+---
+// src/components/StaticInfo.astro
+const introText = "Good that you're here. I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment."
+---
+<div class="static-info-wrapper">
+    <div class="static-column static-column-left">
+        <div class="placeholder-visual">STATIC VISUAL</div>
+    </div>
+    <div class="static-column static-column-right">
+        <p>{introText}</p>
+    </div>
+</div>
+
+<style>
+    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
+    .static-info-wrapper {
+        display: flex;
+        flex-direction: row; /* Default: side-by-side */
+        gap: var(--column-gap-desktop); /* Use layout variable */
+        height: 100%;
+    }
+    .static-column {
+        flex-basis: 0;
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .static-column p {
+        margin-top: 0;
+        line-height: var(--line-height-unified);
+    }
+    .placeholder-visual {
+        width: 100%;
+        min-height: 200px;
+        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em;
+        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6);
+        border: var(--line-thickness) dashed var(--color-border);
+        padding: var(--spacing-md);
+    }
+    /* Ensure RGB var is defined globally */
+
+    /* ================================== */
+    /* --- MOBILE - PORTRAIT ONLY --- */
+    /* ================================== */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .static-info-wrapper {
+             flex-direction: column; /* Stack columns in portrait */
+             gap: var(--spacing-lg);
+        }
+        .placeholder-visual {
+            min-height: 150px;
+        }
+    }
+     /* --- NO specific landscape override needed, uses default --- */
+</style>

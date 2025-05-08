@@ -1,0 +1,1729 @@
+--- FILE: src/layouts/BaseLayout.astro ---
+---
+// src/layouts/BaseLayout.astro
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; /* Keep */
+
+       :root {
+          /* Keep variables */
+          --scrollbar-track-color: #222;
+          --scrollbar-thumb-color: #555;
+          --scrollbar-width: 8px;
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
+          --header-area-height: 90px;
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          /* Mobile specific */
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 125px; /* Use variable */
+       }
+
+        html { height: 100%; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            background-color: var(--color-background); margin: 0;
+            overscroll-behavior: none; min-height: 100%; height: 100%;
+            overflow: hidden; position: relative;
+        }
+
+        #app-container { height: 100%; box-sizing: border-box; position: relative; }
+        /* Target direct children EXCEPT the mobile wrapper by default */
+        #app-container > div:not(#mobile-header-sticky-container) { box-sizing: border-box; }
+        #mobile-header-sticky-container { box-sizing: border-box; } /* Style wrapper separately */
+
+
+        /* ================================== */
+        /* --- DESKTOP LAYOUT (GRID) --- */
+        /* ================================== */
+        @media (min-width: 769px) {
+            body { overflow: hidden; }
+
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns:
+                    var(--desktop-identity-width)   /* Col 1 */
+                    var(--desktop-divider-width)    /* Col 2 */
+                    var(--desktop-main-header-width); /* Col 3 */
+                grid-template-rows:
+                    var(--header-area-height)      /* Row 1 */
+                    1fr;                            /* Row 2 */
+                height: 100vh; overflow: hidden;
+            }
+
+            /* --- Hide Mobile Wrapper BUT allow grid to see inside --- */
+            #app-container.is-desktop > #mobile-header-sticky-container {
+                 display: contents; /* Allows children to participate in grid */
+                 /* Alternative if 'contents' causes issues: display: none; */
+            }
+
+             /* --- Grid Area Assignments --- */
+             /* Target ACTUAL header areas (now children of the wrapper) */
+             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
+             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                font-size: 1.5em;
+                z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height);
+                /* Remove flex from grid cell - let component inside handle layout */
+                display: block; /* Or initial */
+                /* Apply padding here */
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
+                 grid-column: 1 / 2;
+                 padding-left: var(--desktop-content-padding);
+                 padding-right: var(--spacing-md);
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                 grid-column: 3 / 4;
+                 padding-right: var(--desktop-content-padding);
+                 padding-left: var(--spacing-md);
+            }
+
+            /* --- Divider and Content Areas (Direct children of #app-container) --- */
+            #app-container.is-desktop > #divider-area {
+                grid-column: 2 / 3; grid-row: 1 / 3;
+                background-color: var(--color-background);
+                z-index: 10; position: relative; display: block;
+            }
+             #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+             }
+
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 1 / 2; grid-row: 2 / 3; position: relative;
+                overflow: hidden; display: block;
+                padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom) var(--desktop-content-padding);
+                padding-right: var(--spacing-md);
+            }
+            #app-container.is-desktop > #feed-content-area {
+                grid-column: 3 / 4; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; display: block;
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom) 0;
+                padding-left: var(--spacing-md);
+            }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+            #app-container.is-desktop > #overview-content-area {
+                grid-column: 1 / 4; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; display: none;
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+            }
+
+             /* --- Desktop View Switching Logic --- */
+             /* (Keep as is) */
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+             #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+             #app-container.is-desktop.view-overview > #divider-area { display: none; }
+
+        } /* End of desktop media query */
+
+
+        /* ================================== */
+        /* --- MOBILE LAYOUT (STICKY WRAPPER) --- */
+        /* ================================== */
+        @media (max-width: 768px) {
+            body { height: auto; overflow: visible; }
+
+             /* App container is simple flex column */
+             #app-container.is-mobile {
+                display: flex;
+                flex-direction: column; /* Stack sticky wrapper, divider, content */
+                height: auto; overflow: visible; position: static;
+            }
+
+            /* --- Mobile Sticky Header Wrapper --- */
+            #app-container.is-mobile > #mobile-header-sticky-container {
+                display: flex; /* Use flex to arrange headers inside */
+                flex-direction: row; /* Side-by-side */
+                width: 100%;
+                order: 1; /* Show first */
+                /* --- STICKY BEHAVIOR --- */
+                position: sticky;
+                top: 0;
+                background-color: var(--color-background);
+                z-index: 100;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+            }
+
+            /* --- Headers INSIDE the Mobile Sticky Wrapper --- */
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 width: 50%;
+                 display: flex !important; /* Use flex for internal alignment */
+                 height: var(--mobile-header-height); /* Use variable */
+                 padding: 0 var(--mobile-content-padding-x); /* Horizontal padding */
+                 font-size: var(--font-size-mobile-header-responsive);
+                 /* Reset positioning, border, etc. from desktop grid */
+                 position: static;
+                 border: none;
+                 background-color: transparent;
+                 z-index: auto;
+                 overflow: hidden; /* Keep from parent */
+                 max-height: none; /* Override any desktop max-height */
+            }
+             #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
+                align-items: flex-start; /* Align internal content top */
+                justify-content: flex-start;
+                padding-right: calc(var(--mobile-content-padding-x) / 2);
+             }
+             #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 align-items: flex-start; /* Align internal content top */
+                 justify-content: flex-end;
+                 padding-left: calc(var(--mobile-content-padding-x) / 2);
+             }
+
+            /* Mobile Divider (Direct child of #app-container) */
+            #app-container.is-mobile > #divider-area { order: 2; display: none; }
+
+            /* Mobile Content Areas (Direct children of #app-container) */
+            #app-container.is-mobile > #info-content-area,
+            #app-container.is-mobile > #feed-content-area,
+            #app-container.is-mobile > #overview-content-area {
+                 order: 3; /* After wrapper and divider */
+                 width: 100%;
+                 grid-column: auto; grid-row: auto; position: static; overflow: visible;
+                 border: none; max-height: none;
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none;
+            }
+
+            /* Mobile View Switching */
+            #app-container.is-mobile.view-feed > #feed-content-area { display: block; }
+            #app-container.is-mobile.view-info > #info-content-area { display: block; }
+            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+
+        } /* End mobile media query */
+
+    </style>
+</head>
+<body>
+    <div id="app-container">
+
+        {/* --- Mobile Sticky Header Wrapper --- */}
+        <div id="mobile-header-sticky-container">
+             <div id="identity-header-area"><slot name="identity-header" /></div>
+             <div id="main-header-area"><slot name="main-header" /></div>
+        </div>
+        {/* --- End Mobile Wrapper --- */}
+
+        {/* Divider - Remains direct child */}
+        <div id="divider-area"></div>
+
+        {/* Content Areas - Remain direct children */}
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div>
+        <div id="overview-content-area"><slot name="overview-content" />
+
+    </div>
+    {/* Script lives in index.astro */}
+</body>
+</html>
+
+--- FILE: src/pages/index.astro ---
+---
+// src/pages/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import FeedEntry from '../components/FeedEntry.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import type { CollectionEntry } from 'astro:content';
+
+// Data Fetching
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
+    altText: entry.data.title || 'Feed item thumbnail'
+}));
+---
+<BaseLayout title="Żakowiecki | fixer supreme XD">
+
+    {/* Slot for Identity Header */}
+    <div slot="identity-header">
+        <IdentityHeader />
+    </div>
+
+    {/* Slot for Main Header (Nav/Contact) */}
+    <div slot="main-header">
+        <Header />
+    </div>
+
+    {/* Slot for Info Content Area */}
+    <div slot="info-content" id="info-content-wrapper"> {/* Use wrapper ID if needed */}
+        <StaticInfo />
+    </div>
+
+    {/* Slot for Feed Content Area */}
+    <section slot="feed-content" id="feed-content-wrapper"> {/* Use wrapper ID if needed */}
+        {feedEntries.map(entry => (
+            <FeedEntry entry={entry} />
+        ))}
+    </section>
+
+    {/* Slot for Overview Content Area */}
+    <div slot="overview-content" id="overview-content-wrapper"> {/* Use wrapper ID if needed */}
+        <div id="overview-grid-wrapper">
+            <OverviewGrid items={overviewItems} />
+        </div>
+    </div>
+
+</BaseLayout>
+
+{/* --- Script for View Switching --- */}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Selectors (Keep as before)
+        const appContainer = document.getElementById('app-container');
+        const identityHeaderArea = document.getElementById('identity-header-area');
+        const mainHeaderArea = document.getElementById('main-header-area');
+        const dividerArea = document.getElementById('divider-area');
+        const infoContentArea = document.getElementById('info-content-area');
+        const feedContentArea = document.getElementById('feed-content-area');
+        const overviewContentArea = document.getElementById('overview-content-area');
+        const infoBtn = document.getElementById('info-view-btn') as HTMLButtonElement | null;
+        const feedBtn = document.getElementById('feed-view-btn') as HTMLButtonElement | null;
+        const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
+        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+
+        // Null Check (Keep as before)
+        if (!appContainer || !identityHeaderArea || !mainHeaderArea || !dividerArea || !infoContentArea || !feedContentArea || !overviewContentArea || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper) {
+            console.error("Essential elements missing for view switching script."); return;
+        }
+
+        const MOBILE_BREAKPOINT = 768;
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+        function isDesktop(): boolean { return !isMobile(); }
+
+        function setActiveButton(activeBtn: HTMLButtonElement | null): void {
+            [infoBtn, feedBtn, overviewBtn].forEach(btn => {
+                if (btn) { btn.classList.toggle('active', btn === activeBtn); }
+            });
+        }
+
+        function setMainView(view: 'feed' | 'overview' | 'info'): void {
+            // (Keep the setMainView function exactly as it was in the previous step)
+            console.log("%cSetting view:", "color: blue; font-weight: bold;", view, "isMobile:", isMobile());
+            if (!appContainer) return;
+            appContainer.classList.remove('view-feed', 'view-overview', 'view-info', 'is-mobile', 'is-desktop');
+            const elementsToReset = [
+                identityHeaderArea, mainHeaderArea, dividerArea,
+                infoContentArea, feedContentArea, overviewContentArea
+            ];
+            elementsToReset.forEach(el => { if (el) { el.style.display = ''; } });
+            if (isMobile()) { appContainer.classList.add('is-mobile'); } else { appContainer.classList.add('is-desktop'); }
+            if (view === 'overview') {
+                console.log("  Applying OVERVIEW class...");
+                appContainer.classList.add('view-overview');
+                setActiveButton(overviewBtn);
+            } else if (view === 'info' && isMobile()) {
+                console.log("  Applying INFO class (Mobile)...");
+                appContainer.classList.add('view-info');
+                setActiveButton(infoBtn);
+            } else {
+                console.log("  Applying FEED class (Default/Desktop)...");
+                appContainer.classList.add('view-feed');
+                setActiveButton(feedBtn);
+            }
+            console.log("Current appContainer classes:", appContainer.className);
+        }
+
+        // Event Listeners (Keep view switching listeners as before)
+        overviewBtn.addEventListener('click', () => setMainView('overview'));
+        feedBtn.addEventListener('click', () => setMainView('feed'));
+        infoBtn.addEventListener('click', () => { if (isMobile()) { setMainView('info'); } else { setMainView('feed'); } });
+
+
+        // --- UPDATED Grid Click Logic ---
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                console.log("Overview grid clicked.");
+                if (event.target instanceof Element) {
+                    const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                    // Ensure feedContentArea exists before proceeding
+                    if (gridItemLink && gridItemLink.dataset.targetId && feedContentArea) {
+                        event.preventDefault();
+                        const targetId = gridItemLink.dataset.targetId;
+                        console.log("Target ID from grid item:", targetId);
+
+                        // 1. Switch view first
+                        setMainView('feed');
+
+                        // 2. Wait for rendering and scroll
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                // --- Use document.getElementById() ---
+                                const targetFeedElement = document.getElementById(targetId);
+
+                                // --- Check if found AND is within feedContentArea ---
+                                if (targetFeedElement && feedContentArea.contains(targetFeedElement)) {
+                                     // Optional: Check class for extra safety, though ID should be unique
+                                     if (targetFeedElement.classList.contains('feed-entry')) {
+                                        console.log("Target feed element found by ID:", targetFeedElement); // DEBUG
+                                        targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        console.log("scrollIntoView called."); // DEBUG
+                                     } else {
+                                         console.warn(`Element with ID '${targetId}' found, but lacks 'feed-entry' class.`);
+                                         // Still try to scroll? Decide based on strictness needed.
+                                         // targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                     }
+                                } else if (targetFeedElement) {
+                                    // Found element by ID, but it's not in the feed area (shouldn't happen with Astro slugs)
+                                    console.error(`Element ID '${targetId}' found, but not within #feed-content-area.`);
+                                } else {
+                                    // Element not found anywhere
+                                    console.error(`Target element with ID '${targetId}' not found in the document.`);
+                                }
+                            }, 100); // Keep delay for now, seems reasonable
+                        });
+                    } else if (gridItemLink) {
+                        console.error("Grid item link missing 'data-target-id'.");
+                    } else if (!feedContentArea) {
+                         console.error("Feed content area not found for scrolling.");
+                    }
+                }
+            });
+        }
+
+        // Initial View & Resize Handling (Keep as before)
+        console.log("Initializing view...");
+        setMainView('feed');
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                console.log(`Resize detected: Switched state. Resetting view to feed.`);
+                setMainView('feed');
+                wasMobile = isNowMobile;
+            }
+        });
+        resizeObserver.observe(document.body);
+
+        // Gallery Logic (Keep as is)
+        // ...
+    });
+</script>
+
+--- FILE: src/components/Header.astro ---
+---
+// src/components/Header.astro (Right Side Only)
+const contactEmail = "hey@mittel.tv";
+---
+<div class="main-header-wrapper">
+    {/* --- Desktop Feed Button --- */}
+    <div class="header-sub-col feed-button-desktop-container">
+        <button type="button" id="feed-view-btn" class="desktop-only">
+            Feed
+        </button>
+    </div>
+
+    {/* --- Overview Button --- */}
+    <div class="header-sub-col overview-button-container">
+        <button type="button" id="overview-view-btn">
+           <span class="arrow mobile-only">→</span> Projects
+        </button>
+    </div>
+
+    {/* --- Contact Button (Changed from <a>) --- */}
+    <div class="header-contact-item">
+        <button type="button" id="contact-link"> {/* << CHANGED from <a> */}
+           <span class="arrow mobile-only">→</span> Contact
+        </button>
+    </div>
+
+    {/* --- Mobile Info Button --- */}
+    <div class="header-sub-col info-button-mobile-container">
+        <button type="button" id="info-view-btn" class="mobile-only">
+            <span class="arrow">→</span> Info
+        </button>
+    </div>
+</div>
+
+{/* --- Styles --- */}
+<style>
+    /* ================================== */
+    /* --- Base Component Styles --- */
+    /* ================================== */
+    .main-header-wrapper {
+        display: flex;
+        justify-content: space-between; /* <<< CORRECT: Parent distributes children */
+        align-items: baseline; /* Align children based on their text baseline */
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+    }
+
+    /* --- Styling for the CONTAINER divs holding buttons --- */
+    /* Defines how each container behaves */
+    .main-header-wrapper > div {
+        box-sizing: border-box;
+        text-align: center; /* Fallback alignment */
+        flex-basis: auto; /* Allow natural width */
+        /* flex-grow: 0; */ /* Don't allow growth */
+        /* flex-shrink: 1; */ /* Allow shrinking */
+        display: flex; /* Make container a flexbox... */
+        align-items: baseline; /* ...to align the button inside based on text */
+        justify-content: center; /* <<< CORRECTED: Center button within container (or flex-start/end) */
+    }
+     /* Override for contact button CONTAINER - Desktop */
+     /* Align the button inside this specific container to the right */
+     .header-contact-item {
+        justify-content: flex-end;
+        text-align: right; /* Keep text-align for fallback */
+     }
+
+    /* --- UNIFIED STYLING for ALL Buttons inside the wrapper --- */
+    .main-header-wrapper button {
+        display: inline-block;
+        padding: 2px 0; /* Keep minimal vertical padding */
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: var(--font-weight-bold);
+        line-height: 1.3; /* <<< CORRECTED: Restore sensible line-height */
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    /* --- Arrow Styling (Common) --- */
+    .arrow {
+        display: inline-block;
+        margin-right: 0.4em;
+     }
+
+    /* ================================== */
+    /* --- Visibility Toggles --- */
+    /* ================================== */
+    .mobile-only { display: none !important; }
+    .desktop-only { display: inline-block !important; }
+    .info-button-mobile-container { display: none !important; }
+
+
+    /* ================================== */
+    /* --- MOBILE SPECIFIC OVERRIDES --- */
+    /* ================================== */
+    @media (max-width: 768px) {
+        /* Mobile styles for the main wrapper */
+        .main-header-wrapper {
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-start;
+            gap: 0px; /* Keep zero gap */
+            height: 100%;
+            padding: 0;
+        }
+
+        /* Mobile styles for the CONTAINER divs */
+        .main-header-wrapper > div {
+             flex-basis: auto;
+             flex-grow: 0;
+             flex-shrink: 1;
+            width: auto;
+            text-align: right;
+             display: block; /* Keep as block */
+             margin-bottom: 0;
+             /* Remove desktop flex alignment */
+             /* justify-content: center; */
+             /* align-items: baseline; */
+        }
+
+        /* --- Mobile Ordering and Visibility --- */
+        .feed-button-desktop-container { display: none !important; order: 99; }
+        .info-button-mobile-container { display: block !important; order: 1; }
+        .overview-button-container { display: block !important; order: 2; }
+        .header-contact-item { display: block !important; order: 3; }
+
+        .mobile-only { display: inline-block !important; }
+        .desktop-only { display: none !important; }
+
+        /* Mobile specific styles for the BUTTONS inside */
+        .main-header-wrapper button {
+             width: auto;
+             /* Use consistent padding with desktop unified rule */
+             padding: 0 0;
+             line-height: 1.3; /* Ensure mobile uses correct line-height too */
+        }
+    } /* End Mobile Media Query */
+
+</style>
+
+{/* --- Script to handle Contact Button click --- */}
+<script define:vars={{ contactEmail }}>
+    const contactButton = document.getElementById('contact-link');
+    if (contactButton) {
+        contactButton.addEventListener('click', () => {
+            // Construct the mailto link and navigate to it
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    } else {
+        console.error("Contact button (#contact-link) not found.");
+    }
+</script>
+
+--- FILE: src/components/IdentityHeader.astro ---
+---
+// src/components/IdentityHeader.astro
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer | researcher | videojournalist";
+---
+<div class="identity-header-wrapper">
+    <span class="identity-site-name-text">{siteName}</span>
+    <span class="identity-tagline">{tagline}</span>
+</div>
+
+<style>
+    .identity-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        /* --- Alignment: TOP --- */
+        align-items: flex-start;
+        justify-content: flex-start; /* Align to top */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%; /* Fill parent height */
+        box-sizing: border-box;
+        font-size: inherit; /* Inherit base size (1.5em on desktop) */
+        padding-left: 0; /* Padding is on parent grid area */
+        padding-right: var(--header-internal-padding); /* Space before divider */
+        text-align: left;
+    }
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0;
+        font-size: 1.1em;
+        text-align: left;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-text-secondary);
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+
+     @media (max-width: 768px) {
+         .identity-header-wrapper {
+             font-size: inherit;
+             height: auto; /* Let parent control height */
+             padding: 0.3rem 0; /* Padding on parent */
+             justify-content: flex-start; /* Ensure top alignment */
+             align-items: flex-start;
+         }
+         .identity-site-name-text { font-size: 1em; }
+         .identity-tagline { font-size: 0.6em; }
+     }
+</style>
+
+--- FILE: src/styles/global.css ---
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; /* list-style: none; */ }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Default/Desktop responsive size */
+  --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
+  /* Mobile Responsive Sizes */
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  /* Set the default weight variable */
+  --font-weight-unified: var(--font-weight-regular); /* Default to Regular */
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204; /* Corresponds to #ccc */
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  /* --- ADDED: Global Desktop Column Split --- */
+  --desktop-info-column-width: 33.33%; /* Approx 1/3 */
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); /* Approx 2/3 */
+}
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  /* Apply default font weight (now 400) */
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Default heading/paragraph styles */
+h1, h2, h3, h4, h5, h6 {
+  /* Ensure headings use bold weight */
+  font-weight: var(--font-weight-bold); /* 700 */
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+h3 { font-size: 1.1em; }
+
+p, li, dt, dd, span, label {
+  /* Inherit weight (defaults to body's 400) */
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: var(--spacing-sm);
+  text-align: justify; /* <<< ADD THIS LINE */
+  /* Optional, but recommended for better justification: */
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto; /* For older Firefox */
+  -ms-hyphens: auto; /* For IE/Edge */
+  hyphens: auto;
+}
+
+/* --- Style List Markers --- */
+li::marker {
+  color: var(--color-accent);
+}
+
+/* --- Header Text Weights --- */
+/* Apply specific weights to header elements as needed */
+.header-site-name-text {
+    font-weight: var(--font-weight-bold); /* Keep site name bold (700) */
+}
+/* If tagline, nav buttons, contact link need specific weights, add rules here: */
+/* Example: */
+/* .header-nav button, .header-contact-item a { */
+/*     font-weight: var(--font-weight-medium); /* 500 */
+/* } */
+
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover,
+button:hover { color: var(--color-accent); }
+button.active { color: var(--color-text-hover); }
+button { cursor: pointer; }
+
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+  /* Optional: font-weight: var(--font-weight-bold); */
+}
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+    /* h3 { font-size: 1.2em; } */
+  }
+
+
+/* ===================================================== */
+/* --- Font Size Adjustment for Landscape Mobile/Tablet --- */
+/* ===================================================== */
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      font-size: 0.8rem;
+  }
+}
+
+--- FILE: src/components/FeedEntry.astro ---
+---
+// src/components/FeedEntry.astro
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { marked } from 'marked';
+
+type BaseBlock = { type: string };
+type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
+
+interface Props {
+    entry: CollectionEntry<'feed'>;
+}
+
+const { entry } = Astro.props;
+const { slug, data } = entry;
+
+const formattedDate = data.date
+    ? new Date(data.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+    : null;
+
+function parseMarkdown(markdownString?: string): string {
+    if (!markdownString) return '';
+    try {
+        const parsed = marked.parse(markdownString, { gfm: true, breaks: false });
+        const trimmed = String(parsed).trim();
+        if (trimmed && !trimmed.match(/^<(p|h[1-6]|ul|ol|li|blockquote|hr|table|div|pre|figure|img)/i)) {
+           return `<p>${trimmed}</p>`;
+        }
+        return trimmed;
+    } catch (e) {
+        console.error("Error parsing Markdown:", e);
+        return '<p>Error rendering content.</p>';
+    }
+}
+---
+<article class="feed-entry" id={slug}>
+    <h3>{data.title || 'Untitled Entry'}</h3>
+    {formattedDate && (
+        <time class="feed-entry-date" datetime={data.date?.toISOString()}>{formattedDate}</time>
+    )}
+
+    <div class="feed-entry-blocks">
+        {data.contentBlocks && data.contentBlocks.length > 0 ? (
+            data.contentBlocks.map((block: ContentBlock, index: number) => {
+                const galleryId = `gallery-${slug}-${index}`;
+                const prevBtnId = `gallery-prev-${slug}-${index}`;
+                const nextBtnId = `gallery-next-${slug}-${index}`;
+
+                switch (block.type) {
+                    case 'twoColumn':
+                        return (
+                            <div class="content-block block-two-column">
+                                {block.left && (
+                                    <div class="column left-column" set:html={parseMarkdown(block.left)}></div>
+                                )}
+                                {block.right && (
+                                    <div class="column right-column" set:html={parseMarkdown(block.right)}></div>
+                                )}
+                            </div>
+                        );
+
+                    case 'fullWidthImage':
+                        return block.image ? (
+                            <div class="content-block block-full-width-image">
+                                <Image
+                                    src={block.image}
+                                    alt={block.alt || ''}
+                                    width={1200}
+                                    height={900}
+                                    format="webp"
+                                    quality={80}
+                                    loading="lazy"
+                                    densities={[1, 1.5, 2]}
+                                />
+                            </div>
+                        ) : <div class="content-block block-missing-image"><p><em>Image missing or path incorrect.</em></p></div>;
+
+                    case 'fullWidthEmbed':
+                        return block.embedCode ? (
+                            <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
+                        ) : null;
+
+                    case 'fullWidthText':
+                        return block.text ? (
+                            <div class="content-block block-full-width-text markdown-content" set:html={parseMarkdown(block.text)}></div>
+                        ) : null;
+
+                    case 'horizontalGallery':
+                         return (
+                            <div class="content-block block-horizontal-gallery">
+                                <div class="gallery-scroll-container" id={galleryId}>
+                                    {block.images && block.images.length > 0 ? (
+                                        block.images.map(img => (
+                                            img.image ? (
+                                                <div class="gallery-item">
+                                                    {/* --- CAREFULLY CORRECTED IMAGE ATTRIBUTES --- */}
+                                                    <Image
+                                                        src={img.image}
+                                                        alt={img.alt || ''}
+                                                        width={800}
+                                                        height={600}
+                                                        format="webp"
+                                                        quality={75}
+                                                        loading="lazy"
+                                                        densities={[1, 1.5]}
+                                                    />
+                                                    {/* --- END CORRECTIONS --- */}
+                                                </div>
+                                            ) : null
+                                        ))
+                                    ) : (
+                                        <div class="gallery-item placeholder"><p><em>No images in gallery.</em></p></div>
+                                    )}
+                                </div>
+                                <button type="button" class="gallery-nav-button prev" id={prevBtnId} data-target={`#${galleryId}`} aria-label="Previous image">‹</button>
+                                <button type="button" class="gallery-nav-button next" id={nextBtnId} data-target={`#${galleryId}`} aria-label="Next image">›</button>
+                            </div>
+                        );
+
+
+                    default:
+                        const unknownBlock = block as BaseBlock;
+                        console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
+                         return (
+                             <div class="content-block block-unknown">
+                                 <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
+                             </div>
+                         );
+                }
+            })
+        ) : (
+             entry.body ? (
+                 <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
+             ) : (
+                 <p><em>No content found for this entry.</em></p>
+             )
+        )}
+    </div>
+
+    <hr class="entry-separator" />
+</article>
+
+<style>
+    /* --- Base and Existing Styles --- */
+    :root {
+        --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        --gallery-nav-button-size: 2.5rem;
+        /* --- ADDED: Define gap size --- */
+        --gallery-item-gap: var(--spacing-md); /* e.g., 1rem */
+    }
+
+    /* ... (keep all styles from .feed-entry down to .block-full-width-text) ... */
+    .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
+    .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-bold); font-size: 1.1em; line-height: 1.3; }
+    .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
+    .feed-entry-blocks { margin-top: var(--spacing-lg); }
+    .content-block { margin-bottom: var(--spacing-lg); }
+    .content-block:last-child { margin-bottom: 0; }
+    .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+    .block-two-column .column { flex: 1; min-width: 0; }
+    .block-two-column .column > *:first-child { margin-top: 0; }
+    .block-two-column .column > *:last-child { margin-bottom: 0; }
+    .block-two-column .column :global(p), .block-two-column .column :global(li), .block-two-column .column :global(dt), .block-two-column .column :global(dd) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; }
+    .block-two-column .column :global(h1), .block-two-column .column :global(h2), .block-two-column .column :global(h3), .block-two-column .column :global(h4) { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+    .block-two-column .column :global(ul), .block-two-column .column :global(ol) { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); }
+    .block-two-column .column :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
+    .block-two-column .column :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
+    .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+    .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+    .block-full-width-embed { width: 100%; max-width: 100%; overflow: hidden; background-color: var(--color-border-light); }
+    .block-full-width-embed :global(iframe), .block-full-width-embed :global(video) { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; }
+    .block-full-width-text {} /* Uses .markdown-content */
+
+
+    /* --- UPDATED: Horizontal Gallery --- */
+    .block-horizontal-gallery {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .gallery-scroll-container {
+        display: flex;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        /* --- ADDED: Gap between flex items --- */
+        gap: var(--gallery-item-gap);
+
+        /* Adjust padding to account for gap AND buttons */
+        padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+
+        scroll-snap-type: x mandatory;
+        /* --- ADDED: Scroll padding to offset snap point by gap --- */
+        scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        max-height: 70vh;
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Optional: Custom scrollbar styling */
+    .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
+    .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+    .gallery-item {
+        /* Keep item itself as 100% of the theoretical *scroll area width* */
+        flex: 0 0 100%;
+        min-width: 100%;
+        scroll-snap-align: center; /* Keep snap to center */
+        height: auto;
+        max-height: 100%;
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        background-color: var(--color-border-light);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .gallery-item img, .gallery-item picture {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+     .gallery-item.placeholder p {
+         font-style: italic;
+         color: var(--color-text-secondary);
+         padding: var(--spacing-md);
+     }
+
+    /* --- Gallery Navigation Buttons (Keep as is) --- */
+    .gallery-nav-button { /* ... */
+        position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
+        width: var(--gallery-nav-button-size); height: var(--gallery-nav-button-size);
+        font-size: calc(var(--gallery-nav-button-size) * 0.6);
+        line-height: var(--gallery-nav-button-size); text-align: center;
+        cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+    .gallery-nav-button.prev { left: var(--spacing-sm); }
+    .gallery-nav-button.next { right: var(--spacing-sm); }
+    .gallery-nav-button.hidden { display: none; }
+
+
+    /* ... (keep remaining styles: .markdown-content, .block-unknown, .entry-separator, @media mobile) ... */
+     /* Fallback Markdown Content */
+    .markdown-content :global(p), .markdown-content :global(ul), .markdown-content :global(ol), .markdown-content :global(blockquote) { line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); }
+    .markdown-content :global(h1), .markdown-content :global(h2), .markdown-content :global(h3), .markdown-content :global(h4) { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+    .markdown-content :global(ul), .markdown-content :global(ol) { padding-left: var(--spacing-lg); }
+    .markdown-content :global(li) > :global(p) { margin-bottom: var(--spacing-xxs); }
+    .markdown-content :global(blockquote) { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+    .markdown-content :global(img) { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+    .markdown-content :global(a) { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    .markdown-content :global(a:hover) { color: var(--color-text-unified); text-decoration: none; }
+    /* Unknown Block */
+    .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+    /* Separator */
+    .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+    /* --- Mobile Styles --- */
+    @media (max-width: 768px) {
+        /* --- ADDED: Mobile gap size --- */
+        :root {
+             --gallery-item-gap: var(--spacing-sm); /* Smaller gap on mobile */
+        }
+
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); }
+        .feed-entry-blocks { margin-top: var(--spacing-md); }
+        .content-block { margin-bottom: var(--spacing-md); }
+        .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        .entry-separator { margin-top: var(--spacing-lg); }
+        .feed-entry-date { font-size: 0.85em; }
+
+        /* --- UPDATED: Mobile Gallery Adjustments --- */
+        .gallery-scroll-container {
+             gap: var(--gallery-item-gap); /* Use mobile gap */
+             max-height: 50vh;
+             /* Adjust padding for mobile button size and gap */
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             /* Adjust scroll-padding */
+             scroll-padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        }
+        .gallery-item img, .gallery-item picture { aspect-ratio: 4 / 3; }
+        .gallery-nav-button { --gallery-nav-button-size: 2rem; }
+         .gallery-nav-button.prev { left: var(--spacing-xs); }
+         .gallery-nav-button.next { right: var(--spacing-xs); }
+    }
+
+</style>
+
+--- FILE: public/admin/index.html ---
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Content Manager</title>
+
+  <!-- Stylesheet link removed from here -->
+
+  <style>
+    /* Preview pane specific adjustments if needed */
+    .nc-preview-pane-container > div {
+        padding: 0 !important;
+    }
+    .feed-entry-preview-wrapper {
+        padding: 1rem;
+        background-color: var(--color-background, white);
+    }
+  </style>
+
+</head>
+<body>
+  <!-- Load Marked library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Decap CMS Core Script -->
+  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+
+    <!-- Custom Preview Registration Script -->
+    <script type="module">
+        console.log("Admin script started.");
+    
+        // Make sure Marked is loaded before proceeding
+        if (typeof marked === 'undefined') {
+          console.error("Marked library not loaded!");
+          // Maybe display an error or stop?
+        } else {
+            console.log("Marked library loaded.");
+            // Optional: Configure marked if needed
+            // marked.setOptions({ gfm: true, breaks: true });
+        }
+    
+        // Get CMS and h (hyperscript) function from global scope
+        const CMS = window.CMS;
+        const h = window.h || window.React.createElement; // Use React.createElement as fallback if h isn't defined
+    
+        if (!CMS || !h) {
+            console.error("CMS object or h function not found. Preview registration failed.");
+        } else {
+            console.log("CMS object and h function found.");
+    
+            // --- Register the stylesheet DIRECTLY for the preview pane ---
+            try {
+                // Use a root-relative path assuming admin.html is in /public/admin/
+                CMS.registerPreviewStyle('/admin-preview.css');
+                console.log("Registered preview style: /admin-preview.css");
+            } catch (error) {
+                console.error("Error registering preview style:", error);
+            }
+    
+            // --- Define the Feed Entry Preview Function ---
+            const FeedEntryPreview = (props) => {
+                // console.log("FeedEntryPreview props:", props); // Debug: See what props are passed
+                const { entry, getAsset } = props;
+                if (!entry || !entry.getIn) {
+                    console.error("Invalid 'entry' object in preview props:", entry);
+                    return h('div', {}, 'Error: Invalid data received for preview.');
+                }
+    
+                // --- Extract Data ---
+                const title = entry.getIn(['data', 'title'], 'Untitled Entry');
+                const dateValue = entry.getIn(['data', 'date'], null);
+                const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
+                const contentBlocksData = entry.getIn(['data', 'contentBlocks'], null); // Get Immutable List/Map or null
+    
+                // --- Process Data ---
+                const formattedDate = dateValue
+                    ? new Date(dateValue).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                      })
+                    : null;
+                const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
+    
+                // Helper to parse markdown client-side
+                function parseMarkdownClient(markdownString) {
+                    if (!markdownString || typeof marked === 'undefined') return '';
+                    try {
+                        // Use marked.parse() which replaced marked()
+                        return marked.parse(markdownString);
+                    } catch (e) {
+                        console.error("Markdown preview parsing error:", e);
+                        return '<p><em>Error parsing markdown</em></p>';
+                    }
+                }
+    
+                // --- Render Content Blocks ---
+                let blockElements = [];
+                if (contentBlocksData && typeof contentBlocksData.map === 'function') {
+                    blockElements = contentBlocksData.map((block, index) => { // Added index for key
+                        if (!block || typeof block.get !== 'function') return null;
+    
+                        const blockType = block.get('type');
+                        const key = `${blockType}-${index}`; // Simple key for React
+    
+                        switch (blockType) {
+                            case 'twoColumn':
+                                const leftContent = block.get('left');
+                                const rightContent = block.get('right');
+                                return h('div', { key: key, className: 'content-block block-two-column' },
+                                    leftContent ? h('div', { className: 'column left-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(leftContent) } }) : null,
+                                    rightContent ? h('div', { className: 'column right-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(rightContent) } }) : null
+                                );
+                            case 'fullWidthImage':
+                                const rawImagePath = block.get('image');
+                                const altText = block.get('alt') || '';
+                                const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
+                                return h('div', { key: key, className: 'content-block block-full-width-image' },
+                                    imageUrl ? h('img', { src: imageUrl, alt: altText, style: { display: 'block', width: '100%', height: 'auto', borderRadius: 'var(--border-radius-sm)', backgroundColor: 'var(--color-border-light)' } }) : h('p', {}, 'Image not available')
+                                );
+                            case 'fullWidthEmbed':
+                                const embedCode = block.get('embedCode');
+                                // Basic sanitization attempt - VERY basic, might need a proper library for safety
+                                const sanitizedEmbedCode = embedCode ? embedCode.replace(/<script.*?>.*?<\/script>/gi, '<!-- Script removed for preview safety -->') : '';
+                                return h('div', { key: key, className: 'content-block block-full-width-embed', dangerouslySetInnerHTML: { __html: sanitizedEmbedCode || '' } });
+    
+                            // +++ ADDED CASE FOR fullWidthText +++
+                            case 'fullWidthText':
+                                const textContent = block.get('text');
+                                return h('div', { key: key, className: 'content-block block-full-width-text markdown-content', /* Add markdown-content class if your CSS uses it */
+                                    dangerouslySetInnerHTML: { __html: parseMarkdownClient(textContent || '') }
+                                 });
+    
+                            // +++ ADDED CASE FOR horizontalGallery (Basic Preview) +++
+                            case 'horizontalGallery':
+                                 const imagesData = block.get('images');
+                                 let galleryImages = [];
+                                 if (imagesData && typeof imagesData.map === 'function') {
+                                     galleryImages = imagesData.map((imgData, imgIndex) => {
+                                         if (!imgData || typeof imgData.get !== 'function') return null;
+                                         const imgRawPath = imgData.get('image');
+                                         const imgAlt = imgData.get('alt') || '';
+                                         const imgUrl = imgRawPath ? getAsset(imgRawPath)?.url || imgRawPath : null;
+                                         return imgUrl ? h('img', {
+                                             key: `gallery-${index}-img-${imgIndex}`,
+                                             src: imgUrl,
+                                             alt: imgAlt,
+                                             style: { height: '100px', width: 'auto', marginRight: '10px', objectFit: 'cover', border: '1px solid #eee' } // Simple inline style for preview
+                                         }) : null;
+                                     }).filter(img => img !== null);
+                                 }
+                                 return h('div', { key: key, className: 'content-block block-horizontal-gallery-preview', style: { overflowX: 'auto', whiteSpace: 'nowrap', padding: '10px', border: '1px dashed #ccc', margin: '5px 0' } },
+                                     galleryImages.length > 0 ? galleryImages : h('p', {}, h('em', {}, 'No images in gallery.'))
+                                 );
+    
+                            default:
+                                console.warn(`Unsupported block type encountered in preview: ${blockType}`); // Log warning
+                                return h('div', { key: key, className: 'content-block block-unknown', style: { padding: '10px', border: '1px solid red', margin: '5px 0', color: 'red' } },
+                                    h('p', {}, h('em', {}, `Unsupported block preview: ${blockType || 'Unknown'}`))
+                                );
+                        }
+                    }).filter(el => el !== null);
+                } else {
+                     blockElements = [h('p', { key: 'no-blocks' }, h('em', {}, 'No content blocks added yet.'))];
+                }
+    
+    
+                // --- Assemble Preview using h() ---
+                // Use a wrapper div matching the structure in your preview CSS
+                return h('div', { className: 'feed-entry-preview-wrapper' },
+                    h('article', { className: 'feed-entry' },
+                        // Title
+                        h('h3', {}, title),
+                        // Date
+                        formattedDate ? h('time', { className: 'feed-entry-date' }, formattedDate) : null,
+                        // Thumbnail (basic preview)
+                        thumbnailUrl ? h('div', { className: 'thumbnail-preview', style: { marginBottom: '1.5rem', backgroundColor: 'var(--color-border-light)' } },
+                            h('img', { src: thumbnailUrl, alt: `Thumbnail for ${title}`, style: { display: 'block', width: '100%', height: 'auto', maxWidth: '100%', objectFit: 'cover' } })
+                        ) : null,
+                        // Content Blocks
+                        h('div', { className: 'feed-entry-blocks' }, blockElements), // Pass array directly
+                        // Separator
+                        h('hr', { className: 'entry-separator' })
+                    )
+                );
+            }; // End of FeedEntryPreview function definition
+    
+            // --- Register the Preview Template ---
+            try {
+                CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+                console.log("Feed entry preview template registered successfully.");
+            } catch (error) {
+                 console.error("Error registering preview template:", error);
+            }
+    
+        } // End of CMS/h check
+      </script>
+</body>
+</html>
+
+--- FILE: public/admin-preview.css ---
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+/* These variables apply globally within the preview context */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Use a fixed size for preview consistency, or keep clamp if preferred */
+  --font-size-desktop-unified: 1.1rem; /* Example: Fixed size */
+  /* Mobile sizes aren't usually relevant for CMS preview pane */
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular);
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204;
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables (Might not be needed unless specific widths are required) */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%;
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width));
+
+  /* Feed Entry Specific Vars */
+  --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+  /* Gallery variables likely not needed for basic preview */
+}
+
+/* 3. Core Body & Universal Text Styling */
+/* Apply base styles to the preview wrapper generated by the script */
+.feed-entry-preview-wrapper { /* Targets the wrapper div added in index.html script */
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  padding: 1rem; /* Ensure some padding */
+  /* min-height: 100vh; Not needed */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Default heading/paragraph styles within the preview */
+.feed-entry-preview-wrapper h1,
+.feed-entry-preview-wrapper h2,
+.feed-entry-preview-wrapper h3,
+.feed-entry-preview-wrapper h4,
+.feed-entry-preview-wrapper h5,
+.feed-entry-preview-wrapper h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+.feed-entry-preview-wrapper h3 { font-size: 1.1em; } /* Example specific size */
+
+.feed-entry-preview-wrapper p,
+.feed-entry-preview-wrapper li,
+.feed-entry-preview-wrapper dt,
+.feed-entry-preview-wrapper dd,
+.feed-entry-preview-wrapper span, /* Apply base styles to spans too */
+.feed-entry-preview-wrapper label {
+  font-weight: inherit; /* Should inherit from wrapper */
+  font-size: inherit; /* Should inherit from wrapper */
+  line-height: inherit; /* Should inherit from wrapper */
+  margin-bottom: var(--spacing-sm);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+/* 4. Basic Link & Button Hover Styling (Might not be interactive in preview) */
+.feed-entry-preview-wrapper a { color: inherit; text-decoration: none; } /* Base link style */
+.feed-entry-preview-wrapper a:hover { color: var(--color-text-hover); } /* Hover might work */
+
+/* 5. Utility Classes */
+.feed-entry-preview-wrapper .accent-text { /* Scope utility class */
+  color: var(--color-accent);
+}
+
+/* ========================================================= */
+/* === Styles Adapted from FeedEntry.astro === */
+/* ========================================================= */
+
+/* REMOVED redundant :root block */
+
+.feed-entry { /* This class is used on the <article> in the preview */
+   margin-bottom: var(--spacing-xl);
+   /* No padding here, handled by wrapper */
+}
+.feed-entry h3 { /* Already styled above, but keep if FeedEntry specific overrides exist */
+    margin-top: 0;
+    margin-bottom: var(--spacing-xxs);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.1em;
+    line-height: 1.3;
+}
+.feed-entry-date {
+    display: block;
+    font-size: 0.9em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+}
+.feed-entry-blocks {
+    margin-top: var(--spacing-lg);
+}
+.content-block {
+    margin-bottom: var(--spacing-lg);
+}
+.content-block:last-child { margin-bottom: 0; }
+
+/* Two Column Block */
+.block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+.block-two-column .column { flex: 1; min-width: 0; }
+.block-two-column .column > *:first-child { margin-top: 0; }
+.block-two-column .column > *:last-child { margin-bottom: 0; }
+
+/* Selectors corrected - REMOVED :global() */
+.block-two-column .column p,
+.block-two-column .column li,
+.block-two-column .column dt,
+.block-two-column .column dd {
+     line-height: var(--line-height-unified);
+     margin-bottom: var(--spacing-sm);
+     font-size: 1em;
+     text-align: justify; /* Ensure justification */
+     hyphens: auto;
+}
+.block-two-column .column h1,
+.block-two-column .column h2,
+.block-two-column .column h3,
+.block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+.block-two-column .column ul,
+.block-two-column .column ol { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); list-style: revert; } /* Add list-style back */
+.block-two-column .column li > p { margin-bottom: var(--spacing-xxs); } /* Direct p child */
+.block-two-column .column li { margin-bottom: var(--spacing-xxs); } /* Style li itself */
+.block-two-column .column blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
+
+/* Full Width Image */
+.block-full-width-image img,
+.block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+.block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+
+/* Full Width Embed */
+.block-full-width-embed {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    background-color: var(--color-border-light);
+}
+.block-full-width-embed iframe, /* Target iframe directly */
+.block-full-width-embed video {  /* Target video directly */
+    position: absolute;
+    top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+    border: none;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Full Width Text Block */
+/* Apply styles directly to elements within .markdown-content */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    text-align: justify; /* Apply justification */
+    hyphens: auto;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+.markdown-content ul, .markdown-content ol { padding-left: var(--spacing-lg); list-style: revert; } /* Add list-style */
+.markdown-content li { margin-bottom: var(--spacing-xxs); } /* Style li itself */
+.markdown-content li > p { margin-bottom: var(--spacing-xxs); } /* Direct p child */
+.markdown-content blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+.markdown-content img { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+.markdown-content a { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.markdown-content a:hover { color: var(--color-text-unified); text-decoration: none; }
+
+/* Horizontal Gallery Preview (Basic styles for the preview container) */
+.block-horizontal-gallery-preview {
+     background-color: var(--color-background-muted);
+     padding: var(--spacing-sm);
+     border: 1px dashed var(--color-border);
+     white-space: nowrap; /* Keep images inline */
+     overflow-x: auto; /* Allow scrolling */
+}
+.block-horizontal-gallery-preview img { /* Style images inside */
+     display: inline-block; /* Make them inline */
+     height: 100px; /* Fixed height for preview */
+     width: auto;
+     margin-right: var(--spacing-sm);
+     vertical-align: middle;
+     border: 1px solid var(--color-border-light);
+}
+
+/* Unknown Block */
+.block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+
+/* Separator */
+.entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+
+/* Ensure no global rules are applied to CMS UI elements by mistake */
+/* Example: Be careful with overly broad selectors like '*' or 'body' if not scoped */
+
+--- FILE: public/admin/config.yml ---
+# public/admin/config.yml
+backend:
+  name: git-gateway
+  repo: giacovecci/mittel # Make sure this is your correct repo
+  branch: adam-feedback-2
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e # Keep your specific URL
+  gateway_url: https://gateway.decapbridge.com # Keep your specific URL
+  commit_messages:
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.reiseburo.workers.dev # Optional: Replace if different
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      # Omit _styling_note field unless you explicitly want it back
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        typeKey: type
+        types:
+          - label: "Two Column Block"
+            name: "twoColumn"
+            widget: "object"
+            fields:
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
+          - label: "Full Width Image"
+            name: "fullWidthImage"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          - label: "Full Width Embed"
+            name: "fullWidthEmbed"
+            widget: "object"
+            fields:
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
+          # --- ADDED: Full Width Text Block Type ---
+          - label: "Full Width Text"
+            name: "fullWidthText"
+            widget: "object"
+            fields:
+              - { label: "Text Content", name: "text", widget: "markdown" }
+          # --- END ADDED ---
+          # --- ADDED: Horizontal Gallery Block Type ---
+          - label: "Horizontal Gallery"
+            name: "horizontalGallery"
+            widget: "object"
+            fields:
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                fields:
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          # --- END ADDED ---
+
+--- FILE: src/content/config.ts ---
+// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+const twoColumnBlockSchema = z.object({
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional(),
+});
+
+const fullWidthImageBlockSchema = z.object({
+    type: z.literal('fullWidthImage'),
+    image: z.string(),
+    alt: z.string().optional(),
+});
+
+const fullWidthEmbedBlockSchema = z.object({
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string(),
+});
+
+// --- ADDED: Schema for Full Width Text Block ---
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string(), // Markdown content
+});
+// --- END ADDED ---
+
+// --- ADDED: Schema for Horizontal Gallery Block ---
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(), // Path to the image
+            alt: z.string().optional(), // Alt text
+        })
+    ).optional(), // Allow the gallery to be empty
+});
+// --- END ADDED ---
+
+const feedCollection = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        // If you had the optional _styling_note before, keep it, otherwise omit it
+        // _styling_note: z.string().optional(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(),
+        contentBlocks: z.array(
+            z.discriminatedUnion('type', [
+                twoColumnBlockSchema,
+                fullWidthImageBlockSchema,
+                fullWidthEmbedBlockSchema,
+                // --- ADDED: Include new schemas in the union ---
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+                // --- END ADDED ---
+            ])
+        ).optional(),
+    }),
+});
+
+export const collections = {
+    'feed': feedCollection,
+};
+
+--- EXPORT COMPLETE ---

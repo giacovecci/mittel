@@ -1,58 +1,69 @@
 ---
 // src/components/StaticInfo.astro
-const introText = "Good that you're here. I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment."
+import { Image } from 'astro:assets';
+import headshotImage from '/src/assets/headshot-2.jpg';
+import { getEntry } from 'astro:content';
+
+// Fetch content.
+// 'general_content' is the collection (folder) name.
+// 'static_info' is the slug (filename without .md) of the data file.
+const entry = await getEntry('general_content', 'static_info');
+
+let introTextToDisplay = "Error: Intro text not loaded."; // Fallback
+
+if (entry && entry.data && typeof entry.data.introText === 'string') {
+    introTextToDisplay = entry.data.introText;
+} else {
+    console.error("StaticInfo.astro: Could not load introText from 'general_content/static_info.md'. Entry:", entry);
+}
+
+// Image details
+const imageAltText = "a picture of Piotr Żakowiecki";
+const imageWidth = 854;
+const imageHeight = 854;
 ---
 <div class="static-info-wrapper">
-    <div class="static-column static-column-left">
-        <div class="placeholder-visual">STATIC VISUAL</div>
+    <div class="static-visual-container">
+        <Image 
+            src={headshotImage} 
+            alt={imageAltText} 
+            width={imageWidth} 
+            height={imageHeight}
+            format="webp"
+            quality={80}      
+            densities={[1, 1.5, 2]}
+            loading="lazy"
+        />
     </div>
-    <div class="static-column static-column-right">
-        <p>{introText}</p>
+    <div class="static-text-container">
+        <p>{introTextToDisplay}</p>
     </div>
 </div>
 
 <style>
-    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
     .static-info-wrapper {
         display: flex;
-        flex-direction: row; /* Default: side-by-side */
-        gap: var(--column-gap-desktop); /* Use layout variable */
+        flex-direction: column;
+        gap: var(--spacing-lg);
         height: 100%;
+        box-sizing: border-box;
     }
-    .static-column {
-        flex-basis: 0;
-        flex-grow: 1;
-        min-width: 0;
+    .static-visual-container {
+        width: 100%;
     }
-    .static-column p {
+    .static-visual-container :global(img) {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--border-radius-sm);
+    }
+    .static-text-container p {
         margin-top: 0;
         line-height: var(--line-height-unified);
     }
-    .placeholder-visual {
-        width: 100%;
-        min-height: 200px;
-        background-color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9em;
-        color: rgba(var(--color-text-unified-rgb, 204, 204, 204), 0.6);
-        border: var(--line-thickness) dashed var(--color-border);
-        padding: var(--spacing-md);
-    }
-    /* Ensure RGB var is defined globally */
-
-    /* ================================== */
-    /* --- MOBILE - PORTRAIT ONLY --- */
-    /* ================================== */
     @media (max-width: 768px) and (orientation: portrait) {
         .static-info-wrapper {
-             flex-direction: column; /* Stack columns in portrait */
-             gap: var(--spacing-lg);
-        }
-        .placeholder-visual {
-            min-height: 150px;
+             gap: var(--spacing-md);
         }
     }
-     /* --- NO specific landscape override needed, uses default --- */
 </style>

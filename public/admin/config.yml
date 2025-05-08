@@ -1,10 +1,10 @@
 # public/admin/config.yml
 backend:
   name: git-gateway
-  repo: giacovecci/mittel # Make sure this is your correct repo
+  repo: giacovecci/mittel
   branch: adam-feedback-2
-  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e # Keep your specific URL
-  gateway_url: https://gateway.decapbridge.com # Keep your specific URL
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
+  gateway_url: https://gateway.decapbridge.com
   commit_messages:
     create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
     update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
@@ -14,7 +14,7 @@ backend:
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-site_url: https://mittel.reiseburo.workers.dev # Optional: Replace if different
+site_url: https://mittel.reiseburo.workers.dev
 publish_mode: editorial_workflow
 
 media_folder: "public/uploads"
@@ -28,7 +28,6 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      # Omit _styling_note field unless you explicitly want it back
       - { label: "Publish Date", name: "date", widget: "datetime", required: false }
       - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
       - label: "Content Blocks"
@@ -53,14 +52,11 @@ collections:
             widget: "object"
             fields:
               - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
-          # --- ADDED: Full Width Text Block Type ---
           - label: "Full Width Text"
             name: "fullWidthText"
             widget: "object"
             fields:
               - { label: "Text Content", name: "text", widget: "markdown" }
-          # --- END ADDED ---
-          # --- ADDED: Horizontal Gallery Block Type ---
           - label: "Horizontal Gallery"
             name: "horizontalGallery"
             widget: "object"
@@ -71,4 +67,12 @@ collections:
                 fields:
                   - { label: "Image", name: "image", widget: "image" }
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
-          # --- END ADDED ---
+
+  - name: "general_content" # Matches folder name src/content/general_content/
+    label: "General Content"
+    files:
+      - label: "Static Info" # CMS UI Label
+        name: "static_info_content" # Internal name for this config item
+        file: "src/content/general_content/static_info.md" # Path to the MD file
+        fields:
+          - { label: "Introductory Text", name: "introText", widget: "markdown" }
