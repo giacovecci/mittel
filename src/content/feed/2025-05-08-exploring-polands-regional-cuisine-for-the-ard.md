@@ -17,7 +17,7 @@ contentBlocks:
 
       <span class="accent-text">DoP:</span> Chris Caliman
 
-      <span class="accent-text">Sound:</span> Julio
+      <span class="accent-text">Sound:</span> Julio Rodriguez
     left: >-
       I researched and organised a four-day shoot at four locations for a
       culinary documentary commissioned by the German public television
