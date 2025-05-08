@@ -52,7 +52,7 @@ const feed = defineCollection({
 // --- Collection Definition: general_content ---
 // This key 'general_content' MUST match the folder name src/content/general_content/
 const general_content = defineCollection({
-    type: 'data', // For YAML/JSON/MD files where we primarily use frontmatter
+    type: 'content', // For YAML/JSON/MD files where we primarily use frontmatter
     schema: z.object({
         introText: z.string(),
     }),
