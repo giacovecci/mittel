@@ -9,5 +9,5 @@ summary: |-
 
   * this
   * and that!
-linkedFeedSlug: 2025-04-22-january-2025.md
+linkedFeedSlug: 2025-04-22-january-2025
 ---
