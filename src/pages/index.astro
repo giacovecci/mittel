@@ -9,7 +9,6 @@ import FeedEntry from '../components/FeedEntry.astro';
 import OverviewGrid from '../components/OverviewGrid.astro';
 import type { CollectionEntry } from 'astro:content';
 
-// Data Fetching
 const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
 const feedEntries = feedEntriesFetched.sort((a, b) => {
     const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
@@ -19,36 +18,31 @@ const feedEntries = feedEntriesFetched.sort((a, b) => {
 const overviewItems = feedEntries.map(entry => ({
     id: entry.slug,
     title: entry.data.title || 'Untitled',
-    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', 
     altText: entry.data.title || 'Feed item thumbnail'
 }));
 ---
 <BaseLayout title="Żakowiecki | fixer supreme XD">
 
-    {/* Slot for Identity Header */}
     <div slot="identity-header">
         <IdentityHeader />
     </div>
 
-    {/* Slot for Main Header (Nav/Contact) */}
     <div slot="main-header">
         <Header />
     </div>
 
-    {/* Slot for Info Content Area */}
-    <div slot="info-content" id="info-content-wrapper"> {/* Use wrapper ID if needed */}
+    <div slot="info-content" id="info-content-wrapper"> 
         <StaticInfo />
     </div>
 
-    {/* Slot for Feed Content Area */}
-    <section slot="feed-content" id="feed-content-wrapper"> {/* Use wrapper ID if needed */}
+    <section slot="feed-content" id="feed-content-wrapper"> 
         {feedEntries.map(entry => (
             <FeedEntry entry={entry} />
         ))}
     </section>
 
-    {/* Slot for Overview Content Area */}
-    <div slot="overview-content" id="overview-content-wrapper"> {/* Use wrapper ID if needed */}
+    <div slot="overview-content" id="overview-content-wrapper"> 
         <div id="overview-grid-wrapper">
             <OverviewGrid items={overviewItems} />
         </div>
@@ -56,10 +50,8 @@ const overviewItems = feedEntries.map(entry => ({
 
 </BaseLayout>
 
-{/* --- Script for View Switching --- */}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Selectors (Keep as before)
         const appContainer = document.getElementById('app-container');
         const identityHeaderArea = document.getElementById('identity-header-area');
         const mainHeaderArea = document.getElementById('main-header-area');
@@ -72,7 +64,6 @@ const overviewItems = feedEntries.map(entry => ({
         const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
         const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
 
-        // Null Check (Keep as before)
         if (!appContainer || !identityHeaderArea || !mainHeaderArea || !dividerArea || !infoContentArea || !feedContentArea || !overviewContentArea || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper) {
             console.error("Essential elements missing for view switching script."); return;
         }
@@ -90,7 +81,6 @@ const overviewItems = feedEntries.map(entry => ({
         }
 
         function setMainView(view: 'feed' | 'overview' | 'info'): void {
-            // (Keep the setMainView function exactly as it was in the previous step)
             console.log("%cSetting view:", "color: blue; font-weight: bold;", view, "isMobile:", isMobile());
             if (!appContainer) return;
             appContainer.classList.remove('view-feed', 'view-overview', 'view-info', 'is-mobile', 'is-desktop');
@@ -101,92 +91,82 @@ const overviewItems = feedEntries.map(entry => ({
             elementsToReset.forEach(el => { if (el) { el.style.display = ''; } });
             if (isMobile()) { appContainer.classList.add('is-mobile'); } else { appContainer.classList.add('is-desktop'); }
             if (view === 'overview') {
-                console.log("  Applying OVERVIEW class...");
                 appContainer.classList.add('view-overview');
                 setActiveButton(overviewBtn);
             } else if (view === 'info' && isMobile()) {
-                console.log("  Applying INFO class (Mobile)...");
                 appContainer.classList.add('view-info');
                 setActiveButton(infoBtn);
             } else {
-                console.log("  Applying FEED class (Default/Desktop)...");
                 appContainer.classList.add('view-feed');
                 setActiveButton(feedBtn);
             }
-            console.log("Current appContainer classes:", appContainer.className);
         }
 
-        // Event Listeners (Keep view switching listeners as before)
         overviewBtn.addEventListener('click', () => setMainView('overview'));
         feedBtn.addEventListener('click', () => setMainView('feed'));
         infoBtn.addEventListener('click', () => { if (isMobile()) { setMainView('info'); } else { setMainView('feed'); } });
 
-
         // --- UPDATED Grid Click Logic ---
         if (overviewGridWrapper) {
             overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
-                console.log("Overview grid clicked.");
-                if (event.target instanceof Element) {
-                    const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                    // Ensure feedContentArea exists before proceeding
-                    if (gridItemLink && gridItemLink.dataset.targetId && feedContentArea) {
-                        event.preventDefault();
-                        const targetId = gridItemLink.dataset.targetId;
-                        console.log("Target ID from grid item:", targetId);
+                if (!(event.target instanceof Element)) return;
 
-                        // 1. Switch view first
-                        setMainView('feed');
-
-                        // 2. Wait for rendering and scroll
-                        requestAnimationFrame(() => {
-                            setTimeout(() => {
-                                // --- Use document.getElementById() ---
-                                const targetFeedElement = document.getElementById(targetId);
-
-                                // --- Check if found AND is within feedContentArea ---
-                                if (targetFeedElement && feedContentArea.contains(targetFeedElement)) {
-                                     // Optional: Check class for extra safety, though ID should be unique
-                                     if (targetFeedElement.classList.contains('feed-entry')) {
-                                        console.log("Target feed element found by ID:", targetFeedElement); // DEBUG
-                                        targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                        console.log("scrollIntoView called."); // DEBUG
-                                     } else {
-                                         console.warn(`Element with ID '${targetId}' found, but lacks 'feed-entry' class.`);
-                                         // Still try to scroll? Decide based on strictness needed.
-                                         // targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                     }
-                                } else if (targetFeedElement) {
-                                    // Found element by ID, but it's not in the feed area (shouldn't happen with Astro slugs)
-                                    console.error(`Element ID '${targetId}' found, but not within #feed-content-area.`);
-                                } else {
-                                    // Element not found anywhere
-                                    console.error(`Target element with ID '${targetId}' not found in the document.`);
-                                }
-                            }, 100); // Keep delay for now, seems reasonable
-                        });
-                    } else if (gridItemLink) {
+                const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
+                
+                if (!gridItemLink || !gridItemLink.dataset.targetId || !feedContentArea) {
+                    if (gridItemLink && !gridItemLink.dataset.targetId) {
                         console.error("Grid item link missing 'data-target-id'.");
-                    } else if (!feedContentArea) {
+                    }
+                    if (!feedContentArea) {
                          console.error("Feed content area not found for scrolling.");
                     }
+                    return;
                 }
+                
+                event.preventDefault();
+                const targetId = gridItemLink.dataset.targetId;
+
+                // 1. Switch view first
+                setMainView('feed');
+
+                // 2. Defer scrolling until after the next browser paint cycle.
+                // This allows the DOM to update with the new view before we try to find and scroll to the element.
+                requestAnimationFrame(() => {
+                    // An additional small delay can sometimes be necessary if requestAnimationFrame alone
+                    // isn't enough for all CSS transitions/layout shifts to complete.
+                    // Start with a minimal timeout, or remove if requestAnimationFrame is sufficient.
+                    setTimeout(() => {
+                        const targetFeedElement = document.getElementById(targetId);
+
+                        if (targetFeedElement && feedContentArea.contains(targetFeedElement)) {
+                            if (targetFeedElement.classList.contains('feed-entry')) {
+                                targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            } else {
+                                console.warn(`Element with ID '${targetId}' found, but lacks 'feed-entry' class. Still attempting scroll.`);
+                                targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        } else if (targetFeedElement) {
+                            console.error(`Element ID '${targetId}' found, but not within #feed-content-area.`);
+                        } else {
+                            console.error(`Target element with ID '${targetId}' not found in the document.`);
+                        }
+                    }, 50); // Small delay for rendering, adjust or remove if not needed
+                });
             });
         }
 
-        // Initial View & Resize Handling (Keep as before)
         console.log("Initializing view...");
         setMainView('feed');
         const resizeObserver = new ResizeObserver(() => {
             const isNowMobile = isMobile();
             if (isNowMobile !== wasMobile) {
-                console.log(`Resize detected: Switched state. Resetting view to feed.`);
                 setMainView('feed');
                 wasMobile = isNowMobile;
             }
         });
         resizeObserver.observe(document.body);
-
-        // Gallery Logic (Keep as is)
-        // ...
+        
+        // The gallery logic is now self-contained within FeedEntry.astro's script
+        // No global gallery initialization is needed here anymore.
     });
 </script>

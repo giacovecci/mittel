@@ -3,10 +3,11 @@
 import { Image } from 'astro:assets';
 import headshotImage from '/src/assets/headshot-2.jpg';
 import { getEntry } from 'astro:content';
-import { marked } from 'marked'; // Import marked
+// MODIFICATION: Import render function from MarkdownRenderer
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
 
 const entry = await getEntry('general_content', 'static_info');
-let rawIntroText = "Error: Intro text not loaded."; // Fallback for raw text
+let rawIntroText = "Error: Intro text not loaded."; 
 
 if (entry && entry.data && typeof entry.data.introText === 'string') {
     rawIntroText = entry.data.introText;
@@ -14,11 +15,9 @@ if (entry && entry.data && typeof entry.data.introText === 'string') {
     console.error("StaticInfo.astro: Could not load introText from 'general_content/static_info.md'. Entry:", entry);
 }
 
-// Parse the Markdown string to HTML
-const
- htmlIntroText = marked.parse(rawIntroText);
+// MODIFICATION: Use imported parseMarkdown function
+const htmlIntroText = parseMarkdown(rawIntroText);
 
-// Image details
 const imageAltText = "a picture of Piotr Żakowiecki";
 const imageWidth = 854;
 const imageHeight = 854;
@@ -37,27 +36,20 @@ const imageHeight = 854;
         />
     </div>
     <div class="static-text-container markdown-content" set:html={htmlIntroText}>
-        {/* The content will be injected here by set:html */}
-        {/* Fallback if htmlIntroText is empty, though unlikely with default error message */}
         {htmlIntroText === "" && <p>Error: Intro text not loaded or empty.</p>}
     </div>
 </div>
 
 <style>
-    /* Styles remain the same, but ensure .markdown-content styles from global.css apply */
     .static-info-wrapper { display: flex; flex-direction: column; gap: var(--spacing-lg); height: 100%; box-sizing: border-box; }
     .static-visual-container { width: 100%; }
     .static-visual-container :global(img) { display: block; max-width: 100%; height: auto; border-radius: var(--border-radius-sm); }
     
     .static-text-container {
-        /* No specific styles needed here unless you want to override markdown defaults */
+        /* Styles for p, ul etc. will come from global .markdown-content */
     }
-    /* Paragraphs, lists, etc. inside .static-text-container will be styled by 
-       .markdown-content rules in global.css or FeedEntry.astro's similar rules if you adapt them */
-    .static-text-container p { /* This direct p rule might be too general if markdown has nested p's */
-        margin-top: 0; /* Good to keep if the container itself is the direct parent of the first <p> */
-        line-height: var(--line-height-unified); 
-    }
+    /* MODIFICATION: Removed specific p rule, rely on global .markdown-content */
+    /* .static-text-container p { ... } */
 
     @media (max-width: 768px) and (orientation: portrait) { .static-info-wrapper { gap: var(--spacing-md); } }
 </style>

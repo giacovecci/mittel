@@ -4,50 +4,36 @@
 *, *::before, *::after { box-sizing: border-box; }
 body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
 button, input, textarea, select { font: inherit; margin: 0; }
-ul, ol { padding: 0; /* list-style: none; */ }
+ul, ol { padding: 0; /* list-style: none; */ } /* Keep user's choice for list-style */
 img, video, picture, svg { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
 
 /* 2. CSS Custom Properties (Variables) */
 :root {
-  /* --- FONT STYLE --- */
   --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  /* Default/Desktop responsive size */
   --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
-  /* Mobile Responsive Sizes */
   --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
   --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
-  /* Font Weights */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
-  /* Set the default weight variable */
-  --font-weight-unified: var(--font-weight-regular); /* Default to Regular */
-
+  --font-weight-unified: var(--font-weight-regular); 
   --line-height-unified: 1.6;
   --color-text-unified: #ccc;
-
-  /* Background & Border Colors */
   --color-background: #000000;
   --color-header-bg: #111111;
   --color-border: #555555;
   --line-thickness: 2px;
-
-  /* Other Colors */
   --color-text-secondary: #aaa;
   --color-border-light: #444;
   --border-radius-sm: 4px;
   --color-background-muted: #1a1a1a;
   --color-surface-light: #2a2a2a;
   --color-surface-light-hover: #383838;
-  --color-text-unified-rgb: 204, 204, 204; /* Corresponds to #ccc */
-
-  /* Accent for Hover/Active */
+  --color-text-unified-rgb: 204, 204, 204; 
   --color-accent: #e70221;
   --color-text-hover: var(--color-accent);
-
-  /* Spacing Unit & Scale */
   --spacing-unit: 1rem;
   --spacing-xxs: calc(0.25 * var(--spacing-unit));
   --spacing-xs: calc(0.5 * var(--spacing-unit));
@@ -56,15 +42,12 @@ button { background: none; border: none; padding: 0; cursor: pointer; color: inh
   --spacing-lg: calc(1.5 * var(--spacing-unit));
   --spacing-xl: calc(2 * var(--spacing-unit));
   --spacing-xxl: calc(3 * var(--spacing-unit));
-
-  /* Layout Specific Variables */
   --content-padding-x-desktop: var(--spacing-lg);
   --content-padding-x-mobile: var(--spacing-md);
   --column-gap-desktop: var(--spacing-lg);
   --column-gap-mobile: var(--spacing-md);
-  /* --- ADDED: Global Desktop Column Split --- */
-  --desktop-info-column-width: 33.33%; /* Approx 1/3 */
-  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); /* Approx 2/3 */
+  --desktop-info-column-width: 33.33%; 
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); 
 }
 
 /* 3. Core Body & Universal Text Styling */
@@ -73,7 +56,6 @@ body {
   background-color: var(--color-background);
   font-family: var(--font-family-unified);
   font-size: var(--font-size-desktop-unified);
-  /* Apply default font weight (now 400) */
   font-weight: var(--font-weight-unified);
   line-height: var(--line-height-unified);
   color: var(--color-text-unified);
@@ -83,45 +65,32 @@ body {
   position: relative;
 }
 
-/* Default heading/paragraph styles */
 h1, h2, h3, h4, h5, h6 {
-  /* Ensure headings use bold weight */
-  font-weight: var(--font-weight-bold); /* 700 */
+  font-weight: var(--font-weight-bold); 
   line-height: 1.3;
   margin-bottom: var(--spacing-sm);
 }
 h3 { font-size: 1.1em; }
 
 p, li, dt, dd, span, label {
-  /* Inherit weight (defaults to body's 400) */
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
   margin-bottom: var(--spacing-sm);
-  text-align: justify; /* <<< ADD THIS LINE */
-  /* Optional, but recommended for better justification: */
+  text-align: justify; 
   -webkit-hyphens: auto;
-  -moz-hyphens: auto; /* For older Firefox */
-  -ms-hyphens: auto; /* For IE/Edge */
+  -moz-hyphens: auto; 
+  -ms-hyphens: auto; 
   hyphens: auto;
 }
 
-/* --- Style List Markers --- */
 li::marker {
   color: var(--color-accent);
 }
 
-/* --- Header Text Weights --- */
-/* Apply specific weights to header elements as needed */
 .header-site-name-text {
-    font-weight: var(--font-weight-bold); /* Keep site name bold (700) */
+    font-weight: var(--font-weight-bold); 
 }
-/* If tagline, nav buttons, contact link need specific weights, add rules here: */
-/* Example: */
-/* .header-nav button, .header-contact-item a { */
-/*     font-weight: var(--font-weight-medium); /* 500 */
-/* } */
-
 
 /* 4. Basic Link & Button Hover Styling */
 a:hover,
@@ -132,7 +101,6 @@ button { cursor: pointer; }
 /* 5. Utility Classes */
 .accent-text {
   color: var(--color-accent);
-  /* Optional: font-weight: var(--font-weight-bold); */
 }
 
 /* ================================== */
@@ -142,15 +110,147 @@ button { cursor: pointer; }
     body {
         font-size: var(--font-size-mobile-content-responsive);
     }
-    /* h3 { font-size: 1.2em; } */
-  }
+}
 
-
-/* ===================================================== */
-/* --- Font Size Adjustment for Landscape Mobile/Tablet --- */
-/* ===================================================== */
 @media (max-width: 992px) and (orientation: landscape) {
   body {
       font-size: 0.8rem;
   }
+}
+
+/* --- ADDED: Global Markdown Content Styles --- */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    /* text-align: justify; and hyphens: auto; will be inherited from global p, li etc. */
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.2;
+    /* font-weight: var(--font-weight-bold); will be inherited from global h1,h2 etc. */
+}
+/* More specific heading margin for first child if needed */
+.markdown-content > *:first-child { margin-top: 0; }
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child,
+.markdown-content h4:first-child,
+.markdown-content h5:first-child,
+.markdown-content h6:first-child {
+    margin-top: 0;
+}
+
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: var(--spacing-lg); /* Standard indent for lists */
+    list-style: revert; /* Ensures bullets/numbers appear */
+}
+.markdown-content ul { list-style-type: disc; }
+.markdown-content ol { list-style-type: decimal; }
+.markdown-content ul ul, .markdown-content ol ol { margin-bottom: 0; list-style-type: circle; } /* Nested lists */
+.markdown-content ul ol, .markdown-content ol ul { margin-bottom: 0; }
+
+
+.markdown-content li {
+    margin-bottom: var(--spacing-xxs);
+    /* text-align: justify; and hyphens: auto; will be inherited */
+}
+/* If a paragraph is the ONLY child of an li, remove its bottom margin */
+.markdown-content li > p:only-child {
+    margin-bottom: 0;
+}
+/* If a paragraph is the LAST child of an li, remove its bottom margin to rely on li's margin */
+.markdown-content li > p:last-child {
+    margin-bottom: 0;
+}
+
+
+.markdown-content blockquote {
+    margin-left: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+    border-left: 3px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+.markdown-content blockquote p {
+    margin-bottom: var(--spacing-xs); /* Slightly less margin for paragraphs inside blockquotes */
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* Placeholder bg if image is transparent or loading */
+}
+
+.markdown-content a {
+    color: var(--color-text-hover); /* Use accent color for links */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+.markdown-content a:hover {
+    color: var(--color-text-unified); /* Revert to standard text color on hover, or a lighter accent */
+    text-decoration: none;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.markdown-content table {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    border-collapse: collapse;
+    border: 1px solid var(--color-border-light);
+}
+.markdown-content th,
+.markdown-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--color-border-light);
+    text-align: left; /* Override global justify for table cells if needed */
+}
+.markdown-content th {
+    background-color: var(--color-surface-light);
+    font-weight: var(--font-weight-bold);
+}
+
+.markdown-content pre {
+    background-color: var(--color-background-muted);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    overflow-x: auto;
+    margin-bottom: var(--spacing-md);
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+.markdown-content code {
+    background-color: var(--color-background-muted);
+    padding: 0.1em 0.3em;
+    border-radius: var(--border-radius-sm);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+.markdown-content pre code { /* Code inside pre shouldn't have extra padding/bg */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
 }
