@@ -1,8 +1,6 @@
 ---
-// src/components/FeedEntry.astro
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-// MODIFICATION: Import render function from MarkdownRenderer
 import { render as parseMarkdown } from './MarkdownRenderer.astro';
 
 type BaseBlock = { type: string };
@@ -22,9 +20,6 @@ const formattedDate = data.date
         day: 'numeric',
     })
     : null;
-
-// MODIFICATION: Removed local parseMarkdown function, using imported one
-// function parseMarkdown(markdownString?: string): string { ... } // REMOVED
 ---
 <article class="feed-entry" id={slug}>
     <h3>{data.title || 'Untitled Entry'}</h3>
@@ -44,10 +39,10 @@ const formattedDate = data.date
                         return (
                             <div class="content-block block-two-column">
                                 {block.left && (
-                                    <div class="column left-column" set:html={parseMarkdown(block.left)}></div>
+                                    <div class="column left-column markdown-content" set:html={parseMarkdown(block.left)}></div>
                                 )}
                                 {block.right && (
-                                    <div class="column right-column" set:html={parseMarkdown(block.right)}></div>
+                                    <div class="column right-column markdown-content" set:html={parseMarkdown(block.right)}></div>
                                 )}
                             </div>
                         );
@@ -111,7 +106,7 @@ const formattedDate = data.date
 
                     default:
                         const unknownBlock = block as BaseBlock;
-                        console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
+                        // console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
                          return (
                              <div class="content-block block-unknown">
                                  <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
@@ -120,7 +115,7 @@ const formattedDate = data.date
                 }
             })
         ) : (
-             entry.body ? (
+             entry.body ? ( 
                  <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
              ) : (
                  <p><em>No content found for this entry.</em></p>
@@ -131,13 +126,8 @@ const formattedDate = data.date
     <hr class="entry-separator" />
 </article>
 
-{/* ADDED SCRIPT FOR GALLERY FUNCTIONALITY */}
 <script>
-    // This script runs for each FeedEntry component instance
-    // It finds all horizontal galleries *within this specific FeedEntry* and sets up their controls.
-    // This is better than a global script as it correctly scopes to each gallery instance.
-
-    // Function to handle gallery navigation for a single gallery instance
+    // Gallery script remains the same
     function setupGallery(galleryElement) {
         const scrollContainer = galleryElement.querySelector('.gallery-scroll-container');
         const prevButton = galleryElement.querySelector('.gallery-nav-button.prev');
@@ -145,17 +135,15 @@ const formattedDate = data.date
         const items = galleryElement.querySelectorAll('.gallery-item');
 
         if (!scrollContainer || !prevButton || !nextButton || items.length === 0) {
-            // console.warn('Gallery elements not found for one of the galleries:', galleryElement);
             if (prevButton) prevButton.style.display = 'none';
             if (nextButton) nextButton.style.display = 'none';
             return;
         }
 
-        const itemWidth = items[0].offsetWidth; // Assumes all items have the same width for snapping
-        const gap = parseFloat(getComputedStyle(scrollContainer).gap) || 0; // Get gap value
+        const itemWidth = items[0].offsetWidth; 
+        const gap = parseFloat(getComputedStyle(scrollContainer).gap) || 0; 
 
         function updateButtonVisibility() {
-            // A small tolerance helps with floating point inaccuracies
             const tolerance = 5;
             if (prevButton) {
                 prevButton.classList.toggle('hidden', scrollContainer.scrollLeft <= tolerance);
@@ -178,164 +166,130 @@ const formattedDate = data.date
         });
 
         scrollContainer.addEventListener('scroll', updateButtonVisibility, { passive: true });
-
-        // Initial check
         updateButtonVisibility();
 
-        // Update on resize as well, in case container/item widths change
-        // Use a ResizeObserver for better performance than a global resize listener
         const resizeObserver = new ResizeObserver(_ => {
-            // Recalculate itemWidth, may not be strictly necessary if it's percentage based and scroll is handled by browser
-            // but button visibility might need re-check if clientWidth changes significantly
             updateButtonVisibility();
         });
         resizeObserver.observe(scrollContainer);
     }
 
-    // Find all gallery blocks within this FeedEntry and set them up.
-    // `document.querySelectorAll` used here will be scoped to the component's shadow DOM by Astro typically,
-    // but since we're targeting elements by class within this component's template, it works.
-    // To be absolutely sure it's scoped if issues arise, one could wrap the component's HTML in a div with a unique ID
-    // and then use `document.getElementById(uniqueId).querySelectorAll(...)`.
-    // However, Astro's script processing should handle this correctly.
-    // For multiple galleries in one FeedEntry, this iterates through each.
-    // The IDs prevBtnId, nextBtnId, galleryId are unique per block due to `slug` and `index` in their generation.
-    // The script below selects based on class within the block.
-
-    // Run this script after the DOM is ready for this component instance
-    // Astro runs <script> tags by default with `type="module"`, which defers execution.
-    // This should be fine.
     const galleriesInThisEntry = document.querySelectorAll('.block-horizontal-gallery');
     galleriesInThisEntry.forEach(galleryInstance => {
-        // Ensure the gallery being set up is within the current <article class="feed-entry">
-        // This is a sanity check. `astro:self` could refer to the shadow root if applicable.
-        // For simple cases, direct query within the expected structure is okay.
-        // The crucial part is that Astro processes this script per component instance.
-        // The `id` attributes on buttons and scroll containers generated in the template
-        // (e.g., galleryId, prevBtnId, nextBtnId) make them unique. The querySelectors inside setupGallery
-        // are relative to the galleryElement passed to it.
         setupGallery(galleryInstance);
     });
-
 </script>
 
 <style>
-    /* --- Base and Existing Styles --- */
     :root {
         --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
         --gallery-nav-button-size: 2.5rem;
-        /* --- ADDED: Define gap size --- */
-        --gallery-item-gap: var(--spacing-md); /* e.g., 1rem */
+        --gallery-item-gap: var(--spacing-md); 
+        --scrollbar-width: 8px; 
+        --scrollbar-thumb-color: var(--color-text-secondary, #aaa); 
+        --scrollbar-track-color: var(--color-background-muted, #1a1a1a); 
     }
 
-    /* ... (keep all styles from .feed-entry down to .block-full-width-text) ... */
     .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
     .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-bold); font-size: 1.1em; line-height: 1.3; }
     .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
     .feed-entry-blocks { margin-top: var(--spacing-lg); }
     .content-block { margin-bottom: var(--spacing-lg); }
     .content-block:last-child { margin-bottom: 0; }
+
     .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
-    .block-two-column .column { flex: 1; min-width: 0; }
-    .block-two-column .column > *:first-child { margin-top: 0; }
-    .block-two-column .column > *:last-child { margin-bottom: 0; }
+    .block-two-column .column { 
+        flex: 1; 
+        min-width: 0; /* Crucial for flex items to shrink properly */
+        overflow-wrap: break-word; /* Allow long words/strings to break */
+        word-break: break-word; /* More aggressive breaking if needed */
+    }
+    .block-two-column .column.markdown-content > *:first-child { margin-top: 0; }
+    .block-two-column .column.markdown-content > *:last-child { margin-bottom: 0; }
     
-    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
-    .block-two-column .column p, 
-    .block-two-column .column li, 
-    .block-two-column .column dt, 
-    .block-two-column .column dd { 
-        line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; 
+    /* Target iframes specifically within two-column blocks or any markdown content */
+    .block-two-column .column :global(iframe),
+    .markdown-content :global(iframe) {
+        max-width: 100% !important; /* Ensure iframe itself scales down */
+        width: 100% !important;     /* Force it to take container width */
+        height: auto !important;    /* Adjust height proportionally if original embed doesn't have aspect ratio */
+        aspect-ratio: 16 / 9; /* Common aspect ratio, adjust if needed or make it configurable */
+        display: block; /* Remove extra space below */
+        border: none; /* Remove default iframe border */
     }
-    .block-two-column .column h1, 
-    .block-two-column .column h2, 
-    .block-two-column .column h3, 
-    .block-two-column .column h4 { 
-        margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; 
+    /* If the iframe is wrapped in a div by the embed code, target that too */
+    .block-two-column .column :global(div[style*="width"]) > :global(iframe),
+    .markdown-content :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
     }
-    .block-two-column .column ul, 
-    .block-two-column .column ol { 
-        margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); 
-        /* list-style: revert; Ensure lists are styled if not caught by global */
+    .block-two-column .column :global(div[style*="width"]), /* Target wrapper divs with inline width */
+    .markdown-content :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
     }
-    .block-two-column .column li > p { 
-        margin-bottom: var(--spacing-xxs); 
-    }
-    .block-two-column .column blockquote { 
-        margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); 
-    }
+
 
     .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
     .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
-    .block-full-width-embed { width: 100%; max-width: 100%; overflow: hidden; background-color: var(--color-border-light); }
     
-    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
-    .block-full-width-embed iframe, 
-    .block-full-width-embed video { 
-        display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; 
+    .block-full-width-embed { 
+        width: 100%; 
+        max-width: 100%; 
+        overflow: hidden; /* Clip content that might still try to overflow */
+        background-color: var(--color-border-light); 
+        position: relative; 
+        /* padding-bottom: 56.25%; /* 16:9 aspect ratio - can be applied if all embeds are 16:9 */
+        /* height: 0; */
     }
-    .block-full-width-text {} /* Uses .markdown-content, which will be styled globally */
-
-
-    /* --- UPDATED: Horizontal Gallery --- */
-    .block-horizontal-gallery {
-        position: relative;
-        width: 100%;
-        box-sizing: border-box;
+    /* More specific iframe styling for full-width embeds */
+    .block-full-width-embed :global(iframe) { 
+        display: block; 
+        width: 100% !important; 
+        height: auto !important; /* Let aspect-ratio or embed itself define height */
+        max-width: 100% !important; 
+        aspect-ratio: 16 / 9; /* Default aspect ratio, can be overridden by embed */
+        border: none; 
+        margin: 0;
+        /* position: absolute; top: 0; left: 0; /* Only if using padding-bottom trick on parent */
     }
+    /* If the iframe is wrapped by a div with fixed width from the embed code */
+    .block-full-width-embed :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
+    }
+     .block-full-width-embed :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .block-full-width-text {} 
+
+    .block-horizontal-gallery { position: relative; width: 100%; box-sizing: border-box; }
     .gallery-scroll-container {
-        display: flex;
-        overflow-x: auto !important;
-        overflow-y: hidden;
-        gap: var(--gallery-item-gap);
+        display: flex; overflow-x: auto; overflow-y: hidden; gap: var(--gallery-item-gap);
         padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
         padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
         padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
         scroll-snap-type: x mandatory;
         scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
         scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
-        scrollbar-width: thin;
-        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-        max-height: 70vh;
-        width: 100%;
-        box-sizing: border-box;
-        margin-left: auto;
-        margin-right: auto;
+        scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        max-height: 70vh; width: 100%; box-sizing: border-box; margin-left: auto; margin-right: auto;
     }
     .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
     .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
     .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
-
     .gallery-item {
-        flex: 0 0 100%;
-        min-width: 100%;
-        scroll-snap-align: center;
-        height: auto;
-        max-height: 100%;
-        border-radius: var(--border-radius-sm);
-        overflow: hidden;
-        background-color: var(--color-border-light);
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        flex: 0 0 100%; min-width: 100%; scroll-snap-align: center; height: auto; max-height: 100%;
+        border-radius: var(--border-radius-sm); overflow: hidden; background-color: var(--color-border-light);
+        position: relative; display: flex; align-items: center; justify-content: center;
     }
     .gallery-item img, .gallery-item picture {
-        display: block;
-        width: auto;
-        max-width: 100%;
-        height: auto;
-        max-height: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: contain;
-        margin: 0 auto;
+        display: block; width: auto; max-width: 100%; height: auto; max-height: 100%;
+        aspect-ratio: 4 / 3; object-fit: contain; margin: 0 auto;
     }
-     .gallery-item.placeholder p {
-         font-style: italic;
-         color: var(--color-text-secondary);
-         padding: var(--spacing-md);
-     }
-
+     .gallery-item.placeholder p { font-style: italic; color: var(--color-text-secondary); padding: var(--spacing-md); }
     .gallery-nav-button {
         position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
         background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
@@ -349,23 +303,24 @@ const formattedDate = data.date
     .gallery-nav-button.prev { left: var(--spacing-sm); }
     .gallery-nav-button.next { right: var(--spacing-sm); }
     .gallery-nav-button.hidden { display: none; }
-
-
-    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
-    /* Fallback Markdown Content - these rules are now intended to be in global.css under .markdown-content */
-    /* .markdown-content p, .markdown-content ul, ... etc. REMOVED */
     
     .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
     .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
     
     @media (max-width: 768px) {
-        :root {
+        .feed-entry {
              --gallery-item-gap: var(--spacing-sm); 
         }
-        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); }
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--mobile-header-height, 125px) + 1rem); } /* Adjusted scroll margin */
         .feed-entry-blocks { margin-top: var(--spacing-md); }
         .content-block { margin-bottom: var(--spacing-md); }
         .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        /* Ensure columns in two-column layout don't cause overflow on mobile */
+        .block-two-column .column {
+            width: 100%; /* Take full width of the parent flex container */
+            flex-basis: auto; /* Reset flex-basis */
+        }
+
         .entry-separator { margin-top: var(--spacing-lg); }
         .feed-entry-date { font-size: 0.85em; }
         .gallery-scroll-container {

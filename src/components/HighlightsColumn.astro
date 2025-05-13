@@ -1,0 +1,37 @@
+---
+// src/components/HighlightsColumn.astro
+import { getCollection } from 'astro:content';
+import HighlightItem from './HighlightItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const allHighlightsRaw = await getCollection('highlights');
+const allHighlights = allHighlightsRaw
+  .map(item => ({ ...item.data, id: item.id })) 
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)); 
+---
+
+<div class="highlights-column-wrapper">
+  {/* REMOVED: <h3>Highlights</h3> */}
+  {allHighlights.length > 0 ? (
+    <div class="highlights-list">
+      {allHighlights.map(highlight => (
+        <HighlightItem highlight={highlight} />
+      ))}
+    </div>
+  ) : (
+    <p>No highlights available at the moment.</p>
+  )}
+</div>
+
+<style>
+  .highlights-column-wrapper {
+    /* Padding or other styles for the column itself, if needed */
+    /* For example, if it needs padding from the edges of its container in BaseLayout */
+    /* padding: 0 var(--spacing-xs); */ 
+  }
+  /* REMOVED: .highlights-column-wrapper h3 styles */
+  
+  .highlights-list {
+    /* Container for highlight items */
+  }
+</style>

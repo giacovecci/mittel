@@ -1,0 +1,2446 @@
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; /* list-style: none; */ } /* Keep user's choice for list-style */
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular); 
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204; 
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%; 
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); 
+}
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold); 
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+h3 { font-size: 1.1em; }
+
+p, li, dt, dd, span, label {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: var(--spacing-sm);
+  text-align: justify; 
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto; 
+  -ms-hyphens: auto; 
+  hyphens: auto;
+}
+
+li::marker {
+  color: var(--color-accent);
+}
+
+.header-site-name-text {
+    font-weight: var(--font-weight-bold); 
+}
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover,
+button:hover { color: var(--color-accent); }
+button.active { color: var(--color-text-hover); }
+button { cursor: pointer; }
+
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+}
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+}
+
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      font-size: 0.8rem;
+  }
+}
+
+/* --- ADDED: Global Markdown Content Styles --- */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    /* text-align: justify; and hyphens: auto; will be inherited from global p, li etc. */
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.2;
+    /* font-weight: var(--font-weight-bold); will be inherited from global h1,h2 etc. */
+}
+/* More specific heading margin for first child if needed */
+.markdown-content > *:first-child { margin-top: 0; }
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child,
+.markdown-content h4:first-child,
+.markdown-content h5:first-child,
+.markdown-content h6:first-child {
+    margin-top: 0;
+}
+
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: var(--spacing-lg); /* Standard indent for lists */
+    list-style: revert; /* Ensures bullets/numbers appear */
+}
+.markdown-content ul { list-style-type: disc; }
+.markdown-content ol { list-style-type: decimal; }
+.markdown-content ul ul, .markdown-content ol ol { margin-bottom: 0; list-style-type: circle; } /* Nested lists */
+.markdown-content ul ol, .markdown-content ol ul { margin-bottom: 0; }
+
+
+.markdown-content li {
+    margin-bottom: var(--spacing-xxs);
+    /* text-align: justify; and hyphens: auto; will be inherited */
+}
+/* If a paragraph is the ONLY child of an li, remove its bottom margin */
+.markdown-content li > p:only-child {
+    margin-bottom: 0;
+}
+/* If a paragraph is the LAST child of an li, remove its bottom margin to rely on li's margin */
+.markdown-content li > p:last-child {
+    margin-bottom: 0;
+}
+
+
+.markdown-content blockquote {
+    margin-left: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+    border-left: 3px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+.markdown-content blockquote p {
+    margin-bottom: var(--spacing-xs); /* Slightly less margin for paragraphs inside blockquotes */
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* Placeholder bg if image is transparent or loading */
+}
+
+.markdown-content a {
+    color: var(--color-text-hover); /* Use accent color for links */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+.markdown-content a:hover {
+    color: var(--color-text-unified); /* Revert to standard text color on hover, or a lighter accent */
+    text-decoration: none;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.markdown-content table {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    border-collapse: collapse;
+    border: 1px solid var(--color-border-light);
+}
+.markdown-content th,
+.markdown-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--color-border-light);
+    text-align: left; /* Override global justify for table cells if needed */
+}
+.markdown-content th {
+    background-color: var(--color-surface-light);
+    font-weight: var(--font-weight-bold);
+}
+
+.markdown-content pre {
+    background-color: var(--color-background-muted);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    overflow-x: auto;
+    margin-bottom: var(--spacing-md);
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+.markdown-content code {
+    background-color: var(--color-background-muted);
+    padding: 0.1em 0.3em;
+    border-radius: var(--border-radius-sm);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+.markdown-content pre code { /* Code inside pre shouldn't have extra padding/bg */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+}// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+// --- Block Schemas (Used by 'feed' collection) ---
+const twoColumnBlockSchema = z.object({
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional(),
+});
+const fullWidthImageBlockSchema = z.object({
+    type: z.literal('fullWidthImage'),
+    image: z.string(), 
+    alt: z.string().optional(),
+});
+const fullWidthEmbedBlockSchema = z.object({
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string(),
+});
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string(),
+});
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(), 
+            alt: z.string().optional(),
+        })
+    ).optional(),
+});
+
+// --- Collection Definition: feed ---
+const feed = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(), 
+        contentBlocks: z.array(
+            z.discriminatedUnion('type', [
+                twoColumnBlockSchema,
+                fullWidthImageBlockSchema,
+                fullWidthEmbedBlockSchema,
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+            ])
+        ).optional(),
+    }),
+});
+
+// --- Collection Definition: general_content ---
+const general_content = defineCollection({
+    type: 'content', 
+    schema: z.object({
+        introText: z.string().optional(), 
+        aboutPageContent: z.string().optional(), 
+    }).passthrough(),
+});
+
+// --- MODIFIED: Collection Definition: highlights ---
+const highlights = defineCollection({
+    type: 'content', // CHANGED from 'data' to 'content'
+    schema: z.object({ // Schema defines the frontmatter for the .md files
+        title: z.string(),
+        summary: z.string(), 
+        thumbnail: z.string(), 
+        linkedFeedSlug: z.string(), 
+        order: z.number().optional(), 
+    }),
+});
+
+// --- Export Collections ---
+export const collections = {
+  feed,
+  general_content,
+  highlights,
+};---
+introText: >-
+  Good that you're here. My name is Piotr and I'm a multi-skilled media
+  professional with experience in video, audio and print journalism, and
+  documentary production.
+
+
+  I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. I'm based in Berlin and Warsaw, and highly mobile.
+
+
+  Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. 
+
+
+  Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment.
+---
+---
+aboutPageContent: |-
+  Ok, so this is going to be about me.
+
+  Me.
+
+  Me.
+
+  Me.
+
+  * pointedly mine
+  * depunk'd
+---
+---
+// src/components/OverviewGrid.astro
+import GridItem from './GridItem.astro';
+
+export interface Props {
+    items: Array<{ id: string; title: string; imageUrl?: string; altText?: string; }>;
+}
+const { items = [] } = Astro.props;
+---
+<div id="overview-grid-wrapper" class="overview-grid-wrapper">
+    {items.length > 0 ? (
+        <div class="overview-grid">
+            {items.map(item => (
+                <GridItem item={item} />
+            ))}
+        </div>
+    ) : (
+        <p>No overview items found.</p>
+    )}
+</div>
+
+<style>
+    .overview-grid-wrapper {
+      padding: 0;
+    }
+
+    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Default: 4 columns */
+        gap: 1.5rem; /* Default gap */
+        /* Removed debug border */
+    }
+
+    /* ================================== */
+    /* --- MOBILE - PORTRAIT ONLY --- */
+    /* ================================== */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .overview-grid {
+            grid-template-columns: repeat(2, 1fr); /* Mobile Portrait: 2 columns */
+            gap: 1rem; /* Mobile gap */
+        }
+    }
+     /* Removed landscape specific rule - landscape uses default */
+     /* Removed max-width: 480px rule */
+</style>---
+// src/components/HighlightsColumn.astro
+import { getCollection } from 'astro:content';
+import HighlightItem from './HighlightItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const allHighlightsRaw = await getCollection('highlights');
+const allHighlights = allHighlightsRaw
+  .map(item => ({ ...item.data, id: item.id })) 
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)); 
+---
+
+<div class="highlights-column-wrapper">
+  {/* REMOVED: <h3>Highlights</h3> */}
+  {allHighlights.length > 0 ? (
+    <div class="highlights-list">
+      {allHighlights.map(highlight => (
+        <HighlightItem highlight={highlight} />
+      ))}
+    </div>
+  ) : (
+    <p>No highlights available at the moment.</p>
+  )}
+</div>
+
+<style>
+  .highlights-column-wrapper {
+    /* Padding or other styles for the column itself, if needed */
+    /* For example, if it needs padding from the edges of its container in BaseLayout */
+    /* padding: 0 var(--spacing-xs); */ 
+  }
+  /* REMOVED: .highlights-column-wrapper h3 styles */
+  
+  .highlights-list {
+    /* Container for highlight items */
+  }
+</style>---
+// src/components/AboutSection.astro
+import { getEntry } from 'astro:content';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+// Fetch the 'about_page.md' entry from the 'general_content' collection
+const aboutEntry = await getEntry('general_content', 'about_page');
+
+let htmlAboutContent = "<p>Error: About content not loaded or empty.</p>";
+
+if (aboutEntry && aboutEntry.data && typeof aboutEntry.data.aboutPageContent === 'string') {
+  htmlAboutContent = parseMarkdown(aboutEntry.data.aboutPageContent);
+} else {
+  console.error("AboutSection.astro: Could not load aboutPageContent from 'general_content/about_page.md'. Entry:", aboutEntry);
+}
+---
+
+<div class="about-section-wrapper markdown-content" set:html={htmlAboutContent}>
+  {/* Content injected by set:html */}
+</div>
+
+<style>
+  .about-section-wrapper {
+    /* Specific styles for the about section wrapper if needed */
+    /* General markdown styles will apply from global.css */
+  }
+  .about-section-wrapper :global(h1:first-child),
+  .about-section-wrapper :global(h2:first-child),
+  .about-section-wrapper :global(h3:first-child) {
+    margin-top: 0; /* Common override for the first heading in a content block */
+  }
+</style>---
+// src/components/MarkdownRenderer.astro
+import { marked } from 'marked'; // Or your preferred Markdown parser library
+
+interface Props {
+  markdown: string;
+}
+
+const { markdown } = Astro.props;
+const html = marked.parse(markdown || ''); // Parse the markdown string
+
+// Export a function for use with set:html and Astro.glob
+export function render(markdownString: string) {
+    return marked.parse(markdownString || '');
+}
+---
+{/* Render the parsed HTML directly */}
+<Fragment set:html={html} />---
+// src/components/GridItem.astro
+export interface Props {
+    item: { id: string; title: string; imageUrl?: string; altText?: string; };
+}
+const { item } = Astro.props;
+const itemLink = `#${item.id}`;
+---
+<a href={itemLink} class="grid-item" data-target-id={item.id}>
+    <div class="grid-item-thumbnail">
+        {item.imageUrl ? (
+            <img src={item.imageUrl} alt={item.altText ?? `Thumbnail for ${item.title}`} loading="lazy" />
+        ) : (
+            <span class="placeholder-text">THUMB</span>
+        )}
+    </div>
+    <div class="grid-item-label">{item.title ?? 'Untitled'}</div>
+</a>
+
+<style>
+    /* Ensure variables used below are defined in global.css */
+
+    .grid-item {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+        /* --- RESTORED BACKGROUND and BORDER --- */
+        background-color: var(--color-surface-light);
+        border: var(--line-thickness) solid var(--color-border);
+        padding: var(--spacing-xs); /* Keep padding */
+        /* --- RESTORED TRANSITION --- */
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+        overflow: hidden; /* Keep overflow hidden */
+    }
+
+    .grid-item-thumbnail {
+        aspect-ratio: 1 / 1;
+        background-color: rgba(var(--color-text-unified-rgb), 0.1);
+        margin-bottom: var(--spacing-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        /* Removed internal border, main border is on .grid-item */
+        /* border: 1px solid rgba(var(--color-text-unified-rgb), 0.2); */
+        width: 100%;
+    }
+     .grid-item-thumbnail .placeholder-text {
+        font-size: 0.8em;
+        color: rgba(var(--color-text-unified-rgb), 0.6);
+     }
+
+    .grid-item-thumbnail img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .grid-item-label {
+        font-size: 0.9em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--color-text-unified);
+        padding: 0 var(--spacing-xxs);
+        display: block;
+        width: 100%;
+    }
+
+    /* --- RESTORED HOVER STYLE --- */
+    .grid-item:hover {
+        background-color: var(--color-surface-light-hover); /* Use variable */
+        /* border-color: var(--color-accent); */ /* Keep optional border commented */
+    }
+
+     /* --- Mobile Adjustments --- */
+     @media (max-width: 768px) {
+        .grid-item {
+            padding: var(--spacing-xxs);
+        }
+        .grid-item-thumbnail {
+            margin-bottom: var(--spacing-xxs);
+        }
+        .grid-item-label {
+            font-size: 0.85em;
+        }
+     }
+</style>---
+// src/components/Header.astro
+const contactEmail = "hey@mittel.tv";
+---
+<div class="main-header-wrapper">
+    {/* --- Desktop Home/Feed Button --- */}
+    <div class="header-sub-col feed-button-desktop-container">
+        <button type="button" id="home-feed-view-btn" class="desktop-only">
+            Feed
+        </button>
+    </div>
+
+    {/* --- Overview Button --- */}
+    <div class="header-sub-col overview-button-container">
+        <button type="button" id="overview-view-btn">
+           <span class="arrow mobile-only">→</span> Projects
+        </button>
+    </div>
+
+    {/* --- About Button --- */}
+    <div class="header-sub-col about-button-container">
+        <button type="button" id="about-view-btn">
+           <span class="arrow mobile-only">→</span> About
+        </button>
+    </div>
+
+    {/* --- Contact Button --- */}
+    <div class="header-sub-col header-contact-item">
+        <button type="button" id="contact-link">
+           <span class="arrow mobile-only">→</span> Contact
+        </button>
+    </div>
+
+    {/* --- Mobile Info Button --- */}
+    <div class="header-sub-col info-button-mobile-container">
+        <button type="button" id="info-view-btn" class="mobile-only">
+            <span class="arrow">→</span> Info
+        </button>
+    </div>
+</div>
+
+<style>
+    .main-header-wrapper {
+        display: flex;
+        justify-content: space-between; 
+        align-items: flex-start; /* Aligns button containers to the top for desktop */
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+    }
+
+    .main-header-wrapper > div.header-sub-col {
+        box-sizing: border-box;
+        flex-grow: 0; 
+        flex-shrink: 0; 
+        flex-basis: auto; 
+        display: flex; 
+        align-items: baseline; 
+    }
+
+    .feed-button-desktop-container {
+        justify-content: flex-start; 
+        text-align: left; 
+    }
+    .overview-button-container {
+        justify-content: center; 
+        text-align: center;
+    }
+    .about-button-container {
+        justify-content: center; 
+        text-align: center;
+    }
+    .header-contact-item { 
+        justify-content: flex-end; 
+        text-align: right;
+    }
+   
+    .main-header-wrapper button {
+        display: inline-block;
+        padding: 2px 0; 
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: var(--font-weight-bold);
+        line-height: 1.3; 
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .arrow {
+        display: inline-block;
+        margin-right: 0.4em;
+     }
+
+    .mobile-only { display: none !important; }
+    .desktop-only { display: inline-block !important; } /* Default for desktop buttons */
+    .info-button-mobile-container { display: none !important; } /* Hidden on desktop */
+
+
+    @media (max-width: 768px) { /* MOBILE STYLES */
+        .main-header-wrapper {
+            flex-direction: column;
+            align-items: flex-end; /* Align all items to the right */
+            justify-content: flex-start; /* Stack from the top */
+            gap: 0px; 
+            /* height: 100%; /* Let content dictate height within the allocated mobile header area */
+            /* padding: 0; /* Padding is on parent #main-header-area */
+        }
+
+        .main-header-wrapper > div.header-sub-col { /* How containers behave on mobile */
+            width: auto; /* Let content dictate width */
+            text-align: right; 
+            display: block; /* Stack them */
+            margin-bottom: 0; /* Or a small var(--spacing-xxs) if desired */
+            justify-content: flex-end; /* Ensure button text is right aligned within block */
+        }
+
+        /* --- Mobile Ordering and Visibility --- */
+        /* Hide desktop-specific button containers */
+        .feed-button-desktop-container.desktop-only { display: none !important; }
+        /* For mobile, these were the general containers for buttons that show up */
+        .info-button-mobile-container { display: block !important; order: 1; }
+        .overview-button-container { display: block !important; order: 2; }
+        .about-button-container { display: block !important; order: 3; } 
+        .header-contact-item { display: block !important; order: 4; } 
+
+        .mobile-only { display: inline-block !important; } /* Show arrows etc. */
+        .desktop-only { display: none !important; } /* Hide explicit desktop buttons */
+        
+        .main-header-wrapper button { /* Mobile specific styles for the BUTTONS themselves */
+             width: auto; 
+             padding: 0; 
+             line-height: 1.3; 
+        }
+    } 
+</style>
+
+<script define:vars={{ contactEmail }}>
+    const contactButton = document.getElementById('contact-link'); // This ID is on the general contact button
+    if (contactButton) {
+        contactButton.addEventListener('click', () => {
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    } else {
+        console.error("Contact button (#contact-link) not found.");
+    }
+</script>---
+// src/components/AllFeedColumn.astro
+import { getCollection } from 'astro:content';
+import FeedEntry from './FeedEntry.astro'; // Re-use the existing FeedEntry component
+import type { CollectionEntry } from 'astro:content';
+
+const allFeedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const sortedFeedEntries = allFeedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA; // Sort descending, newest first
+});
+---
+
+<div class="all-feed-column-wrapper">
+  <h3>Feed</h3> {/* Or "All Posts", "Chronological Feed", etc. */}
+  {sortedFeedEntries.length > 0 ? (
+    <div class="all-feed-list">
+      {sortedFeedEntries.map(entry => (
+        <FeedEntry entry={entry} />
+      ))}
+    </div>
+  ) : (
+    <p>No feed entries available yet.</p>
+  )}
+</div>
+
+<style>
+  .all-feed-column-wrapper {
+    /* Styles for the wrapper if needed */
+  }
+  .all-feed-column-wrapper h3 {
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-md);
+  }
+  .all-feed-list {
+    /* Container for all feed entries */
+  }
+  /* FeedEntry component will have its own margins, so list might not need much */
+</style>---
+// src/components/StaticInfo.astro
+import { Image } from 'astro:assets';
+import headshotImage from '/src/assets/headshot-2.jpg';
+import { getEntry } from 'astro:content';
+// MODIFICATION: Import render function from MarkdownRenderer
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+const entry = await getEntry('general_content', 'static_info');
+let rawIntroText = "Error: Intro text not loaded."; 
+
+if (entry && entry.data && typeof entry.data.introText === 'string') {
+    rawIntroText = entry.data.introText;
+} else {
+    console.error("StaticInfo.astro: Could not load introText from 'general_content/static_info.md'. Entry:", entry);
+}
+
+// MODIFICATION: Use imported parseMarkdown function
+const htmlIntroText = parseMarkdown(rawIntroText);
+
+const imageAltText = "a picture of Piotr Żakowiecki";
+const imageWidth = 854;
+const imageHeight = 854;
+---
+<div class="static-info-wrapper">
+    <div class="static-visual-container">
+        <Image 
+            src={headshotImage} 
+            alt={imageAltText} 
+            width={imageWidth} 
+            height={imageHeight}
+            format="webp"
+            quality={80}      
+            densities={[1, 1.5, 2]}
+            loading="lazy"
+        />
+    </div>
+    <div class="static-text-container markdown-content" set:html={htmlIntroText}>
+        {htmlIntroText === "" && <p>Error: Intro text not loaded or empty.</p>}
+    </div>
+</div>
+
+<style>
+    .static-info-wrapper { display: flex; flex-direction: column; gap: var(--spacing-lg); height: 100%; box-sizing: border-box; }
+    .static-visual-container { width: 100%; }
+    .static-visual-container :global(img) { display: block; max-width: 100%; height: auto; border-radius: var(--border-radius-sm); }
+    
+    .static-text-container {
+        /* Styles for p, ul etc. will come from global .markdown-content */
+    }
+    /* MODIFICATION: Removed specific p rule, rely on global .markdown-content */
+    /* .static-text-container p { ... } */
+
+    @media (max-width: 768px) and (orientation: portrait) { .static-info-wrapper { gap: var(--spacing-md); } }
+</style>---
+// src/components/IdentityHeader.astro
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer | researcher | videojournalist";
+---
+<div class="identity-header-wrapper">
+    <span class="identity-site-name-text">{siteName}</span>
+    <span class="identity-tagline">{tagline}</span>
+</div>
+
+<style>
+    .identity-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        /* --- Alignment: TOP --- */
+        align-items: flex-start;
+        justify-content: flex-start; /* Align to top */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%; /* Fill parent height */
+        box-sizing: border-box;
+        font-size: inherit; /* Inherit base size (1.5em on desktop) */
+        padding-left: 0; /* Padding is on parent grid area */
+        padding-right: var(--header-internal-padding); /* Space before divider */
+        text-align: left;
+    }
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0;
+        font-size: 1.1em;
+        text-align: left;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-text-secondary);
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+
+     @media (max-width: 768px) {
+         .identity-header-wrapper {
+             font-size: inherit;
+             height: auto; /* Let parent control height */
+             padding: 0.3rem 0; /* Padding on parent */
+             justify-content: flex-start; /* Ensure top alignment */
+             align-items: flex-start;
+         }
+         .identity-site-name-text { font-size: 1em; }
+         .identity-tagline { font-size: 0.6em; }
+     }
+</style>---
+// src/components/FeedEntry.astro
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+// MODIFICATION: Import render function from MarkdownRenderer
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+type BaseBlock = { type: string };
+type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
+
+interface Props {
+    entry: CollectionEntry<'feed'>;
+}
+
+const { entry } = Astro.props;
+const { slug, data } = entry;
+
+const formattedDate = data.date
+    ? new Date(data.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+    : null;
+
+// MODIFICATION: Removed local parseMarkdown function, using imported one
+// function parseMarkdown(markdownString?: string): string { ... } // REMOVED
+---
+<article class="feed-entry" id={slug}>
+    <h3>{data.title || 'Untitled Entry'}</h3>
+    {formattedDate && (
+        <time class="feed-entry-date" datetime={data.date?.toISOString()}>{formattedDate}</time>
+    )}
+
+    <div class="feed-entry-blocks">
+        {data.contentBlocks && data.contentBlocks.length > 0 ? (
+            data.contentBlocks.map((block: ContentBlock, index: number) => {
+                const galleryId = `gallery-${slug}-${index}`;
+                const prevBtnId = `gallery-prev-${slug}-${index}`;
+                const nextBtnId = `gallery-next-${slug}-${index}`;
+
+                switch (block.type) {
+                    case 'twoColumn':
+                        return (
+                            <div class="content-block block-two-column">
+                                {block.left && (
+                                    <div class="column left-column" set:html={parseMarkdown(block.left)}></div>
+                                )}
+                                {block.right && (
+                                    <div class="column right-column" set:html={parseMarkdown(block.right)}></div>
+                                )}
+                            </div>
+                        );
+
+                    case 'fullWidthImage':
+                        return block.image ? (
+                            <div class="content-block block-full-width-image">
+                                <Image
+                                    src={block.image}
+                                    alt={block.alt || ''}
+                                    width={1200}
+                                    height={900}
+                                    format="webp"
+                                    quality={80}
+                                    loading="lazy"
+                                    densities={[1, 1.5, 2]}
+                                />
+                            </div>
+                        ) : <div class="content-block block-missing-image"><p><em>Image missing or path incorrect.</em></p></div>;
+
+                    case 'fullWidthEmbed':
+                        return block.embedCode ? (
+                            <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
+                        ) : null;
+
+                    case 'fullWidthText':
+                        return block.text ? (
+                            <div class="content-block block-full-width-text markdown-content" set:html={parseMarkdown(block.text)}></div>
+                        ) : null;
+
+                    case 'horizontalGallery':
+                         return (
+                            <div class="content-block block-horizontal-gallery">
+                                <div class="gallery-scroll-container" id={galleryId}>
+                                    {block.images && block.images.length > 0 ? (
+                                        block.images.map(img => (
+                                            img.image ? (
+                                                <div class="gallery-item">
+                                                    <Image
+                                                        src={img.image}
+                                                        alt={img.alt || ''}
+                                                        width={800}
+                                                        height={600}
+                                                        format="webp"
+                                                        quality={75}
+                                                        loading="lazy"
+                                                        densities={[1, 1.5]}
+                                                    />
+                                                </div>
+                                            ) : null
+                                        ))
+                                    ) : (
+                                        <div class="gallery-item placeholder"><p><em>No images in gallery.</em></p></div>
+                                    )}
+                                </div>
+                                <button type="button" class="gallery-nav-button prev" id={prevBtnId} data-target={`#${galleryId}`} aria-label="Previous image">‹</button>
+                                <button type="button" class="gallery-nav-button next" id={nextBtnId} data-target={`#${galleryId}`} aria-label="Next image">›</button>
+                            </div>
+                        );
+
+
+                    default:
+                        const unknownBlock = block as BaseBlock;
+                        console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
+                         return (
+                             <div class="content-block block-unknown">
+                                 <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
+                             </div>
+                         );
+                }
+            })
+        ) : (
+             entry.body ? (
+                 <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
+             ) : (
+                 <p><em>No content found for this entry.</em></p>
+             )
+        )}
+    </div>
+
+    <hr class="entry-separator" />
+</article>
+
+{/* ADDED SCRIPT FOR GALLERY FUNCTIONALITY */}
+<script>
+    // This script runs for each FeedEntry component instance
+    // It finds all horizontal galleries *within this specific FeedEntry* and sets up their controls.
+    // This is better than a global script as it correctly scopes to each gallery instance.
+
+    // Function to handle gallery navigation for a single gallery instance
+    function setupGallery(galleryElement) {
+        const scrollContainer = galleryElement.querySelector('.gallery-scroll-container');
+        const prevButton = galleryElement.querySelector('.gallery-nav-button.prev');
+        const nextButton = galleryElement.querySelector('.gallery-nav-button.next');
+        const items = galleryElement.querySelectorAll('.gallery-item');
+
+        if (!scrollContainer || !prevButton || !nextButton || items.length === 0) {
+            // console.warn('Gallery elements not found for one of the galleries:', galleryElement);
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            return;
+        }
+
+        const itemWidth = items[0].offsetWidth; // Assumes all items have the same width for snapping
+        const gap = parseFloat(getComputedStyle(scrollContainer).gap) || 0; // Get gap value
+
+        function updateButtonVisibility() {
+            // A small tolerance helps with floating point inaccuracies
+            const tolerance = 5;
+            if (prevButton) {
+                prevButton.classList.toggle('hidden', scrollContainer.scrollLeft <= tolerance);
+            }
+            if (nextButton) {
+                nextButton.classList.toggle('hidden', scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - tolerance));
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll - itemWidth - gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        nextButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll + itemWidth + gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        scrollContainer.addEventListener('scroll', updateButtonVisibility, { passive: true });
+
+        // Initial check
+        updateButtonVisibility();
+
+        // Update on resize as well, in case container/item widths change
+        // Use a ResizeObserver for better performance than a global resize listener
+        const resizeObserver = new ResizeObserver(_ => {
+            // Recalculate itemWidth, may not be strictly necessary if it's percentage based and scroll is handled by browser
+            // but button visibility might need re-check if clientWidth changes significantly
+            updateButtonVisibility();
+        });
+        resizeObserver.observe(scrollContainer);
+    }
+
+    // Find all gallery blocks within this FeedEntry and set them up.
+    // `document.querySelectorAll` used here will be scoped to the component's shadow DOM by Astro typically,
+    // but since we're targeting elements by class within this component's template, it works.
+    // To be absolutely sure it's scoped if issues arise, one could wrap the component's HTML in a div with a unique ID
+    // and then use `document.getElementById(uniqueId).querySelectorAll(...)`.
+    // However, Astro's script processing should handle this correctly.
+    // For multiple galleries in one FeedEntry, this iterates through each.
+    // The IDs prevBtnId, nextBtnId, galleryId are unique per block due to `slug` and `index` in their generation.
+    // The script below selects based on class within the block.
+
+    // Run this script after the DOM is ready for this component instance
+    // Astro runs <script> tags by default with `type="module"`, which defers execution.
+    // This should be fine.
+    const galleriesInThisEntry = document.querySelectorAll('.block-horizontal-gallery');
+    galleriesInThisEntry.forEach(galleryInstance => {
+        // Ensure the gallery being set up is within the current <article class="feed-entry">
+        // This is a sanity check. `astro:self` could refer to the shadow root if applicable.
+        // For simple cases, direct query within the expected structure is okay.
+        // The crucial part is that Astro processes this script per component instance.
+        // The `id` attributes on buttons and scroll containers generated in the template
+        // (e.g., galleryId, prevBtnId, nextBtnId) make them unique. The querySelectors inside setupGallery
+        // are relative to the galleryElement passed to it.
+        setupGallery(galleryInstance);
+    });
+
+</script>
+
+<style>
+    /* --- Base and Existing Styles --- */
+    :root {
+        --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        --gallery-nav-button-size: 2.5rem;
+        /* --- ADDED: Define gap size --- */
+        --gallery-item-gap: var(--spacing-md); /* e.g., 1rem */
+    }
+
+    /* ... (keep all styles from .feed-entry down to .block-full-width-text) ... */
+    .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
+    .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-bold); font-size: 1.1em; line-height: 1.3; }
+    .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
+    .feed-entry-blocks { margin-top: var(--spacing-lg); }
+    .content-block { margin-bottom: var(--spacing-lg); }
+    .content-block:last-child { margin-bottom: 0; }
+    .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+    .block-two-column .column { flex: 1; min-width: 0; }
+    .block-two-column .column > *:first-child { margin-top: 0; }
+    .block-two-column .column > *:last-child { margin-bottom: 0; }
+    
+    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
+    .block-two-column .column p, 
+    .block-two-column .column li, 
+    .block-two-column .column dt, 
+    .block-two-column .column dd { 
+        line-height: var(--line-height-unified); margin-bottom: var(--spacing-sm); font-size: 1em; 
+    }
+    .block-two-column .column h1, 
+    .block-two-column .column h2, 
+    .block-two-column .column h3, 
+    .block-two-column .column h4 { 
+        margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; 
+    }
+    .block-two-column .column ul, 
+    .block-two-column .column ol { 
+        margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); 
+        /* list-style: revert; Ensure lists are styled if not caught by global */
+    }
+    .block-two-column .column li > p { 
+        margin-bottom: var(--spacing-xxs); 
+    }
+    .block-two-column .column blockquote { 
+        margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); 
+    }
+
+    .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+    .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+    .block-full-width-embed { width: 100%; max-width: 100%; overflow: hidden; background-color: var(--color-border-light); }
+    
+    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
+    .block-full-width-embed iframe, 
+    .block-full-width-embed video { 
+        display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; aspect-ratio: 16 / 9; border: none; margin: 0; 
+    }
+    .block-full-width-text {} /* Uses .markdown-content, which will be styled globally */
+
+
+    /* --- UPDATED: Horizontal Gallery --- */
+    .block-horizontal-gallery {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .gallery-scroll-container {
+        display: flex;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        gap: var(--gallery-item-gap);
+        padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        max-height: 70vh;
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
+    .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+    .gallery-item {
+        flex: 0 0 100%;
+        min-width: 100%;
+        scroll-snap-align: center;
+        height: auto;
+        max-height: 100%;
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        background-color: var(--color-border-light);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .gallery-item img, .gallery-item picture {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+     .gallery-item.placeholder p {
+         font-style: italic;
+         color: var(--color-text-secondary);
+         padding: var(--spacing-md);
+     }
+
+    .gallery-nav-button {
+        position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
+        width: var(--gallery-nav-button-size); height: var(--gallery-nav-button-size);
+        font-size: calc(var(--gallery-nav-button-size) * 0.6);
+        line-height: var(--gallery-nav-button-size); text-align: center;
+        cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+    .gallery-nav-button.prev { left: var(--spacing-sm); }
+    .gallery-nav-button.next { right: var(--spacing-sm); }
+    .gallery-nav-button.hidden { display: none; }
+
+
+    /* MODIFICATION: Remove :global() for markdown content, styles will be in global.css */
+    /* Fallback Markdown Content - these rules are now intended to be in global.css under .markdown-content */
+    /* .markdown-content p, .markdown-content ul, ... etc. REMOVED */
+    
+    .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+    .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+    
+    @media (max-width: 768px) {
+        :root {
+             --gallery-item-gap: var(--spacing-sm); 
+        }
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--header-height-estimate-mobile-px, 92px) + 6rem); }
+        .feed-entry-blocks { margin-top: var(--spacing-md); }
+        .content-block { margin-bottom: var(--spacing-md); }
+        .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        .entry-separator { margin-top: var(--spacing-lg); }
+        .feed-entry-date { font-size: 0.85em; }
+        .gallery-scroll-container {
+             gap: var(--gallery-item-gap); 
+             max-height: 50vh;
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        }
+        .gallery-item img, .gallery-item picture { aspect-ratio: 4 / 3; }
+        .gallery-nav-button { --gallery-nav-button-size: 2rem; }
+         .gallery-nav-button.prev { left: var(--spacing-xs); }
+         .gallery-nav-button.next { right: var(--spacing-xs); }
+    }
+</style>---
+// src/components/HighlightItem.astro
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+export interface Props {
+  highlight: {
+    title: string;
+    summary: string; 
+    thumbnail: string; 
+    linkedFeedSlug: string;
+  };
+}
+
+const { highlight } = Astro.props;
+// The href for the anchor tag should correctly point to an ID on the page.
+// The data-target-id is used by the script.
+---
+
+<div class="highlight-item">
+  {/* CORRECTED href below */}
+  <a href={`#${highlight.linkedFeedSlug}`} class="highlight-link-wrapper" data-target-id={highlight.linkedFeedSlug} aria-label={`Read more about ${highlight.title}`}>
+    <div class="highlight-content-flex">
+      {highlight.thumbnail && (
+        <div class="highlight-thumbnail-container">
+          <Image 
+            src={highlight.thumbnail} 
+            alt={`Thumbnail for ${highlight.title}`} 
+            width={200}
+            height={150} 
+            format="webp"
+            quality={70}
+            loading="lazy" 
+          />
+        </div>
+      )}
+      <div class="highlight-text-container">
+        <h4 class="highlight-title">{highlight.title}</h4>
+        {highlight.summary && (
+          <div class="highlight-summary markdown-content" set:html={parseMarkdown(highlight.summary)}>
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
+
+{/* Styles remain the same as the previous corrected version */}
+<style>
+  .highlight-item {
+    margin-bottom: var(--spacing-md);
+    background-color: transparent;
+    overflow: hidden; 
+    transition: background-color 0.2s ease;
+  }
+  .highlight-item:hover {
+    background-color: var(--color-surface-light);
+  }
+  .highlight-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+  }
+  .highlight-content-flex {
+    display: flex;
+    align-items: center; 
+    gap: var(--spacing-sm);
+  }
+  .highlight-thumbnail-container {
+    flex-shrink: 0; 
+    flex-grow: 0;   
+    flex-basis: 25%; 
+    max-width: 25%;  
+    background-color: var(--color-background-muted);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+  }
+  .highlight-thumbnail-container img {
+    width: 100%;
+    height: 150px; 
+    object-fit: cover; 
+    display: block;
+  }
+  .highlight-text-container {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 0;  
+  }
+  .highlight-title {
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+    margin-top: 0;
+    margin-bottom: var(--spacing-xxs);
+    color: var(--color-text-unified);
+    line-height: 1.3;
+  }
+  .highlight-item:hover .highlight-title {
+    color: var(--color-accent);
+  }
+  .highlight-summary {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    hyphens: auto;
+  }
+  .highlight-summary :global(p) {
+    margin-bottom: var(--spacing-xxs); 
+  }
+  .highlight-summary > :global(p):last-child {
+    margin-bottom: 0;
+  }
+</style>---
+// src/layouts/BaseLayout.astro
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; 
+
+       :root {
+          --scrollbar-track-color: #222;
+          --scrollbar-thumb-color: #555;
+          --scrollbar-width: 8px;
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
+          --header-area-height: 90px; 
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 125px; /* RESTORED: Fixed mobile header height */
+       }
+
+        html { height: 100%; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            background-color: var(--color-background); margin: 0;
+            overscroll-behavior: none; min-height: 100%; height: 100%;
+            overflow: hidden; position: relative;
+        }
+
+        #app-container { height: 100%; box-sizing: border-box; position: relative; }
+        #app-container > div:not(#mobile-header-sticky-container) { box-sizing: border-box; }
+        #mobile-header-sticky-container { box-sizing: border-box; }
+
+
+        @media (min-width: 769px) { /* DESKTOP */
+            body { overflow: hidden; }
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-template-rows: var(--header-area-height) 1fr;                            
+                height: 100vh; overflow: hidden;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container { display: contents; }
+
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                font-size: 1.5em; z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height); 
+                display: flex;
+                flex-direction: column; 
+                justify-content: center; 
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
+                 grid-column: 1 / 2; 
+                 padding-left: var(--desktop-content-padding); 
+                 padding-right: var(--spacing-md);
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                 grid-column: 3 / 4; 
+                 padding-right: var(--desktop-content-padding); 
+                 padding-left: var(--spacing-md);
+            }
+            /* ... rest of desktop styles for divider, content areas, view switching are assumed to be correct as per your last provided BaseLayout ... */
+            #app-container.is-desktop > #divider-area {
+                grid-column: 2 / 3; grid-row: 1 / 3; background-color: var(--color-background);
+                z-index: 10; position: relative; display: block;
+            }
+            #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+            }
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 1 / 2; grid-row: 2 / 3; position: relative; overflow-y: auto; 
+                display: block; padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom) var(--desktop-content-padding);
+                padding-right: var(--spacing-md); scrollbar-width: thin; 
+                scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+            }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+            #app-container.is-desktop > #feed-content-area, 
+            #app-container.is-desktop > #dynamic-content-area, 
+            #app-container.is-desktop > #all-feed-content-area { 
+                grid-column: 3 / 4; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; display: none; 
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom) 0;
+                padding-left: var(--spacing-md);
+            }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+            #app-container.is-desktop > #overview-content-area { 
+                grid-column: 1 / 4; grid-row: 2 / 3; position: relative;
+                overflow-y: auto; display: none;
+                scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+            }
+             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+
+             /* --- Desktop View Switching Logic (as per your last full BaseLayout) --- */
+             #app-container.is-desktop.view-home > #info-content-area { display: block; }
+             #app-container.is-desktop.view-home > #dynamic-content-area { display: block; } 
+             #app-container.is-desktop.view-home > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-home > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; } 
+             #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; } 
+             #app-container.is-desktop.view-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+             
+             #app-container.is-desktop.view-about > #info-content-area { display: block; }
+             #app-container.is-desktop.view-about > #dynamic-content-area { display: block; } 
+             #app-container.is-desktop.view-about > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-about > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+             #app-container.is-desktop.view-overview > #divider-area { display: none; }
+        } 
+
+        @media (max-width: 768px) { /* MOBILE */
+            body { height: auto; overflow: visible; }
+            #app-container.is-mobile {
+                display: flex; flex-direction: column; 
+                height: auto; overflow: visible; position: static;
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container {
+                display: flex; flex-direction: row; width: 100%; order: 1; 
+                position: sticky; top: 0; background-color: var(--color-background);
+                z-index: 100; border-bottom: var(--line-thickness) solid var(--color-border);
+                /* RESTORED: No top/bottom padding, fixed height comes from children */
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 width: 50%; display: flex !important; 
+                 flex-direction: column; 
+                 justify-content: flex-start; /* Changed from center to flex-start for top alignment */
+                 height: var(--mobile-header-height); /* RESTORED: Fixed height for these areas */
+                 padding-top: var(--spacing-xs); /* Add some padding inside these areas */
+                 padding-bottom: var(--spacing-xs);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 position: static; border: none; background-color: transparent;
+                 z-index: auto; overflow: hidden; /* Keep overflow hidden for mobile header areas */
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
+                padding-left: var(--mobile-content-padding-x);
+                padding-right: calc(var(--mobile-content-padding-x) / 2);
+                align-items: flex-start; 
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 padding-right: var(--mobile-content-padding-x);
+                 padding-left: calc(var(--mobile-content-padding-x) / 2);
+                 align-items: flex-end; 
+            }
+            /* ... rest of mobile styles for divider, content areas, view switching are assumed to be correct ... */
+            #app-container.is-mobile > #divider-area { order: 2; display: none; }
+
+            #app-container.is-mobile > #info-content-area,
+            #app-container.is-mobile > #feed-content-area, 
+            #app-container.is-mobile > #overview-content-area,
+            #app-container.is-mobile > #dynamic-content-area, 
+            #app-container.is-mobile > #all-feed-content-area { 
+                 order: 3; width: 100%;
+                 grid-column: auto; grid-row: auto; position: static; overflow: visible;
+                 border: none; max-height: none;
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none; 
+            }
+
+            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; } 
+            #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; } 
+            #app-container.is-mobile.view-feed > #feed-content-area { display: block; } 
+            #app-container.is-mobile.view-info > #info-content-area { display: block; }
+            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; } 
+            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+        } 
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div id="mobile-header-sticky-container">
+             <div id="identity-header-area"><slot name="identity-header" /></div>
+             <div id="main-header-area"><slot name="main-header" /></div>
+        </div>
+        <div id="divider-area"></div>
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div>
+        <div id="overview-content-area"><slot name="overview-content" /></div>
+        <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
+        <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
+    </div>
+</body>
+</html>---
+// src/pages/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import FeedEntry from '../components/FeedEntry.astro'; // This is for individual rendering context
+import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro'; // <<< IMPORT NEW COMPONENT
+import type { CollectionEntry } from 'astro:content';
+
+// feedEntries is already fetched and sorted for OverviewGrid and potentially AllFeedColumn
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => { // This is used by AllFeedColumn and OverviewGrid
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', 
+    altText: entry.data.title || 'Feed item thumbnail'
+}));
+---
+<BaseLayout title="Żakowiecki | Portfolio">
+
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
+
+    {/* Slot for individual feed entry when 'view-feed' is active */}
+    <section slot="feed-content" id="feed-content-wrapper"> 
+        {/* This section will be populated by JS or be empty if not viewing a single feed entry.
+            Alternatively, if Astro required content here, it might list one item by default or be hidden.
+            For now, it's where a single FeedEntry.astro instance would be shown if we were to render it from here.
+            However, individual feed items are already part of the sortedFeedEntries map in AllFeedColumn.
+            This #feed-content-wrapper is primarily for the *target* of scrollIntoView.
+            It will display a *single* FeedEntry when a grid/highlight item is clicked.
+            The AllFeedColumn will display *all* of them.
+        */}
+        {/* Content for single feed entry is typically handled by clicking links which then sets this area to display that single entry.
+            The existing `FeedEntry.astro` component is used by `AllFeedColumn` to list all.
+            When a single entry is viewed (view-feed), its content is what's shown in #feed-content-area.
+            This section might remain structurally empty here, as `setMainView('feed')` makes it visible,
+            and then `scrollIntoView` targets an element *within* `AllFeedColumn` that is now visible in `all-feed-content-area`
+            OR it targets a specific FeedEntry if we were to dynamically render one here.
+
+            Let's adjust: When view-feed is active, we want to show ONLY the single clicked feed item in #feed-content-area,
+            not the entire AllFeedColumn. So AllFeedColumn goes into #all-feed-content-area.
+            The #feed-content-area will be used for displaying a single, focused FeedEntry.
+            The script will need to handle populating this, or we need a different strategy.
+
+            Simpler approach for now: scrollIntoView will target items within AllFeedColumn.
+            If `view-feed` is meant to show ONLY one item, not just scroll to it within a list, that's a larger change.
+            The current `handleGridOrHighlightClick` sets `view-feed` and then scrolls.
+            The CSS for `view-feed` shows `#info-content-area` and `#feed-content-area`.
+            Let's assume for now that clicking a grid/highlight item will make `#all-feed-content-area` visible (as if it's the feed)
+            and scroll to the item within it.
+
+            Revisiting the `view-feed` definition: Static Info (left) + Single Feed Entry (right).
+            This means `feed-content-area` should display *only* the selected entry.
+            `all-feed-content-area` displays the list.
+        */}
+    </section>
+
+    <div slot="overview-content" id="overview-content-wrapper"> 
+        <div id="overview-grid-wrapper"><OverviewGrid items={overviewItems} /></div>
+    </div>
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    {/* ADDED: Slot for the new All Feed Column */}
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn /> {/* This component already fetches and maps feedEntries */}
+    </div>
+</BaseLayout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const appContainer = document.getElementById('app-container');
+        // Content Area Divs
+        const infoContentArea = document.getElementById('info-content-area');
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); 
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area'); 
+        const overviewContentArea = document.getElementById('overview-content-area');
+        
+        // Buttons
+        const infoBtnMobile = document.getElementById('info-view-btn') as HTMLButtonElement | null;
+        const mainFeedHighlightsBtn = document.getElementById('home-feed-view-btn') as HTMLButtonElement | null;
+        const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
+        const aboutBtn = document.getElementById('about-view-btn') as HTMLButtonElement | null;
+
+        // Clickable content wrappers
+        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual'); 
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper'); 
+
+        if (!appContainer || !infoContentArea || !dynamicContentArea || !highlightsContentWrapper || 
+            !aboutContentWrapper || !allFeedContentArea || !overviewContentArea ||
+            !mainFeedHighlightsBtn || !overviewBtn || !aboutBtn) {
+            console.error("Essential elements missing for view switching. Check IDs.");
+            return;
+        }
+        
+        const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; 
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+
+        function updateButtonLabelAndState() {
+            if (!mainFeedHighlightsBtn) return;
+
+            const activeButtons = [];
+            if (currentView === 'home') { 
+                mainFeedHighlightsBtn.textContent = 'Feed';
+                activeButtons.push('home-feed-view-btn');
+            } else if (currentView === 'all-feed') { 
+                mainFeedHighlightsBtn.textContent = 'Highlights';
+                activeButtons.push('home-feed-view-btn');
+            } else if (currentView === 'about') {
+                mainFeedHighlightsBtn.textContent = 'Highlights'; 
+                activeButtons.push('about-view-btn');
+            } else if (currentView === 'overview') {
+                mainFeedHighlightsBtn.textContent = 'Highlights'; 
+                activeButtons.push('overview-view-btn');
+            } else if (currentView === 'info' && isMobile()) {
+                 mainFeedHighlightsBtn.textContent = 'Highlights'; 
+                 activeButtons.push('info-view-btn');
+            } else { 
+                mainFeedHighlightsBtn.textContent = 'Highlights';
+            }
+            
+            [mainFeedHighlightsBtn, overviewBtn, aboutBtn, infoBtnMobile].forEach(btn => {
+                if (btn) {
+                    btn.classList.toggle('active', activeButtons.includes(btn.id));
+                }
+            });
+        }
+
+        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about'): void {
+            console.log("%cSetting view to:", "color: blue; font-weight: bold;", view, "/ Is mobile:", isMobile());
+            currentView = view; 
+
+            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'is-mobile', 'is-desktop', 'view-feed');
+            
+            if (isMobile()) appContainer.classList.add('is-mobile');
+            else appContainer.classList.add('is-desktop');
+
+            if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+            if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+            const singleFeedArea = document.getElementById('feed-content-area'); 
+            if(singleFeedArea) singleFeedArea.style.display = 'none';
+
+
+            switch (view) {
+                case 'home': 
+                    appContainer.classList.add('view-home');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'all-feed': 
+                    appContainer.classList.add('view-all-feed');
+                    break;
+                case 'overview': 
+                    appContainer.classList.add('view-overview');
+                    break;
+                case 'about': 
+                    appContainer.classList.add('view-about');
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'block';
+                    break;
+                case 'info': 
+                    if (isMobile()) appContainer.classList.add('view-info');
+                    else { 
+                        appContainer.classList.add('view-home');
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    }
+                    break;
+                default: 
+                    appContainer.classList.add('view-home'); 
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+            }
+            updateButtonLabelAndState();
+            console.log("AppContainer classes:", appContainer.className);
+        }
+
+        // Event Listeners for Header Buttons
+        if (mainFeedHighlightsBtn) {
+            mainFeedHighlightsBtn.addEventListener('click', () => {
+                if (currentView === 'home') {
+                    setMainView('all-feed');
+                } else if (currentView === 'all-feed') {
+                    setMainView('home');
+                } else { 
+                    setMainView('home'); 
+                }
+            });
+        }
+        if (overviewBtn) {
+            overviewBtn.addEventListener('click', () => setMainView('overview'));
+        }
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', () => setMainView('about'));
+        }
+        if (infoBtnMobile) { 
+            infoBtnMobile.addEventListener('click', () => {
+                if (isMobile()) setMainView('info');
+            });
+        }
+
+        // navigateToFeedItem function (using rAF + setTimeout)
+        function navigateToFeedItem(targetId: string) {
+            console.log(`%cnavigateToFeedItem CALLED for targetId: ${targetId}`, "color: purple; font-weight: bold;");
+            setMainView('all-feed'); 
+
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    console.log(`Attempting to find targetElement ID: '${targetId}' after rAF + 100ms timeout.`);
+                    const targetElement = document.getElementById(targetId);
+                    const scrollContainer = allFeedContentArea; 
+
+                    if (targetElement) {
+                        console.log("Target element FOUND:", targetElement);
+                        if (scrollContainer && scrollContainer.contains(targetElement)) {
+                            console.log("Target is within scrollContainer. Scrolling...");
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            if (mainFeedHighlightsBtn) mainFeedHighlightsBtn.textContent = 'Highlights'; 
+                        } else if (scrollContainer) {
+                            console.error("Target element found in DOM, but NOT within #all-feed-content-area. This is unexpected.");
+                            console.log("#all-feed-content-area current content:", scrollContainer.innerHTML.substring(0, 500));
+                        } else {
+                             console.error("#all-feed-content-area container not found itself.");
+                        }
+                    } else {
+                        console.error(`Target feed element '${targetId}' NOT FOUND (document.getElementById returned null).`);
+                        if(scrollContainer) {
+                             console.log("Content of #all-feed-content-area at time of failure (first 500 chars):", scrollContainer.innerHTML.substring(0,500));
+                        } else {
+                             console.log("#all-feed-content-area itself was not found when trying to log its content.");
+                        }
+                    }
+                }, 100); 
+            });
+        }
+
+
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.grid-item');
+                if (link && link.dataset.targetId) {
+                    event.preventDefault();
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        // Corrected event listener for highlightsListWrapper
+        if (highlightsListWrapper) { 
+            highlightsListWrapper.addEventListener('click', (event: MouseEvent) => {
+                 if (!(event.target instanceof Element)) {
+                    console.log("Highlight click: event.target is not an Element.");
+                    return;
+                 }
+                // CORRECTED SELECTOR HERE:
+                const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper'); 
+                
+                if (link && link.dataset.targetId) {
+                    console.log("Highlight item clicked. Link found:", link, "Target ID:", link.dataset.targetId);
+                    event.preventDefault(); 
+                    navigateToFeedItem(link.dataset.targetId);
+                } else {
+                    console.log("Highlight click: Did not find '.highlight-link-wrapper' with targetId. Event target:", event.target);
+                    console.log("Attempted to find closest '.highlight-link-wrapper'. Result:", link);
+                     if(link && !link.dataset.targetId) console.log("Reason: Link found, but no data-target-id attribute.");
+                }
+            });
+        }
+
+        if (allFeedListWrapper) {
+            allFeedListWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const feedEntryElement = event.target.closest<HTMLElement>('.feed-entry'); 
+                if (feedEntryElement && feedEntryElement.id) {
+                    console.log(`Clicked on feed entry ${feedEntryElement.id} within the AllFeedColumn.`);
+                     if (mainFeedHighlightsBtn) mainFeedHighlightsBtn.textContent = 'Highlights'; 
+                }
+            });
+        }
+
+        setMainView('home'); 
+
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                setMainView(isNowMobile ? 'info' : 'home'); 
+                wasMobile = isNowMobile;
+            } else { 
+                updateButtonLabelAndState();
+            }
+        });
+        resizeObserver.observe(document.body);
+    });
+</script>/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+/* These variables apply globally within the preview context */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: 1.1rem; 
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular);
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204;
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables (Might not be needed unless specific widths are required) */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%;
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width));
+
+  /* Feed Entry Specific Vars */
+  --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+}
+
+/* 3. Core Body & Universal Text Styling */
+.feed-entry-preview-wrapper { 
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  padding: 1rem; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.feed-entry-preview-wrapper h1,
+.feed-entry-preview-wrapper h2,
+.feed-entry-preview-wrapper h3,
+.feed-entry-preview-wrapper h4,
+.feed-entry-preview-wrapper h5,
+.feed-entry-preview-wrapper h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+.feed-entry-preview-wrapper h3 { font-size: 1.1em; } 
+
+.feed-entry-preview-wrapper p,
+.feed-entry-preview-wrapper li,
+.feed-entry-preview-wrapper dt,
+.feed-entry-preview-wrapper dd,
+.feed-entry-preview-wrapper span, 
+.feed-entry-preview-wrapper label {
+  font-weight: inherit; 
+  font-size: inherit; 
+  line-height: inherit; 
+  margin-bottom: var(--spacing-sm);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.feed-entry-preview-wrapper a { color: inherit; text-decoration: none; } 
+.feed-entry-preview-wrapper a:hover { color: var(--color-text-hover); } 
+
+.feed-entry-preview-wrapper .accent-text { 
+  color: var(--color-accent);
+}
+
+/* ========================================================= */
+/* === Styles Adapted from FeedEntry.astro === */
+/* ========================================================= */
+
+/* MODIFICATION: Removed incorrect comment */
+
+.feed-entry { 
+   margin-bottom: var(--spacing-xl);
+}
+.feed-entry h3 { 
+    margin-top: 0;
+    margin-bottom: var(--spacing-xxs);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.1em;
+    line-height: 1.3;
+}
+.feed-entry-date {
+    display: block;
+    font-size: 0.9em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+}
+.feed-entry-blocks {
+    margin-top: var(--spacing-lg);
+}
+.content-block {
+    margin-bottom: var(--spacing-lg);
+}
+.content-block:last-child { margin-bottom: 0; }
+
+.block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+.block-two-column .column { flex: 1; min-width: 0; }
+.block-two-column .column > *:first-child { margin-top: 0; }
+.block-two-column .column > *:last-child { margin-bottom: 0; }
+
+.block-two-column .column p,
+.block-two-column .column li,
+.block-two-column .column dt,
+.block-two-column .column dd {
+     line-height: var(--line-height-unified);
+     margin-bottom: var(--spacing-sm);
+     font-size: 1em;
+     text-align: justify; 
+     hyphens: auto;
+}
+.block-two-column .column h1,
+.block-two-column .column h2,
+.block-two-column .column h3,
+.block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+.block-two-column .column ul,
+.block-two-column .column ol { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); list-style: revert; } 
+.block-two-column .column li > p { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column li { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
+
+.block-full-width-image img,
+.block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+.block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+
+.block-full-width-embed {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 56.25%; 
+    height: 0;
+    background-color: var(--color-border-light);
+}
+.block-full-width-embed iframe, 
+.block-full-width-embed video {  
+    position: absolute;
+    top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+    border: none;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Styles for .markdown-content within the preview */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    text-align: justify; 
+    hyphens: auto;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+.markdown-content ul, .markdown-content ol { padding-left: var(--spacing-lg); list-style: revert; } 
+.markdown-content li { margin-bottom: var(--spacing-xxs); } 
+.markdown-content li > p { margin-bottom: var(--spacing-xxs); } 
+.markdown-content blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+.markdown-content img { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+.markdown-content a { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.markdown-content a:hover { color: var(--color-text-unified); text-decoration: none; }
+
+.block-horizontal-gallery-preview {
+     background-color: var(--color-background-muted);
+     padding: var(--spacing-sm);
+     border: 1px dashed var(--color-border);
+     white-space: nowrap; 
+     overflow-x: auto; 
+}
+.block-horizontal-gallery-preview img { 
+     display: inline-block; 
+     height: 100px; 
+     width: auto;
+     margin-right: var(--spacing-sm);
+     vertical-align: middle;
+     border: 1px solid var(--color-border-light);
+}
+
+.block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+
+.entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Content Manager</title>
+
+  <!-- Stylesheet link removed from here -->
+
+  <style>
+    /* Preview pane specific adjustments if needed */
+    .nc-preview-pane-container > div {
+        padding: 0 !important;
+    }
+    .feed-entry-preview-wrapper {
+        padding: 1rem;
+        background-color: var(--color-background, white);
+    }
+  </style>
+
+</head>
+<body>
+  <!-- Load Marked library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Decap CMS Core Script -->
+  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+
+    <!-- Custom Preview Registration Script -->
+    <script type="module">
+        console.log("Admin script started.");
+    
+        // Make sure Marked is loaded before proceeding
+        if (typeof marked === 'undefined') {
+          console.error("Marked library not loaded!");
+          // Maybe display an error or stop?
+        } else {
+            console.log("Marked library loaded.");
+            // Optional: Configure marked if needed
+            // marked.setOptions({ gfm: true, breaks: true });
+        }
+    
+        // Get CMS and h (hyperscript) function from global scope
+        const CMS = window.CMS;
+        const h = window.h || window.React.createElement; // Use React.createElement as fallback if h isn't defined
+    
+        if (!CMS || !h) {
+            console.error("CMS object or h function not found. Preview registration failed.");
+        } else {
+            console.log("CMS object and h function found.");
+    
+            // --- Register the stylesheet DIRECTLY for the preview pane ---
+            try {
+                // Use a root-relative path assuming admin.html is in /public/admin/
+                CMS.registerPreviewStyle('/admin-preview.css');
+                console.log("Registered preview style: /admin-preview.css");
+            } catch (error) {
+                console.error("Error registering preview style:", error);
+            }
+    
+            // --- Define the Feed Entry Preview Function ---
+            const FeedEntryPreview = (props) => {
+                // console.log("FeedEntryPreview props:", props); // Debug: See what props are passed
+                const { entry, getAsset } = props;
+                if (!entry || !entry.getIn) {
+                    console.error("Invalid 'entry' object in preview props:", entry);
+                    return h('div', {}, 'Error: Invalid data received for preview.');
+                }
+    
+                // --- Extract Data ---
+                const title = entry.getIn(['data', 'title'], 'Untitled Entry');
+                const dateValue = entry.getIn(['data', 'date'], null);
+                const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
+                const contentBlocksData = entry.getIn(['data', 'contentBlocks'], null); // Get Immutable List/Map or null
+    
+                // --- Process Data ---
+                const formattedDate = dateValue
+                    ? new Date(dateValue).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                      })
+                    : null;
+                const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
+    
+                // Helper to parse markdown client-side
+                function parseMarkdownClient(markdownString) {
+                    if (!markdownString || typeof marked === 'undefined') return '';
+                    try {
+                        // Use marked.parse() which replaced marked()
+                        return marked.parse(markdownString);
+                    } catch (e) {
+                        console.error("Markdown preview parsing error:", e);
+                        return '<p><em>Error parsing markdown</em></p>';
+                    }
+                }
+    
+                // --- Render Content Blocks ---
+                let blockElements = [];
+                if (contentBlocksData && typeof contentBlocksData.map === 'function') {
+                    blockElements = contentBlocksData.map((block, index) => { // Added index for key
+                        if (!block || typeof block.get !== 'function') return null;
+    
+                        const blockType = block.get('type');
+                        const key = `${blockType}-${index}`; // Simple key for React
+    
+                        switch (blockType) {
+                            case 'twoColumn':
+                                const leftContent = block.get('left');
+                                const rightContent = block.get('right');
+                                return h('div', { key: key, className: 'content-block block-two-column' },
+                                    leftContent ? h('div', { className: 'column left-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(leftContent) } }) : null,
+                                    rightContent ? h('div', { className: 'column right-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(rightContent) } }) : null
+                                );
+                            case 'fullWidthImage':
+                                const rawImagePath = block.get('image');
+                                const altText = block.get('alt') || '';
+                                const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
+                                return h('div', { key: key, className: 'content-block block-full-width-image' },
+                                    imageUrl ? h('img', { src: imageUrl, alt: altText, style: { display: 'block', width: '100%', height: 'auto', borderRadius: 'var(--border-radius-sm)', backgroundColor: 'var(--color-border-light)' } }) : h('p', {}, 'Image not available')
+                                );
+                            case 'fullWidthEmbed':
+                                const embedCode = block.get('embedCode');
+                                // Basic sanitization attempt - VERY basic, might need a proper library for safety
+                                const sanitizedEmbedCode = embedCode ? embedCode.replace(/<script.*?>.*?<\/script>/gi, '<!-- Script removed for preview safety -->') : '';
+                                return h('div', { key: key, className: 'content-block block-full-width-embed', dangerouslySetInnerHTML: { __html: sanitizedEmbedCode || '' } });
+    
+                            // +++ ADDED CASE FOR fullWidthText +++
+                            case 'fullWidthText':
+                                const textContent = block.get('text');
+                                return h('div', { key: key, className: 'content-block block-full-width-text markdown-content', /* Add markdown-content class if your CSS uses it */
+                                    dangerouslySetInnerHTML: { __html: parseMarkdownClient(textContent || '') }
+                                 });
+    
+                            // +++ ADDED CASE FOR horizontalGallery (Basic Preview) +++
+                            case 'horizontalGallery':
+                                 const imagesData = block.get('images');
+                                 let galleryImages = [];
+                                 if (imagesData && typeof imagesData.map === 'function') {
+                                     galleryImages = imagesData.map((imgData, imgIndex) => {
+                                         if (!imgData || typeof imgData.get !== 'function') return null;
+                                         const imgRawPath = imgData.get('image');
+                                         const imgAlt = imgData.get('alt') || '';
+                                         const imgUrl = imgRawPath ? getAsset(imgRawPath)?.url || imgRawPath : null;
+                                         return imgUrl ? h('img', {
+                                             key: `gallery-${index}-img-${imgIndex}`,
+                                             src: imgUrl,
+                                             alt: imgAlt,
+                                             style: { height: '100px', width: 'auto', marginRight: '10px', objectFit: 'cover', border: '1px solid #eee' } // Simple inline style for preview
+                                         }) : null;
+                                     }).filter(img => img !== null);
+                                 }
+                                 return h('div', { key: key, className: 'content-block block-horizontal-gallery-preview', style: { overflowX: 'auto', whiteSpace: 'nowrap', padding: '10px', border: '1px dashed #ccc', margin: '5px 0' } },
+                                     galleryImages.length > 0 ? galleryImages : h('p', {}, h('em', {}, 'No images in gallery.'))
+                                 );
+    
+                            default:
+                                console.warn(`Unsupported block type encountered in preview: ${blockType}`); // Log warning
+                                return h('div', { key: key, className: 'content-block block-unknown', style: { padding: '10px', border: '1px solid red', margin: '5px 0', color: 'red' } },
+                                    h('p', {}, h('em', {}, `Unsupported block preview: ${blockType || 'Unknown'}`))
+                                );
+                        }
+                    }).filter(el => el !== null);
+                } else {
+                     blockElements = [h('p', { key: 'no-blocks' }, h('em', {}, 'No content blocks added yet.'))];
+                }
+    
+    
+                // --- Assemble Preview using h() ---
+                // Use a wrapper div matching the structure in your preview CSS
+                return h('div', { className: 'feed-entry-preview-wrapper' },
+                    h('article', { className: 'feed-entry' },
+                        // Title
+                        h('h3', {}, title),
+                        // Date
+                        formattedDate ? h('time', { className: 'feed-entry-date' }, formattedDate) : null,
+                        // Thumbnail (basic preview)
+                        thumbnailUrl ? h('div', { className: 'thumbnail-preview', style: { marginBottom: '1.5rem', backgroundColor: 'var(--color-border-light)' } },
+                            h('img', { src: thumbnailUrl, alt: `Thumbnail for ${title}`, style: { display: 'block', width: '100%', height: 'auto', maxWidth: '100%', objectFit: 'cover' } })
+                        ) : null,
+                        // Content Blocks
+                        h('div', { className: 'feed-entry-blocks' }, blockElements), // Pass array directly
+                        // Separator
+                        h('hr', { className: 'entry-separator' })
+                    )
+                );
+            }; // End of FeedEntryPreview function definition
+    
+            // --- Register the Preview Template ---
+            try {
+                CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+                console.log("Feed entry preview template registered successfully.");
+            } catch (error) {
+                 console.error("Error registering preview template:", error);
+            }
+    
+        } // End of CMS/h check
+      </script>
+</body>
+</html># public/admin/config.yml
+backend:
+  name: git-gateway
+  repo: giacovecci/mittel
+  branch: adam-feedback-2
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
+  gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.reiseburo.workers.dev
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        typeKey: type
+        types:
+          - label: "Two Column Block"
+            name: "twoColumn"
+            widget: "object"
+            fields:
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
+          - label: "Full Width Image"
+            name: "fullWidthImage"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          - label: "Full Width Embed"
+            name: "fullWidthEmbed"
+            widget: "object"
+            fields:
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
+          - label: "Full Width Text"
+            name: "fullWidthText"
+            widget: "object"
+            fields:
+              - { label: "Text Content", name: "text", widget: "markdown" }
+          - label: "Horizontal Gallery"
+            name: "horizontalGallery"
+            widget: "object"
+            fields:
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                fields:
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+
+  # ADDED: Highlights Collection
+  - name: "highlights" # Matches folder src/content/highlights/
+    label: "Highlights"
+    folder: "src/content/highlights" # Store each highlight as a separate file
+    create: true
+    slug: "{{slug}}" # User can define slug for each highlight item
+    identifier_field: title # Show title in the list view
+    summary: "{{title}} (Order: {{order | default('N/A')}})" # Summary in CMS list view
+    fields:
+      - { label: "Highlight Title", name: "title", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Lower numbers appear first." }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
+      - { label: "Summary Text", name: "summary", widget: "markdown" }
+      - { label: "Slug of Linked Feed Entry", name: "linkedFeedSlug", widget: "string", hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
+
+  - name: "general_content"
+    label: "General Content"
+    files:
+      - label: "Static Info (Left Column)" # Clarified label
+        name: "static_info_content"
+        file: "src/content/general_content/static_info.md"
+        fields:
+          - { label: "Introductory Text", name: "introText", widget: "markdown" }
+      # ADDED: About Page Content File
+      - label: "About Page"
+        name: "about_page_content"
+        file: "src/content/general_content/about_page.md"
+        fields:
+          - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }

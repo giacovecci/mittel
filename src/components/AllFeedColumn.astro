@@ -1,0 +1,39 @@
+---
+// src/components/AllFeedColumn.astro
+import { getCollection } from 'astro:content';
+import FeedEntry from './FeedEntry.astro'; // Re-use the existing FeedEntry component
+import type { CollectionEntry } from 'astro:content';
+
+const allFeedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const sortedFeedEntries = allFeedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA; // Sort descending, newest first
+});
+---
+
+<div class="all-feed-column-wrapper">
+  {sortedFeedEntries.length > 0 ? (
+    <div class="all-feed-list">
+      {sortedFeedEntries.map(entry => (
+        <FeedEntry entry={entry} />
+      ))}
+    </div>
+  ) : (
+    <p>No feed entries available yet.</p>
+  )}
+</div>
+
+<style>
+  .all-feed-column-wrapper {
+    /* Styles for the wrapper if needed */
+  }
+  .all-feed-column-wrapper h3 {
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-md);
+  }
+  .all-feed-list {
+    /* Container for all feed entries */
+  }
+  /* FeedEntry component will have its own margins, so list might not need much */
+</style>

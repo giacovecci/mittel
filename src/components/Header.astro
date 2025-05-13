@@ -1,158 +1,151 @@
 ---
-// src/components/Header.astro (Right Side Only)
 const contactEmail = "hey@mittel.tv";
 ---
 <div class="main-header-wrapper">
-    {/* --- Desktop Feed Button --- */}
+    {/* ... HTML for buttons (no arrows) ... */}
     <div class="header-sub-col feed-button-desktop-container">
-        <button type="button" id="feed-view-btn" class="desktop-only">
+        <button type="button" id="home-feed-view-btn" class="desktop-only">
             Feed
         </button>
     </div>
-
-    {/* --- Overview Button --- */}
     <div class="header-sub-col overview-button-container">
-        <button type="button" id="overview-view-btn">
-           <span class="arrow mobile-only">→</span> Projects
+        <button type="button" id="overview-view-btn" class="nav-button">
+           Projects
         </button>
     </div>
-
-    {/* --- Contact Button (Changed from <a>) --- */}
-    <div class="header-contact-item">
-        <button type="button" id="contact-link"> {/* << CHANGED from <a> */}
-           <span class="arrow mobile-only">→</span> Contact
+    <div class="header-sub-col about-button-container">
+        <button type="button" id="about-view-btn" class="nav-button">
+           About
         </button>
     </div>
-
-    {/* --- Mobile Info Button --- */}
+    <div class="header-sub-col header-contact-item">
+        <button type="button" id="contact-link" class="nav-button">
+           Contact
+        </button>
+    </div>
     <div class="header-sub-col info-button-mobile-container">
-        <button type="button" id="info-view-btn" class="mobile-only">
-            <span class="arrow">→</span> Info
+        <button type="button" id="mobile-feed-highlights-btn" class="mobile-only nav-button">
+            {/* Text set by JS */}
         </button>
     </div>
 </div>
 
-{/* --- Styles --- */}
 <style>
-    /* ================================== */
-    /* --- Base Component Styles --- */
-    /* ================================== */
     .main-header-wrapper {
         display: flex;
-        justify-content: space-between; /* <<< CORRECT: Parent distributes children */
-        align-items: baseline; /* Align children based on their text baseline */
+        justify-content: space-between; 
+        align-items: flex-start; 
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         font-size: inherit;
     }
 
-    /* --- Styling for the CONTAINER divs holding buttons --- */
-    /* Defines how each container behaves */
-    .main-header-wrapper > div {
+    .main-header-wrapper > div.header-sub-col {
         box-sizing: border-box;
-        text-align: center; /* Fallback alignment */
-        flex-basis: auto; /* Allow natural width */
-        /* flex-grow: 0; */ /* Don't allow growth */
-        /* flex-shrink: 1; */ /* Allow shrinking */
-        display: flex; /* Make container a flexbox... */
-        align-items: baseline; /* ...to align the button inside based on text */
-        justify-content: center; /* <<< CORRECTED: Center button within container (or flex-start/end) */
+        flex-grow: 0; 
+        flex-shrink: 0; 
+        flex-basis: auto; 
+        display: flex; 
+        align-items: baseline; 
     }
-     /* Override for contact button CONTAINER - Desktop */
-     /* Align the button inside this specific container to the right */
-     .header-contact-item {
-        justify-content: flex-end;
-        text-align: right; /* Keep text-align for fallback */
-     }
 
-    /* --- UNIFIED STYLING for ALL Buttons inside the wrapper --- */
-    .main-header-wrapper button {
-        display: inline-block;
-        padding: 2px 0; /* Keep minimal vertical padding */
+    .feed-button-desktop-container {
+        justify-content: flex-start; 
+        text-align: left; 
+    }
+    .overview-button-container,
+    .about-button-container {
+        justify-content: center; 
+        text-align: center;
+    }
+    .header-contact-item { 
+        justify-content: flex-end; 
+        text-align: right;
+    }
+   
+    .main-header-wrapper button { 
+        padding: 2px 0; 
         margin: 0;
         font-size: inherit;
         font-family: inherit;
         font-weight: var(--font-weight-bold);
-        line-height: 1.3; /* <<< CORRECTED: Restore sensible line-height */
+        line-height: 1.3; 
         color: inherit;
         background: none;
         border: none;
         cursor: pointer;
-        white-space: nowrap;
+        white-space: nowrap; 
     }
 
-    /* --- Arrow Styling (Common) --- */
-    .arrow {
-        display: inline-block;
-        margin-right: 0.4em;
-     }
+    .main-header-wrapper button.nav-button {
+        display: inline-flex; 
+        align-items: center;   
+        justify-content: center; 
+    }
 
-    /* ================================== */
-    /* --- Visibility Toggles --- */
-    /* ================================== */
     .mobile-only { display: none !important; }
-    .desktop-only { display: inline-block !important; }
+    .desktop-only { display: inline-block !important; } 
     .info-button-mobile-container { display: none !important; }
 
 
-    /* ================================== */
-    /* --- MOBILE SPECIFIC OVERRIDES --- */
-    /* ================================== */
-    @media (max-width: 768px) {
-        /* Mobile styles for the main wrapper */
+    @media (max-width: 768px) { /* MOBILE STYLES */
         .main-header-wrapper {
             flex-direction: column;
-            align-items: flex-end;
-            justify-content: flex-start;
-            gap: 0px; /* Keep zero gap */
-            height: 100%;
-            padding: 0;
+            align-items: flex-end; 
+            justify-content: flex-start; 
+            gap: 0px; 
         }
 
-        /* Mobile styles for the CONTAINER divs */
-        .main-header-wrapper > div {
-             flex-basis: auto;
-             flex-grow: 0;
-             flex-shrink: 1;
-            width: auto;
-            text-align: right;
-             display: block; /* Keep as block */
-             margin-bottom: 0;
-             /* Remove desktop flex alignment */
-             /* justify-content: center; */
-             /* align-items: baseline; */
+        /* MODIFIED: .header-sub-col is now a flex container to align its button child */
+        .main-header-wrapper > div.header-sub-col { 
+            display: flex;             /* Make the sub-column a flex container */
+            justify-content: flex-end; /* Push its child (the button) to the right */
+            align-items: center;       /* Vertically center the button within the sub-col's allocated height */
+            width: 100%;               /* Sub-col takes full width of its parent's content box (#main-header-area) */
+            box-sizing: border-box;
+            margin-bottom: 0;          /* Keep this if it was intentional for vertical spacing by parent */
+            /* overflow: hidden; /* Usually not needed if content is sized correctly */
+            /* padding: 0 var(--spacing-xxs); /* Add a tiny bit of padding if buttons feel too flush, optional */
         }
 
-        /* --- Mobile Ordering and Visibility --- */
-        .feed-button-desktop-container { display: none !important; order: 99; }
-        .info-button-mobile-container { display: block !important; order: 1; }
+        .feed-button-desktop-container.desktop-only { display: none !important; }
+        
+        .info-button-mobile-container { display: block !important; order: 1; } 
         .overview-button-container { display: block !important; order: 2; }
-        .header-contact-item { display: block !important; order: 3; }
+        .about-button-container { display: block !important; order: 3; } 
+        .header-contact-item { display: block !important; order: 4; } 
 
-        .mobile-only { display: inline-block !important; }
-        .desktop-only { display: none !important; }
-
-        /* Mobile specific styles for the BUTTONS inside */
-        .main-header-wrapper button {
-             width: auto;
-             /* Use consistent padding with desktop unified rule */
-             padding: 0 0;
-             line-height: 1.3; /* Ensure mobile uses correct line-height too */
+        .mobile-only { display: none !important; } /* Arrows are gone, so this might be unused */
+        .desktop-only { display: none !important; } 
+        
+        /* MODIFIED: Button styling on mobile */
+        .main-header-wrapper button { 
+             padding: 2px 0; /* Keep some vertical padding for tap area / visual */
+             margin: 0; /* Ensure no external margins */
+             line-height: 1.3; 
+             white-space: normal; 
+             overflow-wrap: break-word; 
+             word-break: break-all; 
+             text-align: right; /* Text within the button aligns right if it wraps */
+             /* display: inline-block; /* Button is now a flex item, its display is less relevant here */
+             /* width: auto; /* Flex item will size to content */
         }
-    } /* End Mobile Media Query */
-
+        
+        /* If nav-button class is used for specific min-height or other non-layout properties */
+        .main-header-wrapper button.nav-button {
+            /* min-height: calc(1.3em + 4px); /* Example: ensure decent tap target */
+            /* display: inline-flex / flex is overridden by the general button rule if more specific, */
+            /* or this can be more specific if needed. For now, let sub-col handle alignment. */
+        }
+    } 
 </style>
 
-{/* --- Script to handle Contact Button click --- */}
 <script define:vars={{ contactEmail }}>
     const contactButton = document.getElementById('contact-link');
     if (contactButton) {
         contactButton.addEventListener('click', () => {
-            // Construct the mailto link and navigate to it
             window.location.href = `mailto:${contactEmail}`;
         });
-    } else {
-        console.error("Contact button (#contact-link) not found.");
     }
 </script>

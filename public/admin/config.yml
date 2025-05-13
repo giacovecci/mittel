@@ -68,11 +68,32 @@ collections:
                   - { label: "Image", name: "image", widget: "image" }
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
 
-  - name: "general_content" # Matches folder name src/content/general_content/
+  # ADDED: Highlights Collection
+  - name: "highlights" # Matches folder src/content/highlights/
+    label: "Highlights"
+    folder: "src/content/highlights" # Store each highlight as a separate file
+    create: true
+    slug: "{{slug}}" # User can define slug for each highlight item
+    identifier_field: title # Show title in the list view
+    summary: "{{title}} (Order: {{order | default('N/A')}})" # Summary in CMS list view
+    fields:
+      - { label: "Highlight Title", name: "title", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Lower numbers appear first." }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
+      - { label: "Summary Text", name: "summary", widget: "markdown" }
+      - { label: "Slug of Linked Feed Entry", name: "linkedFeedSlug", widget: "string", hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
+
+  - name: "general_content"
     label: "General Content"
     files:
-      - label: "Static Info" # CMS UI Label
-        name: "static_info_content" # Internal name for this config item
-        file: "src/content/general_content/static_info.md" # Path to the MD file
+      - label: "Static Info (Left Column)" # Clarified label
+        name: "static_info_content"
+        file: "src/content/general_content/static_info.md"
         fields:
           - { label: "Introductory Text", name: "introText", widget: "markdown" }
+      # ADDED: About Page Content File
+      - label: "About Page"
+        name: "about_page_content"
+        file: "src/content/general_content/about_page.md"
+        fields:
+          - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }

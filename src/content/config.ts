@@ -9,7 +9,7 @@ const twoColumnBlockSchema = z.object({
 });
 const fullWidthImageBlockSchema = z.object({
     type: z.literal('fullWidthImage'),
-    image: z.string(),
+    image: z.string(), 
     alt: z.string().optional(),
 });
 const fullWidthEmbedBlockSchema = z.object({
@@ -24,7 +24,7 @@ const horizontalGalleryBlockSchema = z.object({
     type: z.literal('horizontalGallery'),
     images: z.array(
         z.object({
-            image: z.string(),
+            image: z.string(), 
             alt: z.string().optional(),
         })
     ).optional(),
@@ -36,7 +36,7 @@ const feed = defineCollection({
     schema: z.object({
         title: z.string(),
         date: z.date().optional(),
-        thumbnail: z.string().optional(),
+        thumbnail: z.string().optional(), 
         contentBlocks: z.array(
             z.discriminatedUnion('type', [
                 twoColumnBlockSchema,
@@ -50,16 +50,29 @@ const feed = defineCollection({
 });
 
 // --- Collection Definition: general_content ---
-// This key 'general_content' MUST match the folder name src/content/general_content/
 const general_content = defineCollection({
-    type: 'content', // For YAML/JSON/MD files where we primarily use frontmatter
+    type: 'content', 
     schema: z.object({
-        introText: z.string(),
+        introText: z.string().optional(), 
+        aboutPageContent: z.string().optional(), 
+    }).passthrough(),
+});
+
+// --- MODIFIED: Collection Definition: highlights ---
+const highlights = defineCollection({
+    type: 'content', // CHANGED from 'data' to 'content'
+    schema: z.object({ // Schema defines the frontmatter for the .md files
+        title: z.string(),
+        summary: z.string(), 
+        thumbnail: z.string(), 
+        linkedFeedSlug: z.string(), 
+        order: z.number().optional(), 
     }),
 });
 
 // --- Export Collections ---
 export const collections = {
-  feed, // Key will be 'feed'
-  general_content, // Key will be 'general_content'
+  feed,
+  general_content,
+  highlights,
 };

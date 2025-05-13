@@ -1,0 +1,32 @@
+---
+// src/components/AboutSection.astro
+import { getEntry } from 'astro:content';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+// Fetch the 'about_page.md' entry from the 'general_content' collection
+const aboutEntry = await getEntry('general_content', 'about_page');
+
+let htmlAboutContent = "<p>Error: About content not loaded or empty.</p>";
+
+if (aboutEntry && aboutEntry.data && typeof aboutEntry.data.aboutPageContent === 'string') {
+  htmlAboutContent = parseMarkdown(aboutEntry.data.aboutPageContent);
+} else {
+  console.error("AboutSection.astro: Could not load aboutPageContent from 'general_content/about_page.md'. Entry:", aboutEntry);
+}
+---
+
+<div class="about-section-wrapper markdown-content" set:html={htmlAboutContent}>
+  {/* Content injected by set:html */}
+</div>
+
+<style>
+  .about-section-wrapper {
+    /* Specific styles for the about section wrapper if needed */
+    /* General markdown styles will apply from global.css */
+  }
+  .about-section-wrapper :global(h1:first-child),
+  .about-section-wrapper :global(h2:first-child),
+  .about-section-wrapper :global(h3:first-child) {
+    margin-top: 0; /* Common override for the first heading in a content block */
+  }
+</style>

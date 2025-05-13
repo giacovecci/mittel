@@ -1,12 +1,13 @@
 ---
-// src/pages/index.astro
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import IdentityHeader from '../components/IdentityHeader.astro';
 import Header from '../components/Header.astro';
 import StaticInfo from '../components/StaticInfo.astro';
-import FeedEntry from '../components/FeedEntry.astro';
 import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro';
 import type { CollectionEntry } from 'astro:content';
 
 const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
@@ -22,151 +23,268 @@ const overviewItems = feedEntries.map(entry => ({
     altText: entry.data.title || 'Feed item thumbnail'
 }));
 ---
-<BaseLayout title="Żakowiecki | fixer supreme XD">
+<BaseLayout title="Żakowiecki | Portfolio">
 
-    <div slot="identity-header">
-        <IdentityHeader />
-    </div>
-
-    <div slot="main-header">
-        <Header />
-    </div>
-
-    <div slot="info-content" id="info-content-wrapper"> 
-        <StaticInfo />
-    </div>
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
 
     <section slot="feed-content" id="feed-content-wrapper"> 
-        {feedEntries.map(entry => (
-            <FeedEntry entry={entry} />
-        ))}
     </section>
 
     <div slot="overview-content" id="overview-content-wrapper"> 
-        <div id="overview-grid-wrapper">
-            <OverviewGrid items={overviewItems} />
-        </div>
+        <div id="overview-grid-wrapper"><OverviewGrid items={overviewItems} /></div>
     </div>
-
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn />
+    </div>
 </BaseLayout>
+
+<style>
+    #highlights-content-wrapper-actual,
+    #about-content-wrapper-actual {
+        display: none;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const appContainer = document.getElementById('app-container');
-        const identityHeaderArea = document.getElementById('identity-header-area');
-        const mainHeaderArea = document.getElementById('main-header-area');
-        const dividerArea = document.getElementById('divider-area');
         const infoContentArea = document.getElementById('info-content-area');
-        const feedContentArea = document.getElementById('feed-content-area');
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); 
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area'); 
         const overviewContentArea = document.getElementById('overview-content-area');
-        const infoBtn = document.getElementById('info-view-btn') as HTMLButtonElement | null;
-        const feedBtn = document.getElementById('feed-view-btn') as HTMLButtonElement | null;
+        const singleFeedContentArea = document.getElementById('feed-content-area');
+        
+        const desktopFeedHighlightsBtn = document.getElementById('home-feed-view-btn') as HTMLButtonElement | null;
+        const mobileFeedHighlightsBtn = document.getElementById('mobile-feed-highlights-btn') as HTMLButtonElement | null;
         const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
+        const aboutBtn = document.getElementById('about-view-btn') as HTMLButtonElement | null;
+
         const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual'); 
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper'); 
 
-        if (!appContainer || !identityHeaderArea || !mainHeaderArea || !dividerArea || !infoContentArea || !feedContentArea || !overviewContentArea || !infoBtn || !feedBtn || !overviewBtn || !overviewGridWrapper) {
-            console.error("Essential elements missing for view switching script."); return;
+        if (!appContainer || !infoContentArea || !dynamicContentArea || !highlightsContentWrapper || 
+            !aboutContentWrapper || !allFeedContentArea || !overviewContentArea || !singleFeedContentArea ||
+            !desktopFeedHighlightsBtn || !mobileFeedHighlightsBtn || !overviewBtn || !aboutBtn) {
+            // console.error("Essential elements missing for view switching. Check IDs.");
+            return;
         }
-
+        
         const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; 
         let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
         function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
-        function isDesktop(): boolean { return !isMobile(); }
 
-        function setActiveButton(activeBtn: HTMLButtonElement | null): void {
-            [infoBtn, feedBtn, overviewBtn].forEach(btn => {
-                if (btn) { btn.classList.toggle('active', btn === activeBtn); }
+        function updateButtonLabelAndState() {
+            const activeButtons = [];
+            
+            if (desktopFeedHighlightsBtn) {
+                if (currentView === 'home') { 
+                    desktopFeedHighlightsBtn.textContent = 'Feed';
+                    if (!isMobile()) activeButtons.push(desktopFeedHighlightsBtn.id);
+                } else if (currentView === 'all-feed') { 
+                    desktopFeedHighlightsBtn.textContent = 'Highlights';
+                    if (!isMobile()) activeButtons.push(desktopFeedHighlightsBtn.id);
+                } else {
+                    desktopFeedHighlightsBtn.textContent = 'Highlights';
+                }
+            }
+
+            if (mobileFeedHighlightsBtn) {
+                if (currentView === 'info') { 
+                    mobileFeedHighlightsBtn.textContent = 'Feed'; // Arrow removed
+                    if (isMobile()) activeButtons.push(mobileFeedHighlightsBtn.id);
+                } else if (currentView === 'all-feed') {
+                    mobileFeedHighlightsBtn.textContent = 'Highlights'; // Arrow removed
+                    if (isMobile()) activeButtons.push(mobileFeedHighlightsBtn.id);
+                } else {
+                    mobileFeedHighlightsBtn.textContent = 'Feed'; // Default, arrow removed
+                }
+            }
+            
+            if (currentView === 'about') activeButtons.push(aboutBtn.id);
+            if (currentView === 'overview') activeButtons.push(overviewBtn.id);
+            
+            [desktopFeedHighlightsBtn, mobileFeedHighlightsBtn, overviewBtn, aboutBtn].forEach(btn => {
+                if (btn) {
+                    btn.classList.toggle('active', activeButtons.includes(btn.id));
+                }
             });
         }
 
-        function setMainView(view: 'feed' | 'overview' | 'info'): void {
-            console.log("%cSetting view:", "color: blue; font-weight: bold;", view, "isMobile:", isMobile());
-            if (!appContainer) return;
-            appContainer.classList.remove('view-feed', 'view-overview', 'view-info', 'is-mobile', 'is-desktop');
-            const elementsToReset = [
-                identityHeaderArea, mainHeaderArea, dividerArea,
-                infoContentArea, feedContentArea, overviewContentArea
-            ];
-            elementsToReset.forEach(el => { if (el) { el.style.display = ''; } });
-            if (isMobile()) { appContainer.classList.add('is-mobile'); } else { appContainer.classList.add('is-desktop'); }
-            if (view === 'overview') {
-                appContainer.classList.add('view-overview');
-                setActiveButton(overviewBtn);
-            } else if (view === 'info' && isMobile()) {
-                appContainer.classList.add('view-info');
-                setActiveButton(infoBtn);
-            } else {
-                appContainer.classList.add('view-feed');
-                setActiveButton(feedBtn);
+        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about'): void {
+            // console.log("%cSetting view to:", "color: blue; font-weight: bold;", view, "/ Is mobile:", isMobile());
+            currentView = view; 
+
+            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'view-feed', 'is-mobile', 'is-desktop');
+            
+            if (isMobile()) appContainer.classList.add('is-mobile');
+            else appContainer.classList.add('is-desktop');
+
+            if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+            if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+            if (singleFeedContentArea) {
+                singleFeedContentArea.style.display = 'none';
+                singleFeedContentArea.innerHTML = '';
             }
+
+            switch (view) {
+                case 'home': 
+                    appContainer.classList.add('view-home');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'info': 
+                    appContainer.classList.add('view-info');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'all-feed': 
+                    appContainer.classList.add('view-all-feed');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+                    break;
+                case 'overview': 
+                    appContainer.classList.add('view-overview');
+                    break;
+                case 'about': 
+                    appContainer.classList.add('view-about');
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'block';
+                    break;
+                default: 
+                    if (isMobile()) {
+                        appContainer.classList.add('view-info');
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    } else {
+                        appContainer.classList.add('view-home'); 
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    }
+            }
+            updateButtonLabelAndState();
+            // console.log("AppContainer classes:", appContainer.className);
         }
 
-        overviewBtn.addEventListener('click', () => setMainView('overview'));
-        feedBtn.addEventListener('click', () => setMainView('feed'));
-        infoBtn.addEventListener('click', () => { if (isMobile()) { setMainView('info'); } else { setMainView('feed'); } });
+        if (desktopFeedHighlightsBtn) {
+            desktopFeedHighlightsBtn.addEventListener('click', () => {
+                if (currentView === 'home') {
+                    setMainView('all-feed');
+                } else { 
+                    setMainView('home');
+                }
+            });
+        }
 
-        // --- UPDATED Grid Click Logic ---
+        if (mobileFeedHighlightsBtn) {
+            mobileFeedHighlightsBtn.addEventListener('click', () => {
+                if (currentView === 'info') { 
+                    setMainView('all-feed');
+                } else { 
+                    setMainView('info'); 
+                }
+            });
+        }
+        
+        if (overviewBtn) {
+            overviewBtn.addEventListener('click', () => setMainView('overview'));
+        }
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', () => setMainView('about'));
+        }
+
+        function navigateToFeedItem(targetId: string) {
+            // console.log(`%cnavigateToFeedItem CALLED for targetId: ${targetId}`, "color: purple; font-weight: bold;");
+            setMainView('all-feed'); 
+
+            requestAnimationFrame(() => {
+                setTimeout(() => { 
+                    // console.log(`Attempting to find targetElement ID: '${targetId}' after rAF + 100ms timeout.`);
+                    const targetElement = document.getElementById(targetId);
+                    const scrollContainer = allFeedContentArea; 
+
+                    if (targetElement) {
+                        // console.log("Target element FOUND:", targetElement);
+                        if (scrollContainer && scrollContainer.contains(targetElement)) {
+                            // console.log("Target is within scrollContainer. Scrolling...");
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            updateButtonLabelAndState(); 
+                        } else if (scrollContainer) {
+                            // console.error("Target element found, but NOT within #all-feed-content-area.");
+                        } else {
+                             // console.error("#all-feed-content-area container not found itself.");
+                        }
+                    } else {
+                        // console.error(`Target feed element '${targetId}' NOT FOUND.`);
+                    }
+                }, 100); 
+            });
+        }
+
         if (overviewGridWrapper) {
             overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
                 if (!(event.target instanceof Element)) return;
-
-                const gridItemLink = event.target.closest<HTMLAnchorElement>('.grid-item');
-                
-                if (!gridItemLink || !gridItemLink.dataset.targetId || !feedContentArea) {
-                    if (gridItemLink && !gridItemLink.dataset.targetId) {
-                        console.error("Grid item link missing 'data-target-id'.");
-                    }
-                    if (!feedContentArea) {
-                         console.error("Feed content area not found for scrolling.");
-                    }
-                    return;
+                const link = event.target.closest<HTMLAnchorElement>('.grid-item');
+                if (link && link.dataset.targetId) {
+                    event.preventDefault();
+                    navigateToFeedItem(link.dataset.targetId);
                 }
-                
-                event.preventDefault();
-                const targetId = gridItemLink.dataset.targetId;
-
-                // 1. Switch view first
-                setMainView('feed');
-
-                // 2. Defer scrolling until after the next browser paint cycle.
-                // This allows the DOM to update with the new view before we try to find and scroll to the element.
-                requestAnimationFrame(() => {
-                    // An additional small delay can sometimes be necessary if requestAnimationFrame alone
-                    // isn't enough for all CSS transitions/layout shifts to complete.
-                    // Start with a minimal timeout, or remove if requestAnimationFrame is sufficient.
-                    setTimeout(() => {
-                        const targetFeedElement = document.getElementById(targetId);
-
-                        if (targetFeedElement && feedContentArea.contains(targetFeedElement)) {
-                            if (targetFeedElement.classList.contains('feed-entry')) {
-                                targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            } else {
-                                console.warn(`Element with ID '${targetId}' found, but lacks 'feed-entry' class. Still attempting scroll.`);
-                                targetFeedElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }
-                        } else if (targetFeedElement) {
-                            console.error(`Element ID '${targetId}' found, but not within #feed-content-area.`);
-                        } else {
-                            console.error(`Target element with ID '${targetId}' not found in the document.`);
-                        }
-                    }, 50); // Small delay for rendering, adjust or remove if not needed
-                });
             });
         }
 
-        console.log("Initializing view...");
-        setMainView('feed');
+        if (highlightsListWrapper) { 
+            highlightsListWrapper.addEventListener('click', (event: MouseEvent) => {
+                 if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper'); 
+                if (link && link.dataset.targetId) {
+                    event.preventDefault(); 
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        if (allFeedListWrapper) {
+            allFeedListWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const feedEntryElement = event.target.closest<HTMLElement>('.feed-entry'); 
+                if (feedEntryElement && feedEntryElement.id) {
+                    event.preventDefault(); 
+                    navigateToFeedItem(feedEntryElement.id);
+                }
+            });
+        }
+
+        if (isMobile()) {
+            setMainView('info'); 
+        } else {
+            setMainView('home'); 
+        }
+        wasMobile = isMobile();
+
         const resizeObserver = new ResizeObserver(() => {
             const isNowMobile = isMobile();
             if (isNowMobile !== wasMobile) {
-                setMainView('feed');
+                if (isNowMobile) { 
+                    if (currentView === 'all-feed') setMainView('all-feed');
+                    else if (currentView === 'overview') setMainView('overview');
+                    else if (currentView === 'about') setMainView('about');
+                    else setMainView('info'); 
+                } else { 
+                    if (currentView === 'all-feed') setMainView('all-feed');
+                    else if (currentView === 'overview') setMainView('overview');
+                    else if (currentView === 'about') setMainView('about');
+                    else setMainView('home'); 
+                }
                 wasMobile = isNowMobile;
+            } else { 
+                updateButtonLabelAndState();
             }
         });
         resizeObserver.observe(document.body);
-        
-        // The gallery logic is now self-contained within FeedEntry.astro's script
-        // No global gallery initialization is needed here anymore.
     });
 </script>

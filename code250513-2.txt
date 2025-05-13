@@ -1,0 +1,2496 @@
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; /* list-style: none; */ } /* Keep user's choice for list-style */
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: clamp(1.1rem, 1rem + 0.2vw, 1.3rem);
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular); 
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204; 
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%; 
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width)); 
+}
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative; /* For potential absolute/fixed children positioning relative to body */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold); 
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+h3 { font-size: 1.1em; } /* Example specific heading size */
+
+p, li, dt, dd, span, label {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: var(--spacing-sm);
+  text-align: justify; 
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto; 
+  -ms-hyphens: auto; 
+  hyphens: auto;
+  overflow-wrap: break-word; /* Prevent long strings from breaking layout */
+  word-wrap: break-word; /* Legacy support */
+}
+
+li::marker {
+  color: var(--color-accent);
+}
+
+.header-site-name-text { /* Example specific class, if used */
+    font-weight: var(--font-weight-bold); 
+}
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover,
+button:hover { color: var(--color-accent); }
+
+/* MODIFIED/CONFIRMED: Active button style */
+button.active { 
+  color: var(--color-accent); /* Explicitly use --color-accent */
+  /* You could add other active styles here, e.g., a subtle border or background */
+  /* text-decoration: underline; */ /* Optional: if you want underline for active */
+}
+button { cursor: pointer; }
+
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+}
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+}
+
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      font-size: 0.8rem; /* Adjust for landscape tablets/wide phones */
+  }
+}
+
+/* --- Global Markdown Content Styles --- */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    /* text-align and hyphens are inherited from global p, li etc. */
+    /* overflow-wrap and word-wrap are inherited from global p, li etc. */
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.2;
+    /* font-weight is inherited from global h1,h2 etc. */
+}
+/* More specific heading margin for first child if needed */
+.markdown-content > *:first-child { margin-top: 0; }
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child,
+.markdown-content h4:first-child,
+.markdown-content h5:first-child,
+.markdown-content h6:first-child {
+    margin-top: 0;
+}
+
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: var(--spacing-lg); /* Standard indent for lists */
+    list-style: revert; /* Ensures bullets/numbers appear, respects user agent styles if not overridden */
+}
+.markdown-content ul { list-style-type: disc; }
+.markdown-content ol { list-style-type: decimal; }
+.markdown-content ul ul, .markdown-content ol ol { margin-bottom: 0; list-style-type: circle; } /* Nested lists */
+.markdown-content ul ol, .markdown-content ol ul { margin-bottom: 0; }
+
+
+.markdown-content li {
+    margin-bottom: var(--spacing-xxs);
+    /* text-align and hyphens are inherited */
+}
+/* If a paragraph is the ONLY child of an li, remove its bottom margin */
+.markdown-content li > p:only-child {
+    margin-bottom: 0;
+}
+/* If a paragraph is the LAST child of an li, remove its bottom margin to rely on li's margin */
+.markdown-content li > p:last-child {
+    margin-bottom: 0;
+}
+
+
+.markdown-content blockquote {
+    margin-left: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+    border-left: 3px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+.markdown-content blockquote p {
+    margin-bottom: var(--spacing-xs); /* Slightly less margin for paragraphs inside blockquotes */
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* Placeholder bg if image is transparent or loading */
+}
+
+.markdown-content a {
+    color: var(--color-text-hover); /* Use accent color for links */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    overflow-wrap: break-word; /* Prevent long links from breaking layout */
+}
+.markdown-content a:hover {
+    color: var(--color-text-unified); /* Revert to standard text color on hover, or a lighter accent */
+    text-decoration: none;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.markdown-content table {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    border-collapse: collapse;
+    border: 1px solid var(--color-border-light);
+    table-layout: fixed; /* Helps with responsive tables, prevents content from expanding cells too much */
+}
+.markdown-content th,
+.markdown-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--color-border-light);
+    text-align: left; 
+    overflow-wrap: break-word; /* Allow content in table cells to wrap */
+    word-wrap: break-word;
+}
+.markdown-content th {
+    background-color: var(--color-surface-light);
+    font-weight: var(--font-weight-bold);
+}
+
+.markdown-content pre {
+    background-color: var(--color-background-muted);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    overflow-x: auto; /* Allow horizontal scrolling for code blocks */
+    margin-bottom: var(--spacing-md);
+    font-family: 'Courier New', Courier, monospace; 
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+.markdown-content code { /* Inline code */
+    background-color: var(--color-background-muted);
+    padding: 0.1em 0.3em;
+    border-radius: var(--border-radius-sm);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em; /* Slightly smaller than surrounding text */
+    overflow-wrap: break-word; /* For long code strings not in pre */
+    word-break: break-all; /* More aggressive for inline code */
+}
+.markdown-content pre code { /* Code inside pre shouldn't have extra padding/bg or different font settings */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit; /* Inherit from pre */
+    font-family: inherit; /* Inherit from pre */
+    line-height: inherit; /* Inherit from pre */
+    overflow-wrap: normal; /* Let pre handle overflow */
+    word-break: normal;
+}
+
+/* === Responsive IFRAMES and EMBEDS within .markdown-content === */
+.markdown-content iframe,
+.markdown-content video,
+.markdown-content embed,
+.markdown-content object {
+    max-width: 100% !important; 
+    width: 100% !important;    
+    height: auto !important;   
+    min-height: 200px; /* Minimum height for embeds like videos */
+    aspect-ratio: 16 / 9;      
+    display: block;            
+    border: none;              
+    box-sizing: border-box;    
+    background-color: var(--color-background-muted); /* Placeholder background */
+}
+
+/* If an iframe/video is wrapped in a div that has an inline style for width (common from some embed codes) */
+.markdown-content div[style*="width"] > iframe,
+.markdown-content div[style*="width"] > video,
+.markdown-content div[style*="width"] > embed,
+.markdown-content div[style*="width"] > object {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important; /* Ensure inner element also scales height */
+}
+.markdown-content div[style*="width"] { /* Target wrapper divs with inline width */
+    width: auto !important; 
+    max-width: 100% !important;
+    height: auto !important; /* Ensure wrapper div also scales height */
+    /* The following can help if the wrapper div itself is causing aspect ratio issues */
+    /* position: relative; */
+    /* padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    /* height: 0; */
+    /* overflow: hidden; */
+}
+/* If the wrapper div has fixed height, try to override it */
+.markdown-content div[style*="height"] {
+    height: auto !important;
+    max-height: 100vh; /* Prevent excessively tall embeds */
+}
+/* === END OF RESPONSIVE IFRAMES AND EMBEDS === */// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+// --- Block Schemas (Used by 'feed' collection) ---
+const twoColumnBlockSchema = z.object({
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional(),
+});
+const fullWidthImageBlockSchema = z.object({
+    type: z.literal('fullWidthImage'),
+    image: z.string(), 
+    alt: z.string().optional(),
+});
+const fullWidthEmbedBlockSchema = z.object({
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string(),
+});
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string(),
+});
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(), 
+            alt: z.string().optional(),
+        })
+    ).optional(),
+});
+
+// --- Collection Definition: feed ---
+const feed = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(), 
+        contentBlocks: z.array(
+            z.discriminatedUnion('type', [
+                twoColumnBlockSchema,
+                fullWidthImageBlockSchema,
+                fullWidthEmbedBlockSchema,
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+            ])
+        ).optional(),
+    }),
+});
+
+// --- Collection Definition: general_content ---
+const general_content = defineCollection({
+    type: 'content', 
+    schema: z.object({
+        introText: z.string().optional(), 
+        aboutPageContent: z.string().optional(), 
+    }).passthrough(),
+});
+
+// --- MODIFIED: Collection Definition: highlights ---
+const highlights = defineCollection({
+    type: 'content', // CHANGED from 'data' to 'content'
+    schema: z.object({ // Schema defines the frontmatter for the .md files
+        title: z.string(),
+        summary: z.string(), 
+        thumbnail: z.string(), 
+        linkedFeedSlug: z.string(), 
+        order: z.number().optional(), 
+    }),
+});
+
+// --- Export Collections ---
+export const collections = {
+  feed,
+  general_content,
+  highlights,
+};---
+introText: >-
+  Good that you're here. My name is Piotr and I'm a multi-skilled media
+  professional with experience in video, audio and print journalism, and
+  documentary production.
+
+
+  I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. I'm based in Berlin and Warsaw, and highly mobile.
+
+
+  Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. 
+
+
+  Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment.
+---
+---
+aboutPageContent: |-
+  Ok, so this is going to be about me.
+
+  Me.
+
+  Me.
+
+  Me.
+
+  * pointedly mine
+  * depunk'd
+---
+---
+// src/components/OverviewGrid.astro
+import GridItem from './GridItem.astro';
+
+export interface Props {
+    items: Array<{ id: string; title: string; imageUrl?: string; altText?: string; }>;
+}
+const { items = [] } = Astro.props;
+---
+<div id="overview-grid-wrapper" class="overview-grid-wrapper">
+    {items.length > 0 ? (
+        <div class="overview-grid">
+            {items.map(item => (
+                <GridItem item={item} />
+            ))}
+        </div>
+    ) : (
+        <p>No overview items found.</p>
+    )}
+</div>
+
+<style>
+    .overview-grid-wrapper {
+      padding: 0;
+    }
+
+    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Default: 4 columns */
+        gap: 1.5rem; /* Default gap */
+        /* Removed debug border */
+    }
+
+    /* ================================== */
+    /* --- MOBILE - PORTRAIT ONLY --- */
+    /* ================================== */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .overview-grid {
+            grid-template-columns: repeat(2, 1fr); /* Mobile Portrait: 2 columns */
+            gap: 1rem; /* Mobile gap */
+        }
+    }
+     /* Removed landscape specific rule - landscape uses default */
+     /* Removed max-width: 480px rule */
+</style>---
+// src/components/HighlightsColumn.astro
+import { getCollection } from 'astro:content';
+import HighlightItem from './HighlightItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const allHighlightsRaw = await getCollection('highlights');
+const allHighlights = allHighlightsRaw
+  .map(item => ({ ...item.data, id: item.id })) 
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)); 
+---
+
+<div class="highlights-column-wrapper">
+  {/* REMOVED: <h3>Highlights</h3> */}
+  {allHighlights.length > 0 ? (
+    <div class="highlights-list">
+      {allHighlights.map(highlight => (
+        <HighlightItem highlight={highlight} />
+      ))}
+    </div>
+  ) : (
+    <p>No highlights available at the moment.</p>
+  )}
+</div>
+
+<style>
+  .highlights-column-wrapper {
+    /* Padding or other styles for the column itself, if needed */
+    /* For example, if it needs padding from the edges of its container in BaseLayout */
+    /* padding: 0 var(--spacing-xs); */ 
+  }
+  /* REMOVED: .highlights-column-wrapper h3 styles */
+  
+  .highlights-list {
+    /* Container for highlight items */
+  }
+</style>---
+// src/components/AboutSection.astro
+import { getEntry } from 'astro:content';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+// Fetch the 'about_page.md' entry from the 'general_content' collection
+const aboutEntry = await getEntry('general_content', 'about_page');
+
+let htmlAboutContent = "<p>Error: About content not loaded or empty.</p>";
+
+if (aboutEntry && aboutEntry.data && typeof aboutEntry.data.aboutPageContent === 'string') {
+  htmlAboutContent = parseMarkdown(aboutEntry.data.aboutPageContent);
+} else {
+  console.error("AboutSection.astro: Could not load aboutPageContent from 'general_content/about_page.md'. Entry:", aboutEntry);
+}
+---
+
+<div class="about-section-wrapper markdown-content" set:html={htmlAboutContent}>
+  {/* Content injected by set:html */}
+</div>
+
+<style>
+  .about-section-wrapper {
+    /* Specific styles for the about section wrapper if needed */
+    /* General markdown styles will apply from global.css */
+  }
+  .about-section-wrapper :global(h1:first-child),
+  .about-section-wrapper :global(h2:first-child),
+  .about-section-wrapper :global(h3:first-child) {
+    margin-top: 0; /* Common override for the first heading in a content block */
+  }
+</style>---
+// src/components/MarkdownRenderer.astro
+import { marked } from 'marked'; // Or your preferred Markdown parser library
+
+interface Props {
+  markdown: string;
+}
+
+const { markdown } = Astro.props;
+const html = marked.parse(markdown || ''); // Parse the markdown string
+
+// Export a function for use with set:html and Astro.glob
+export function render(markdownString: string) {
+    return marked.parse(markdownString || '');
+}
+---
+{/* Render the parsed HTML directly */}
+<Fragment set:html={html} />---
+// src/components/GridItem.astro
+export interface Props {
+    item: { id: string; title: string; imageUrl?: string; altText?: string; };
+}
+const { item } = Astro.props;
+const itemLink = `#${item.id}`;
+---
+<a href={itemLink} class="grid-item" data-target-id={item.id}>
+    <div class="grid-item-thumbnail">
+        {item.imageUrl ? (
+            <img src={item.imageUrl} alt={item.altText ?? `Thumbnail for ${item.title}`} loading="lazy" />
+        ) : (
+            <span class="placeholder-text">THUMB</span>
+        )}
+    </div>
+    <div class="grid-item-label">{item.title ?? 'Untitled'}</div>
+</a>
+
+<style>
+    /* Ensure variables used below are defined in global.css */
+
+    .grid-item {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+        /* --- RESTORED BACKGROUND and BORDER --- */
+        background-color: var(--color-surface-light);
+        border: var(--line-thickness) solid var(--color-border);
+        padding: var(--spacing-xs); /* Keep padding */
+        /* --- RESTORED TRANSITION --- */
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+        overflow: hidden; /* Keep overflow hidden */
+    }
+
+    .grid-item-thumbnail {
+        aspect-ratio: 1 / 1;
+        background-color: rgba(var(--color-text-unified-rgb), 0.1);
+        margin-bottom: var(--spacing-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        /* Removed internal border, main border is on .grid-item */
+        /* border: 1px solid rgba(var(--color-text-unified-rgb), 0.2); */
+        width: 100%;
+    }
+     .grid-item-thumbnail .placeholder-text {
+        font-size: 0.8em;
+        color: rgba(var(--color-text-unified-rgb), 0.6);
+     }
+
+    .grid-item-thumbnail img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .grid-item-label {
+        font-size: 0.9em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--color-text-unified);
+        padding: 0 var(--spacing-xxs);
+        display: block;
+        width: 100%;
+    }
+
+    /* --- RESTORED HOVER STYLE --- */
+    .grid-item:hover {
+        background-color: var(--color-surface-light-hover); /* Use variable */
+        /* border-color: var(--color-accent); */ /* Keep optional border commented */
+    }
+
+     /* --- Mobile Adjustments --- */
+     @media (max-width: 768px) {
+        .grid-item {
+            padding: var(--spacing-xxs);
+        }
+        .grid-item-thumbnail {
+            margin-bottom: var(--spacing-xxs);
+        }
+        .grid-item-label {
+            font-size: 0.85em;
+        }
+     }
+</style>---
+const contactEmail = "hey@mittel.tv";
+---
+<div class="main-header-wrapper">
+    {/* ... HTML for buttons (no arrows) ... */}
+    <div class="header-sub-col feed-button-desktop-container">
+        <button type="button" id="home-feed-view-btn" class="desktop-only">
+            Feed
+        </button>
+    </div>
+    <div class="header-sub-col overview-button-container">
+        <button type="button" id="overview-view-btn" class="nav-button">
+           Projects
+        </button>
+    </div>
+    <div class="header-sub-col about-button-container">
+        <button type="button" id="about-view-btn" class="nav-button">
+           About
+        </button>
+    </div>
+    <div class="header-sub-col header-contact-item">
+        <button type="button" id="contact-link" class="nav-button">
+           Contact
+        </button>
+    </div>
+    <div class="header-sub-col info-button-mobile-container">
+        <button type="button" id="mobile-feed-highlights-btn" class="mobile-only nav-button">
+            {/* Text set by JS */}
+        </button>
+    </div>
+</div>
+
+<style>
+    .main-header-wrapper {
+        display: flex;
+        justify-content: space-between; 
+        align-items: flex-start; 
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+    }
+
+    .main-header-wrapper > div.header-sub-col {
+        box-sizing: border-box;
+        flex-grow: 0; 
+        flex-shrink: 0; 
+        flex-basis: auto; 
+        display: flex; 
+        align-items: baseline; 
+    }
+
+    .feed-button-desktop-container {
+        justify-content: flex-start; 
+        text-align: left; 
+    }
+    .overview-button-container,
+    .about-button-container {
+        justify-content: center; 
+        text-align: center;
+    }
+    .header-contact-item { 
+        justify-content: flex-end; 
+        text-align: right;
+    }
+   
+    .main-header-wrapper button { 
+        padding: 2px 0; 
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: var(--font-weight-bold);
+        line-height: 1.3; 
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap; 
+    }
+
+    .main-header-wrapper button.nav-button {
+        display: inline-flex; 
+        align-items: center;   
+        justify-content: center; 
+    }
+
+    .mobile-only { display: none !important; }
+    .desktop-only { display: inline-block !important; } 
+    .info-button-mobile-container { display: none !important; }
+
+
+    @media (max-width: 768px) { /* MOBILE STYLES */
+        .main-header-wrapper {
+            flex-direction: column;
+            align-items: flex-end; 
+            justify-content: flex-start; 
+            gap: 0px; 
+        }
+
+        /* MODIFIED: .header-sub-col is now a flex container to align its button child */
+        .main-header-wrapper > div.header-sub-col { 
+            display: flex;             /* Make the sub-column a flex container */
+            justify-content: flex-end; /* Push its child (the button) to the right */
+            align-items: center;       /* Vertically center the button within the sub-col's allocated height */
+            width: 100%;               /* Sub-col takes full width of its parent's content box (#main-header-area) */
+            box-sizing: border-box;
+            margin-bottom: 0;          /* Keep this if it was intentional for vertical spacing by parent */
+            /* overflow: hidden; /* Usually not needed if content is sized correctly */
+            /* padding: 0 var(--spacing-xxs); /* Add a tiny bit of padding if buttons feel too flush, optional */
+        }
+
+        .feed-button-desktop-container.desktop-only { display: none !important; }
+        
+        .info-button-mobile-container { display: block !important; order: 1; } 
+        .overview-button-container { display: block !important; order: 2; }
+        .about-button-container { display: block !important; order: 3; } 
+        .header-contact-item { display: block !important; order: 4; } 
+
+        .mobile-only { display: none !important; } /* Arrows are gone, so this might be unused */
+        .desktop-only { display: none !important; } 
+        
+        /* MODIFIED: Button styling on mobile */
+        .main-header-wrapper button { 
+             padding: 2px 0; /* Keep some vertical padding for tap area / visual */
+             margin: 0; /* Ensure no external margins */
+             line-height: 1.3; 
+             white-space: normal; 
+             overflow-wrap: break-word; 
+             word-break: break-all; 
+             text-align: right; /* Text within the button aligns right if it wraps */
+             /* display: inline-block; /* Button is now a flex item, its display is less relevant here */
+             /* width: auto; /* Flex item will size to content */
+        }
+        
+        /* If nav-button class is used for specific min-height or other non-layout properties */
+        .main-header-wrapper button.nav-button {
+            /* min-height: calc(1.3em + 4px); /* Example: ensure decent tap target */
+            /* display: inline-flex / flex is overridden by the general button rule if more specific, */
+            /* or this can be more specific if needed. For now, let sub-col handle alignment. */
+        }
+    } 
+</style>
+
+<script define:vars={{ contactEmail }}>
+    const contactButton = document.getElementById('contact-link');
+    if (contactButton) {
+        contactButton.addEventListener('click', () => {
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    }
+</script>---
+// src/components/AllFeedColumn.astro
+import { getCollection } from 'astro:content';
+import FeedEntry from './FeedEntry.astro'; // Re-use the existing FeedEntry component
+import type { CollectionEntry } from 'astro:content';
+
+const allFeedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const sortedFeedEntries = allFeedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA; // Sort descending, newest first
+});
+---
+
+<div class="all-feed-column-wrapper">
+  {sortedFeedEntries.length > 0 ? (
+    <div class="all-feed-list">
+      {sortedFeedEntries.map(entry => (
+        <FeedEntry entry={entry} />
+      ))}
+    </div>
+  ) : (
+    <p>No feed entries available yet.</p>
+  )}
+</div>
+
+<style>
+  .all-feed-column-wrapper {
+    /* Styles for the wrapper if needed */
+  }
+  .all-feed-column-wrapper h3 {
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-md);
+  }
+  .all-feed-list {
+    /* Container for all feed entries */
+  }
+  /* FeedEntry component will have its own margins, so list might not need much */
+</style>---
+// src/components/StaticInfo.astro
+import { Image } from 'astro:assets';
+import headshotImage from '/src/assets/headshot-2.jpg';
+import { getEntry } from 'astro:content';
+// MODIFICATION: Import render function from MarkdownRenderer
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+const entry = await getEntry('general_content', 'static_info');
+let rawIntroText = "Error: Intro text not loaded."; 
+
+if (entry && entry.data && typeof entry.data.introText === 'string') {
+    rawIntroText = entry.data.introText;
+} else {
+    console.error("StaticInfo.astro: Could not load introText from 'general_content/static_info.md'. Entry:", entry);
+}
+
+// MODIFICATION: Use imported parseMarkdown function
+const htmlIntroText = parseMarkdown(rawIntroText);
+
+const imageAltText = "a picture of Piotr Żakowiecki";
+const imageWidth = 854;
+const imageHeight = 854;
+---
+<div class="static-info-wrapper">
+    <div class="static-visual-container">
+        <Image 
+            src={headshotImage} 
+            alt={imageAltText} 
+            width={imageWidth} 
+            height={imageHeight}
+            format="webp"
+            quality={80}      
+            densities={[1, 1.5, 2]}
+            loading="lazy"
+        />
+    </div>
+    <div class="static-text-container markdown-content" set:html={htmlIntroText}>
+        {htmlIntroText === "" && <p>Error: Intro text not loaded or empty.</p>}
+    </div>
+</div>
+
+<style>
+    .static-info-wrapper { display: flex; flex-direction: column; gap: var(--spacing-lg); height: 100%; box-sizing: border-box; }
+    .static-visual-container { width: 100%; }
+    .static-visual-container :global(img) { display: block; max-width: 100%; height: auto; border-radius: var(--border-radius-sm); }
+    
+    .static-text-container {
+        /* Styles for p, ul etc. will come from global .markdown-content */
+    }
+    /* MODIFICATION: Removed specific p rule, rely on global .markdown-content */
+    /* .static-text-container p { ... } */
+
+    @media (max-width: 768px) and (orientation: portrait) { .static-info-wrapper { gap: var(--spacing-md); } }
+</style>---
+// src/components/IdentityHeader.astro
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer | researcher | videojournalist";
+---
+<div class="identity-header-wrapper">
+    <span class="identity-site-name-text">{siteName}</span>
+    <span class="identity-tagline">{tagline}</span>
+</div>
+
+<style>
+    .identity-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        /* --- Alignment: TOP --- */
+        align-items: flex-start;
+        justify-content: flex-start; /* Align to top */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%; /* Fill parent height */
+        box-sizing: border-box;
+        font-size: inherit; /* Inherit base size (1.5em on desktop) */
+        padding-left: 0; /* Padding is on parent grid area */
+        padding-right: var(--header-internal-padding); /* Space before divider */
+        text-align: left;
+    }
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0;
+        font-size: 1.1em;
+        text-align: left;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-text-secondary);
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+
+     @media (max-width: 768px) {
+         .identity-header-wrapper {
+             font-size: inherit;
+             height: auto; /* Let parent control height */
+             padding: 0.3rem 0; /* Padding on parent */
+             justify-content: flex-start; /* Ensure top alignment */
+             align-items: flex-start;
+         }
+         .identity-site-name-text { font-size: 1em; }
+         .identity-tagline { font-size: 0.6em; }
+     }
+</style>---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+type BaseBlock = { type: string };
+type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
+
+interface Props {
+    entry: CollectionEntry<'feed'>;
+}
+
+const { entry } = Astro.props;
+const { slug, data } = entry;
+
+const formattedDate = data.date
+    ? new Date(data.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+    : null;
+---
+<article class="feed-entry" id={slug}>
+    <h3>{data.title || 'Untitled Entry'}</h3>
+    {formattedDate && (
+        <time class="feed-entry-date" datetime={data.date?.toISOString()}>{formattedDate}</time>
+    )}
+
+    <div class="feed-entry-blocks">
+        {data.contentBlocks && data.contentBlocks.length > 0 ? (
+            data.contentBlocks.map((block: ContentBlock, index: number) => {
+                const galleryId = `gallery-${slug}-${index}`;
+                const prevBtnId = `gallery-prev-${slug}-${index}`;
+                const nextBtnId = `gallery-next-${slug}-${index}`;
+
+                switch (block.type) {
+                    case 'twoColumn':
+                        return (
+                            <div class="content-block block-two-column">
+                                {block.left && (
+                                    <div class="column left-column markdown-content" set:html={parseMarkdown(block.left)}></div>
+                                )}
+                                {block.right && (
+                                    <div class="column right-column markdown-content" set:html={parseMarkdown(block.right)}></div>
+                                )}
+                            </div>
+                        );
+
+                    case 'fullWidthImage':
+                        return block.image ? (
+                            <div class="content-block block-full-width-image">
+                                <Image
+                                    src={block.image}
+                                    alt={block.alt || ''}
+                                    width={1200}
+                                    height={900}
+                                    format="webp"
+                                    quality={80}
+                                    loading="lazy"
+                                    densities={[1, 1.5, 2]}
+                                />
+                            </div>
+                        ) : <div class="content-block block-missing-image"><p><em>Image missing or path incorrect.</em></p></div>;
+
+                    case 'fullWidthEmbed':
+                        return block.embedCode ? (
+                            <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
+                        ) : null;
+
+                    case 'fullWidthText':
+                        return block.text ? (
+                            <div class="content-block block-full-width-text markdown-content" set:html={parseMarkdown(block.text)}></div>
+                        ) : null;
+
+                    case 'horizontalGallery':
+                         return (
+                            <div class="content-block block-horizontal-gallery">
+                                <div class="gallery-scroll-container" id={galleryId}>
+                                    {block.images && block.images.length > 0 ? (
+                                        block.images.map(img => (
+                                            img.image ? (
+                                                <div class="gallery-item">
+                                                    <Image
+                                                        src={img.image}
+                                                        alt={img.alt || ''}
+                                                        width={800}
+                                                        height={600}
+                                                        format="webp"
+                                                        quality={75}
+                                                        loading="lazy"
+                                                        densities={[1, 1.5]}
+                                                    />
+                                                </div>
+                                            ) : null
+                                        ))
+                                    ) : (
+                                        <div class="gallery-item placeholder"><p><em>No images in gallery.</em></p></div>
+                                    )}
+                                </div>
+                                <button type="button" class="gallery-nav-button prev" id={prevBtnId} data-target={`#${galleryId}`} aria-label="Previous image">‹</button>
+                                <button type="button" class="gallery-nav-button next" id={nextBtnId} data-target={`#${galleryId}`} aria-label="Next image">›</button>
+                            </div>
+                        );
+
+
+                    default:
+                        const unknownBlock = block as BaseBlock;
+                        // console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
+                         return (
+                             <div class="content-block block-unknown">
+                                 <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
+                             </div>
+                         );
+                }
+            })
+        ) : (
+             entry.body ? ( 
+                 <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
+             ) : (
+                 <p><em>No content found for this entry.</em></p>
+             )
+        )}
+    </div>
+
+    <hr class="entry-separator" />
+</article>
+
+<script>
+    // Gallery script remains the same
+    function setupGallery(galleryElement) {
+        const scrollContainer = galleryElement.querySelector('.gallery-scroll-container');
+        const prevButton = galleryElement.querySelector('.gallery-nav-button.prev');
+        const nextButton = galleryElement.querySelector('.gallery-nav-button.next');
+        const items = galleryElement.querySelectorAll('.gallery-item');
+
+        if (!scrollContainer || !prevButton || !nextButton || items.length === 0) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            return;
+        }
+
+        const itemWidth = items[0].offsetWidth; 
+        const gap = parseFloat(getComputedStyle(scrollContainer).gap) || 0; 
+
+        function updateButtonVisibility() {
+            const tolerance = 5;
+            if (prevButton) {
+                prevButton.classList.toggle('hidden', scrollContainer.scrollLeft <= tolerance);
+            }
+            if (nextButton) {
+                nextButton.classList.toggle('hidden', scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - tolerance));
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll - itemWidth - gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        nextButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll + itemWidth + gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        scrollContainer.addEventListener('scroll', updateButtonVisibility, { passive: true });
+        updateButtonVisibility();
+
+        const resizeObserver = new ResizeObserver(_ => {
+            updateButtonVisibility();
+        });
+        resizeObserver.observe(scrollContainer);
+    }
+
+    const galleriesInThisEntry = document.querySelectorAll('.block-horizontal-gallery');
+    galleriesInThisEntry.forEach(galleryInstance => {
+        setupGallery(galleryInstance);
+    });
+</script>
+
+<style>
+    :root {
+        --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        --gallery-nav-button-size: 2.5rem;
+        --gallery-item-gap: var(--spacing-md); 
+        --scrollbar-width: 8px; 
+        --scrollbar-thumb-color: var(--color-text-secondary, #aaa); 
+        --scrollbar-track-color: var(--color-background-muted, #1a1a1a); 
+    }
+
+    .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
+    .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-bold); font-size: 1.1em; line-height: 1.3; }
+    .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
+    .feed-entry-blocks { margin-top: var(--spacing-lg); }
+    .content-block { margin-bottom: var(--spacing-lg); }
+    .content-block:last-child { margin-bottom: 0; }
+
+    .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+    .block-two-column .column { 
+        flex: 1; 
+        min-width: 0; /* Crucial for flex items to shrink properly */
+        overflow-wrap: break-word; /* Allow long words/strings to break */
+        word-break: break-word; /* More aggressive breaking if needed */
+    }
+    .block-two-column .column.markdown-content > *:first-child { margin-top: 0; }
+    .block-two-column .column.markdown-content > *:last-child { margin-bottom: 0; }
+    
+    /* Target iframes specifically within two-column blocks or any markdown content */
+    .block-two-column .column :global(iframe),
+    .markdown-content :global(iframe) {
+        max-width: 100% !important; /* Ensure iframe itself scales down */
+        width: 100% !important;     /* Force it to take container width */
+        height: auto !important;    /* Adjust height proportionally if original embed doesn't have aspect ratio */
+        aspect-ratio: 16 / 9; /* Common aspect ratio, adjust if needed or make it configurable */
+        display: block; /* Remove extra space below */
+        border: none; /* Remove default iframe border */
+    }
+    /* If the iframe is wrapped in a div by the embed code, target that too */
+    .block-two-column .column :global(div[style*="width"]) > :global(iframe),
+    .markdown-content :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .block-two-column .column :global(div[style*="width"]), /* Target wrapper divs with inline width */
+    .markdown-content :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
+    }
+
+
+    .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+    .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+    
+    .block-full-width-embed { 
+        width: 100%; 
+        max-width: 100%; 
+        overflow: hidden; /* Clip content that might still try to overflow */
+        background-color: var(--color-border-light); 
+        position: relative; 
+        /* padding-bottom: 56.25%; /* 16:9 aspect ratio - can be applied if all embeds are 16:9 */
+        /* height: 0; */
+    }
+    /* More specific iframe styling for full-width embeds */
+    .block-full-width-embed :global(iframe) { 
+        display: block; 
+        width: 100% !important; 
+        height: auto !important; /* Let aspect-ratio or embed itself define height */
+        max-width: 100% !important; 
+        aspect-ratio: 16 / 9; /* Default aspect ratio, can be overridden by embed */
+        border: none; 
+        margin: 0;
+        /* position: absolute; top: 0; left: 0; /* Only if using padding-bottom trick on parent */
+    }
+    /* If the iframe is wrapped by a div with fixed width from the embed code */
+    .block-full-width-embed :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
+    }
+     .block-full-width-embed :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .block-full-width-text {} 
+
+    .block-horizontal-gallery { position: relative; width: 100%; box-sizing: border-box; }
+    .gallery-scroll-container {
+        display: flex; overflow-x: auto; overflow-y: hidden; gap: var(--gallery-item-gap);
+        padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        max-height: 70vh; width: 100%; box-sizing: border-box; margin-left: auto; margin-right: auto;
+    }
+    .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
+    .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+    .gallery-item {
+        flex: 0 0 100%; min-width: 100%; scroll-snap-align: center; height: auto; max-height: 100%;
+        border-radius: var(--border-radius-sm); overflow: hidden; background-color: var(--color-border-light);
+        position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item img, .gallery-item picture {
+        display: block; width: auto; max-width: 100%; height: auto; max-height: 100%;
+        aspect-ratio: 4 / 3; object-fit: contain; margin: 0 auto;
+    }
+     .gallery-item.placeholder p { font-style: italic; color: var(--color-text-secondary); padding: var(--spacing-md); }
+    .gallery-nav-button {
+        position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
+        width: var(--gallery-nav-button-size); height: var(--gallery-nav-button-size);
+        font-size: calc(var(--gallery-nav-button-size) * 0.6);
+        line-height: var(--gallery-nav-button-size); text-align: center;
+        cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+    .gallery-nav-button.prev { left: var(--spacing-sm); }
+    .gallery-nav-button.next { right: var(--spacing-sm); }
+    .gallery-nav-button.hidden { display: none; }
+    
+    .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+    .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+    
+    @media (max-width: 768px) {
+        .feed-entry {
+             --gallery-item-gap: var(--spacing-sm); 
+        }
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--mobile-header-height, 125px) + 1rem); } /* Adjusted scroll margin */
+        .feed-entry-blocks { margin-top: var(--spacing-md); }
+        .content-block { margin-bottom: var(--spacing-md); }
+        .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        /* Ensure columns in two-column layout don't cause overflow on mobile */
+        .block-two-column .column {
+            width: 100%; /* Take full width of the parent flex container */
+            flex-basis: auto; /* Reset flex-basis */
+        }
+
+        .entry-separator { margin-top: var(--spacing-lg); }
+        .feed-entry-date { font-size: 0.85em; }
+        .gallery-scroll-container {
+             gap: var(--gallery-item-gap); 
+             max-height: 50vh;
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        }
+        .gallery-item img, .gallery-item picture { aspect-ratio: 4 / 3; }
+        .gallery-nav-button { --gallery-nav-button-size: 2rem; }
+         .gallery-nav-button.prev { left: var(--spacing-xs); }
+         .gallery-nav-button.next { right: var(--spacing-xs); }
+    }
+</style>---
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+export interface Props {
+  highlight: {
+    title: string;
+    summary: string; 
+    thumbnail: string; 
+    linkedFeedSlug: string;
+  };
+}
+
+const { highlight } = Astro.props;
+---
+
+<div class="highlight-item">
+  <a href={`#${highlight.linkedFeedSlug}`} class="highlight-link-wrapper" data-target-id={highlight.linkedFeedSlug} aria-label={`Read more about ${highlight.title}`}>
+    <div class="highlight-content-flex">
+      {highlight.thumbnail && (
+        <div class="highlight-thumbnail-container">
+          <Image 
+            src={highlight.thumbnail} 
+            alt={`Thumbnail for ${highlight.title}`} 
+            width={200} 
+            height={150} 
+            format="webp"
+            quality={70}
+            loading="lazy" 
+          />
+        </div>
+      )}
+      <div class="highlight-text-container">
+        <h4 class="highlight-title">{highlight.title}</h4>
+        {highlight.summary && (
+          <div class="highlight-summary markdown-content" set:html={parseMarkdown(highlight.summary)}>
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  .highlight-item {
+    margin-bottom: var(--spacing-md);
+    background-color: transparent;
+    overflow: hidden; 
+    transition: background-color 0.2s ease;
+  }
+  .highlight-item:hover {
+    background-color: var(--color-surface-light);
+  }
+  .highlight-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+  }
+  .highlight-content-flex {
+    display: flex;
+    /* MODIFIED: align items to the top */
+    align-items: flex-start; 
+    gap: var(--spacing-sm);
+  }
+  .highlight-thumbnail-container {
+    flex-shrink: 0; 
+    flex-grow: 0;   
+    flex-basis: 25%; 
+    max-width: 25%;  
+    background-color: var(--color-background-muted);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    height: 180px; 
+  }
+  .highlight-thumbnail-container :global(img) {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+  }
+  .highlight-text-container {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 0;  
+  }
+  .highlight-title {
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+    margin-top: 0; /* Ensure no extra margin at the top */
+    margin-bottom: var(--spacing-xxs);
+    color: var(--color-text-unified);
+    line-height: 1.3;
+  }
+  .highlight-item:hover .highlight-title {
+    color: var(--color-accent);
+  }
+  .highlight-summary {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    hyphens: auto;
+  }
+  .highlight-summary :global(p) {
+    margin-bottom: var(--spacing-xxs); 
+  }
+  .highlight-summary > :global(p):last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .highlight-content-flex {
+      gap: var(--spacing-xs); 
+    }
+    .highlight-thumbnail-container {
+      flex-basis: 35%; 
+      max-width: 35%;
+      height: auto; 
+      aspect-ratio: 4 / 3; 
+    }
+    .highlight-title {
+      font-size: 0.9em; 
+      line-height: 1.25;
+    }
+    .highlight-summary {
+      font-size: 0.8em; 
+      line-height: 1.35;
+    }
+    .highlight-summary :global(p) {
+        margin-bottom: var(--spacing-xxs);
+    }
+  }
+</style>---
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; 
+
+       :root {
+          --scrollbar-track-color: #222;
+          --scrollbar-thumb-color: #555;
+          --scrollbar-width: 8px;
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
+          --header-area-height: 90px; 
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 125px;
+       }
+
+        html { height: 100%; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            background-color: var(--color-background); margin: 0;
+            overscroll-behavior: none; min-height: 100%; 
+        }
+
+        #app-container { 
+            box-sizing: border-box; 
+            position: relative; 
+        }
+        #app-container > div:not(#mobile-header-sticky-container) { box-sizing: border-box; }
+        #mobile-header-sticky-container { box-sizing: border-box; }
+
+
+        @media (min-width: 769px) { /* DESKTOP */
+            body { overflow: hidden; height: 100%; }
+            #app-container { height: 100%; }
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-template-rows: var(--header-area-height) 1fr;                            
+                height: 100vh; overflow: hidden;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container { display: contents; }
+
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                font-size: 1.5em; z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height); 
+                display: flex;
+                flex-direction: column; 
+                justify-content: center; 
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
+                 grid-column: 1 / 2; 
+                 padding-left: var(--desktop-content-padding); 
+                 padding-right: var(--spacing-md);
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                 grid-column: 3 / 4; 
+                 padding-right: var(--desktop-content-padding); 
+                 padding-left: var(--spacing-md);
+            }
+            #app-container.is-desktop > #divider-area {
+                grid-column: 2 / 3; grid-row: 1 / 3; background-color: var(--color-background);
+                z-index: 10; position: relative; display: block;
+            }
+            #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+            }
+            #app-container.is-desktop > #info-content-area,
+            #app-container.is-desktop > #feed-content-area, 
+            #app-container.is-desktop > #dynamic-content-area, 
+            #app-container.is-desktop > #all-feed-content-area,
+            #app-container.is-desktop > #overview-content-area {
+                overflow-y: auto; 
+                scrollbar-width: thin; 
+                scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+            }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+            
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 1 / 2; grid-row: 2 / 3; display: block; 
+                padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom) var(--desktop-content-padding);
+                padding-right: var(--spacing-md);
+            }
+            #app-container.is-desktop > #feed-content-area, 
+            #app-container.is-desktop > #dynamic-content-area, 
+            #app-container.is-desktop > #all-feed-content-area { 
+                grid-column: 3 / 4; grid-row: 2 / 3; display: none; 
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom) 0;
+                padding-left: var(--spacing-md);
+            }
+            #app-container.is-desktop > #overview-content-area { 
+                grid-column: 1 / 4; grid-row: 2 / 3; display: none;
+                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+            }
+
+             /* Desktop View Switching Logic */
+             #app-container.is-desktop.view-home > #info-content-area { display: block; }
+             #app-container.is-desktop.view-home > #dynamic-content-area { display: block; } 
+             #app-container.is-desktop.view-home > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-home > #divider-area { display: block; }
+             #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; } 
+             #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; } 
+             #app-container.is-desktop.view-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+             #app-container.is-desktop.view-about > #info-content-area { display: block; }
+             #app-container.is-desktop.view-about > #dynamic-content-area { display: block; } 
+             #app-container.is-desktop.view-about > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-about > #divider-area { display: block; }
+             #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+             #app-container.is-desktop.view-overview > #divider-area { display: none; }
+        } 
+
+        @media (max-width: 768px) { /* MOBILE */
+            body { 
+                height: auto; 
+                overflow-y: auto; 
+                overflow-x: hidden;
+            }
+            #app-container.is-mobile {
+                display: flex; flex-direction: column; 
+                min-height: 100vh; 
+                height: auto; 
+                position: relative; 
+                padding-top: var(--mobile-header-height); 
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container {
+                display: flex; flex-direction: row; 
+                width: 100%; 
+                position: fixed; 
+                top: 0; left: 0; right: 0; 
+                background-color: var(--color-background);
+                z-index: 1000; 
+                border-bottom: var(--line-thickness) solid var(--color-border);
+                box-sizing: border-box; 
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 flex: 1 1 50%; 
+                 min-width: 0; 
+                 display: flex; 
+                 flex-direction: column; 
+                 /* MODIFIED: justify-content for vertical spacing */
+                 justify-content: space-around; /* Or space-between if no padding is desired at ends */
+                 height: var(--mobile-header-height); 
+                 padding-top: var(--spacing-xs); 
+                 padding-bottom: var(--spacing-xs);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 overflow: hidden; 
+                 box-sizing: border-box; 
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
+                padding-left: var(--mobile-content-padding-x);
+                padding-right: calc(var(--mobile-content-padding-x) / 4); 
+                align-items: flex-start; 
+                /* If identity header also needs vertical spacing for its items (name, tagline) */
+                /* justify-content: space-around; /* or center, flex-start etc. */
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 padding-right: var(--mobile-content-padding-x);
+                 padding-left: calc(var(--mobile-content-padding-x) / 4); 
+                 align-items: flex-end; /* Keep horizontal alignment to the right */
+                 /* justify-content: space-around; /* This is now set on the parent rule */
+            }
+            #app-container.is-mobile > #divider-area { 
+                order: 2; display: none; 
+            }
+
+            #app-container.is-mobile > #info-content-area,
+            #app-container.is-mobile > #feed-content-area, 
+            #app-container.is-mobile > #overview-content-area,
+            #app-container.is-mobile > #dynamic-content-area, 
+            #app-container.is-mobile > #all-feed-content-area { 
+                 order: 3; 
+                 width: 100%;
+                 position: static; 
+                 border: none; max-height: none;
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none; 
+                 box-sizing: border-box; 
+            }
+
+            /* Mobile View Logic */
+            #app-container.is-mobile.view-home > #info-content-area { display: none; }
+            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
+            
+            #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
+            #app-container.is-mobile.view-all-feed > #info-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #dynamic-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #feed-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #overview-content-area { display: none; }
+            
+            #app-container.is-mobile.view-feed > #feed-content-area { display: block; } 
+            
+            #app-container.is-mobile.view-info > #info-content-area { display: block; }
+            #app-container.is-mobile.view-info > #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-info > #feed-content-area { display: none; }
+            #app-container.is-mobile.view-info > #overview-content-area { display: none; }
+            #app-container.is-mobile.view-info > #all-feed-content-area { display: none; }
+
+            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; } 
+            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+        } 
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div id="mobile-header-sticky-container">
+             <div id="identity-header-area"><slot name="identity-header" /></div>
+             <div id="main-header-area"><slot name="main-header" /></div>
+        </div>
+        <div id="divider-area"></div>
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div>
+        <div id="overview-content-area"><slot name="overview-content" /></div>
+        <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
+        <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
+    </div>
+</body>
+</html>---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', 
+    altText: entry.data.title || 'Feed item thumbnail'
+}));
+---
+<BaseLayout title="Żakowiecki | Portfolio">
+
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
+
+    <section slot="feed-content" id="feed-content-wrapper"> 
+    </section>
+
+    <div slot="overview-content" id="overview-content-wrapper"> 
+        <div id="overview-grid-wrapper"><OverviewGrid items={overviewItems} /></div>
+    </div>
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn />
+    </div>
+</BaseLayout>
+
+<style>
+    #highlights-content-wrapper-actual,
+    #about-content-wrapper-actual {
+        display: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const appContainer = document.getElementById('app-container');
+        const infoContentArea = document.getElementById('info-content-area');
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); 
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area'); 
+        const overviewContentArea = document.getElementById('overview-content-area');
+        const singleFeedContentArea = document.getElementById('feed-content-area');
+        
+        const desktopFeedHighlightsBtn = document.getElementById('home-feed-view-btn') as HTMLButtonElement | null;
+        const mobileFeedHighlightsBtn = document.getElementById('mobile-feed-highlights-btn') as HTMLButtonElement | null;
+        const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
+        const aboutBtn = document.getElementById('about-view-btn') as HTMLButtonElement | null;
+
+        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual'); 
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper'); 
+
+        if (!appContainer || !infoContentArea || !dynamicContentArea || !highlightsContentWrapper || 
+            !aboutContentWrapper || !allFeedContentArea || !overviewContentArea || !singleFeedContentArea ||
+            !desktopFeedHighlightsBtn || !mobileFeedHighlightsBtn || !overviewBtn || !aboutBtn) {
+            // console.error("Essential elements missing for view switching. Check IDs.");
+            return;
+        }
+        
+        const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; 
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+
+        function updateButtonLabelAndState() {
+            const activeButtons = [];
+            
+            if (desktopFeedHighlightsBtn) {
+                if (currentView === 'home') { 
+                    desktopFeedHighlightsBtn.textContent = 'Feed';
+                    if (!isMobile()) activeButtons.push(desktopFeedHighlightsBtn.id);
+                } else if (currentView === 'all-feed') { 
+                    desktopFeedHighlightsBtn.textContent = 'Highlights';
+                    if (!isMobile()) activeButtons.push(desktopFeedHighlightsBtn.id);
+                } else {
+                    desktopFeedHighlightsBtn.textContent = 'Highlights';
+                }
+            }
+
+            if (mobileFeedHighlightsBtn) {
+                if (currentView === 'info') { 
+                    mobileFeedHighlightsBtn.textContent = 'Feed'; // Arrow removed
+                    if (isMobile()) activeButtons.push(mobileFeedHighlightsBtn.id);
+                } else if (currentView === 'all-feed') {
+                    mobileFeedHighlightsBtn.textContent = 'Highlights'; // Arrow removed
+                    if (isMobile()) activeButtons.push(mobileFeedHighlightsBtn.id);
+                } else {
+                    mobileFeedHighlightsBtn.textContent = 'Feed'; // Default, arrow removed
+                }
+            }
+            
+            if (currentView === 'about') activeButtons.push(aboutBtn.id);
+            if (currentView === 'overview') activeButtons.push(overviewBtn.id);
+            
+            [desktopFeedHighlightsBtn, mobileFeedHighlightsBtn, overviewBtn, aboutBtn].forEach(btn => {
+                if (btn) {
+                    btn.classList.toggle('active', activeButtons.includes(btn.id));
+                }
+            });
+        }
+
+        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about'): void {
+            // console.log("%cSetting view to:", "color: blue; font-weight: bold;", view, "/ Is mobile:", isMobile());
+            currentView = view; 
+
+            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'view-feed', 'is-mobile', 'is-desktop');
+            
+            if (isMobile()) appContainer.classList.add('is-mobile');
+            else appContainer.classList.add('is-desktop');
+
+            if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+            if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+            if (singleFeedContentArea) {
+                singleFeedContentArea.style.display = 'none';
+                singleFeedContentArea.innerHTML = '';
+            }
+
+            switch (view) {
+                case 'home': 
+                    appContainer.classList.add('view-home');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'info': 
+                    appContainer.classList.add('view-info');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'all-feed': 
+                    appContainer.classList.add('view-all-feed');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+                    break;
+                case 'overview': 
+                    appContainer.classList.add('view-overview');
+                    break;
+                case 'about': 
+                    appContainer.classList.add('view-about');
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'block';
+                    break;
+                default: 
+                    if (isMobile()) {
+                        appContainer.classList.add('view-info');
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    } else {
+                        appContainer.classList.add('view-home'); 
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    }
+            }
+            updateButtonLabelAndState();
+            // console.log("AppContainer classes:", appContainer.className);
+        }
+
+        if (desktopFeedHighlightsBtn) {
+            desktopFeedHighlightsBtn.addEventListener('click', () => {
+                if (currentView === 'home') {
+                    setMainView('all-feed');
+                } else { 
+                    setMainView('home');
+                }
+            });
+        }
+
+        if (mobileFeedHighlightsBtn) {
+            mobileFeedHighlightsBtn.addEventListener('click', () => {
+                if (currentView === 'info') { 
+                    setMainView('all-feed');
+                } else { 
+                    setMainView('info'); 
+                }
+            });
+        }
+        
+        if (overviewBtn) {
+            overviewBtn.addEventListener('click', () => setMainView('overview'));
+        }
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', () => setMainView('about'));
+        }
+
+        function navigateToFeedItem(targetId: string) {
+            // console.log(`%cnavigateToFeedItem CALLED for targetId: ${targetId}`, "color: purple; font-weight: bold;");
+            setMainView('all-feed'); 
+
+            requestAnimationFrame(() => {
+                setTimeout(() => { 
+                    // console.log(`Attempting to find targetElement ID: '${targetId}' after rAF + 100ms timeout.`);
+                    const targetElement = document.getElementById(targetId);
+                    const scrollContainer = allFeedContentArea; 
+
+                    if (targetElement) {
+                        // console.log("Target element FOUND:", targetElement);
+                        if (scrollContainer && scrollContainer.contains(targetElement)) {
+                            // console.log("Target is within scrollContainer. Scrolling...");
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            updateButtonLabelAndState(); 
+                        } else if (scrollContainer) {
+                            // console.error("Target element found, but NOT within #all-feed-content-area.");
+                        } else {
+                             // console.error("#all-feed-content-area container not found itself.");
+                        }
+                    } else {
+                        // console.error(`Target feed element '${targetId}' NOT FOUND.`);
+                    }
+                }, 100); 
+            });
+        }
+
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.grid-item');
+                if (link && link.dataset.targetId) {
+                    event.preventDefault();
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        if (highlightsListWrapper) { 
+            highlightsListWrapper.addEventListener('click', (event: MouseEvent) => {
+                 if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper'); 
+                if (link && link.dataset.targetId) {
+                    event.preventDefault(); 
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        if (allFeedListWrapper) {
+            allFeedListWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const feedEntryElement = event.target.closest<HTMLElement>('.feed-entry'); 
+                if (feedEntryElement && feedEntryElement.id) {
+                    event.preventDefault(); 
+                    navigateToFeedItem(feedEntryElement.id);
+                }
+            });
+        }
+
+        if (isMobile()) {
+            setMainView('info'); 
+        } else {
+            setMainView('home'); 
+        }
+        wasMobile = isMobile();
+
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                if (isNowMobile) { 
+                    if (currentView === 'all-feed') setMainView('all-feed');
+                    else if (currentView === 'overview') setMainView('overview');
+                    else if (currentView === 'about') setMainView('about');
+                    else setMainView('info'); 
+                } else { 
+                    if (currentView === 'all-feed') setMainView('all-feed');
+                    else if (currentView === 'overview') setMainView('overview');
+                    else if (currentView === 'about') setMainView('about');
+                    else setMainView('home'); 
+                }
+                wasMobile = isNowMobile;
+            } else { 
+                updateButtonLabelAndState();
+            }
+        });
+        resizeObserver.observe(document.body);
+    });
+</script>/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+/* These variables apply globally within the preview context */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: 1.1rem; 
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular);
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204;
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables (Might not be needed unless specific widths are required) */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%;
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width));
+
+  /* Feed Entry Specific Vars */
+  --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+}
+
+/* 3. Core Body & Universal Text Styling */
+.feed-entry-preview-wrapper { 
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  padding: 1rem; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.feed-entry-preview-wrapper h1,
+.feed-entry-preview-wrapper h2,
+.feed-entry-preview-wrapper h3,
+.feed-entry-preview-wrapper h4,
+.feed-entry-preview-wrapper h5,
+.feed-entry-preview-wrapper h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+.feed-entry-preview-wrapper h3 { font-size: 1.1em; } 
+
+.feed-entry-preview-wrapper p,
+.feed-entry-preview-wrapper li,
+.feed-entry-preview-wrapper dt,
+.feed-entry-preview-wrapper dd,
+.feed-entry-preview-wrapper span, 
+.feed-entry-preview-wrapper label {
+  font-weight: inherit; 
+  font-size: inherit; 
+  line-height: inherit; 
+  margin-bottom: var(--spacing-sm);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.feed-entry-preview-wrapper a { color: inherit; text-decoration: none; } 
+.feed-entry-preview-wrapper a:hover { color: var(--color-text-hover); } 
+
+.feed-entry-preview-wrapper .accent-text { 
+  color: var(--color-accent);
+}
+
+/* ========================================================= */
+/* === Styles Adapted from FeedEntry.astro === */
+/* ========================================================= */
+
+/* MODIFICATION: Removed incorrect comment */
+
+.feed-entry { 
+   margin-bottom: var(--spacing-xl);
+}
+.feed-entry h3 { 
+    margin-top: 0;
+    margin-bottom: var(--spacing-xxs);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.1em;
+    line-height: 1.3;
+}
+.feed-entry-date {
+    display: block;
+    font-size: 0.9em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+}
+.feed-entry-blocks {
+    margin-top: var(--spacing-lg);
+}
+.content-block {
+    margin-bottom: var(--spacing-lg);
+}
+.content-block:last-child { margin-bottom: 0; }
+
+.block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+.block-two-column .column { flex: 1; min-width: 0; }
+.block-two-column .column > *:first-child { margin-top: 0; }
+.block-two-column .column > *:last-child { margin-bottom: 0; }
+
+.block-two-column .column p,
+.block-two-column .column li,
+.block-two-column .column dt,
+.block-two-column .column dd {
+     line-height: var(--line-height-unified);
+     margin-bottom: var(--spacing-sm);
+     font-size: 1em;
+     text-align: justify; 
+     hyphens: auto;
+}
+.block-two-column .column h1,
+.block-two-column .column h2,
+.block-two-column .column h3,
+.block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+.block-two-column .column ul,
+.block-two-column .column ol { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); list-style: revert; } 
+.block-two-column .column li > p { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column li { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
+
+.block-full-width-image img,
+.block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+.block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+
+.block-full-width-embed {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 56.25%; 
+    height: 0;
+    background-color: var(--color-border-light);
+}
+.block-full-width-embed iframe, 
+.block-full-width-embed video {  
+    position: absolute;
+    top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+    border: none;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Styles for .markdown-content within the preview */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    text-align: justify; 
+    hyphens: auto;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+.markdown-content ul, .markdown-content ol { padding-left: var(--spacing-lg); list-style: revert; } 
+.markdown-content li { margin-bottom: var(--spacing-xxs); } 
+.markdown-content li > p { margin-bottom: var(--spacing-xxs); } 
+.markdown-content blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+.markdown-content img { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+.markdown-content a { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.markdown-content a:hover { color: var(--color-text-unified); text-decoration: none; }
+
+.block-horizontal-gallery-preview {
+     background-color: var(--color-background-muted);
+     padding: var(--spacing-sm);
+     border: 1px dashed var(--color-border);
+     white-space: nowrap; 
+     overflow-x: auto; 
+}
+.block-horizontal-gallery-preview img { 
+     display: inline-block; 
+     height: 100px; 
+     width: auto;
+     margin-right: var(--spacing-sm);
+     vertical-align: middle;
+     border: 1px solid var(--color-border-light);
+}
+
+.block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+
+.entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Content Manager</title>
+
+  <!-- Stylesheet link removed from here -->
+
+  <style>
+    /* Preview pane specific adjustments if needed */
+    .nc-preview-pane-container > div {
+        padding: 0 !important;
+    }
+    .feed-entry-preview-wrapper {
+        padding: 1rem;
+        background-color: var(--color-background, white);
+    }
+  </style>
+
+</head>
+<body>
+  <!-- Load Marked library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Decap CMS Core Script -->
+  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+
+    <!-- Custom Preview Registration Script -->
+    <script type="module">
+        console.log("Admin script started.");
+    
+        // Make sure Marked is loaded before proceeding
+        if (typeof marked === 'undefined') {
+          console.error("Marked library not loaded!");
+          // Maybe display an error or stop?
+        } else {
+            console.log("Marked library loaded.");
+            // Optional: Configure marked if needed
+            // marked.setOptions({ gfm: true, breaks: true });
+        }
+    
+        // Get CMS and h (hyperscript) function from global scope
+        const CMS = window.CMS;
+        const h = window.h || window.React.createElement; // Use React.createElement as fallback if h isn't defined
+    
+        if (!CMS || !h) {
+            console.error("CMS object or h function not found. Preview registration failed.");
+        } else {
+            console.log("CMS object and h function found.");
+    
+            // --- Register the stylesheet DIRECTLY for the preview pane ---
+            try {
+                // Use a root-relative path assuming admin.html is in /public/admin/
+                CMS.registerPreviewStyle('/admin-preview.css');
+                console.log("Registered preview style: /admin-preview.css");
+            } catch (error) {
+                console.error("Error registering preview style:", error);
+            }
+    
+            // --- Define the Feed Entry Preview Function ---
+            const FeedEntryPreview = (props) => {
+                // console.log("FeedEntryPreview props:", props); // Debug: See what props are passed
+                const { entry, getAsset } = props;
+                if (!entry || !entry.getIn) {
+                    console.error("Invalid 'entry' object in preview props:", entry);
+                    return h('div', {}, 'Error: Invalid data received for preview.');
+                }
+    
+                // --- Extract Data ---
+                const title = entry.getIn(['data', 'title'], 'Untitled Entry');
+                const dateValue = entry.getIn(['data', 'date'], null);
+                const rawThumbnail = entry.getIn(['data', 'thumbnail'], null);
+                const contentBlocksData = entry.getIn(['data', 'contentBlocks'], null); // Get Immutable List/Map or null
+    
+                // --- Process Data ---
+                const formattedDate = dateValue
+                    ? new Date(dateValue).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                      })
+                    : null;
+                const thumbnailUrl = rawThumbnail ? getAsset(rawThumbnail)?.url || rawThumbnail : null;
+    
+                // Helper to parse markdown client-side
+                function parseMarkdownClient(markdownString) {
+                    if (!markdownString || typeof marked === 'undefined') return '';
+                    try {
+                        // Use marked.parse() which replaced marked()
+                        return marked.parse(markdownString);
+                    } catch (e) {
+                        console.error("Markdown preview parsing error:", e);
+                        return '<p><em>Error parsing markdown</em></p>';
+                    }
+                }
+    
+                // --- Render Content Blocks ---
+                let blockElements = [];
+                if (contentBlocksData && typeof contentBlocksData.map === 'function') {
+                    blockElements = contentBlocksData.map((block, index) => { // Added index for key
+                        if (!block || typeof block.get !== 'function') return null;
+    
+                        const blockType = block.get('type');
+                        const key = `${blockType}-${index}`; // Simple key for React
+    
+                        switch (blockType) {
+                            case 'twoColumn':
+                                const leftContent = block.get('left');
+                                const rightContent = block.get('right');
+                                return h('div', { key: key, className: 'content-block block-two-column' },
+                                    leftContent ? h('div', { className: 'column left-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(leftContent) } }) : null,
+                                    rightContent ? h('div', { className: 'column right-column', dangerouslySetInnerHTML: { __html: parseMarkdownClient(rightContent) } }) : null
+                                );
+                            case 'fullWidthImage':
+                                const rawImagePath = block.get('image');
+                                const altText = block.get('alt') || '';
+                                const imageUrl = rawImagePath ? getAsset(rawImagePath)?.url || rawImagePath : null;
+                                return h('div', { key: key, className: 'content-block block-full-width-image' },
+                                    imageUrl ? h('img', { src: imageUrl, alt: altText, style: { display: 'block', width: '100%', height: 'auto', borderRadius: 'var(--border-radius-sm)', backgroundColor: 'var(--color-border-light)' } }) : h('p', {}, 'Image not available')
+                                );
+                            case 'fullWidthEmbed':
+                                const embedCode = block.get('embedCode');
+                                // Basic sanitization attempt - VERY basic, might need a proper library for safety
+                                const sanitizedEmbedCode = embedCode ? embedCode.replace(/<script.*?>.*?<\/script>/gi, '<!-- Script removed for preview safety -->') : '';
+                                return h('div', { key: key, className: 'content-block block-full-width-embed', dangerouslySetInnerHTML: { __html: sanitizedEmbedCode || '' } });
+    
+                            // +++ ADDED CASE FOR fullWidthText +++
+                            case 'fullWidthText':
+                                const textContent = block.get('text');
+                                return h('div', { key: key, className: 'content-block block-full-width-text markdown-content', /* Add markdown-content class if your CSS uses it */
+                                    dangerouslySetInnerHTML: { __html: parseMarkdownClient(textContent || '') }
+                                 });
+    
+                            // +++ ADDED CASE FOR horizontalGallery (Basic Preview) +++
+                            case 'horizontalGallery':
+                                 const imagesData = block.get('images');
+                                 let galleryImages = [];
+                                 if (imagesData && typeof imagesData.map === 'function') {
+                                     galleryImages = imagesData.map((imgData, imgIndex) => {
+                                         if (!imgData || typeof imgData.get !== 'function') return null;
+                                         const imgRawPath = imgData.get('image');
+                                         const imgAlt = imgData.get('alt') || '';
+                                         const imgUrl = imgRawPath ? getAsset(imgRawPath)?.url || imgRawPath : null;
+                                         return imgUrl ? h('img', {
+                                             key: `gallery-${index}-img-${imgIndex}`,
+                                             src: imgUrl,
+                                             alt: imgAlt,
+                                             style: { height: '100px', width: 'auto', marginRight: '10px', objectFit: 'cover', border: '1px solid #eee' } // Simple inline style for preview
+                                         }) : null;
+                                     }).filter(img => img !== null);
+                                 }
+                                 return h('div', { key: key, className: 'content-block block-horizontal-gallery-preview', style: { overflowX: 'auto', whiteSpace: 'nowrap', padding: '10px', border: '1px dashed #ccc', margin: '5px 0' } },
+                                     galleryImages.length > 0 ? galleryImages : h('p', {}, h('em', {}, 'No images in gallery.'))
+                                 );
+    
+                            default:
+                                console.warn(`Unsupported block type encountered in preview: ${blockType}`); // Log warning
+                                return h('div', { key: key, className: 'content-block block-unknown', style: { padding: '10px', border: '1px solid red', margin: '5px 0', color: 'red' } },
+                                    h('p', {}, h('em', {}, `Unsupported block preview: ${blockType || 'Unknown'}`))
+                                );
+                        }
+                    }).filter(el => el !== null);
+                } else {
+                     blockElements = [h('p', { key: 'no-blocks' }, h('em', {}, 'No content blocks added yet.'))];
+                }
+    
+    
+                // --- Assemble Preview using h() ---
+                // Use a wrapper div matching the structure in your preview CSS
+                return h('div', { className: 'feed-entry-preview-wrapper' },
+                    h('article', { className: 'feed-entry' },
+                        // Title
+                        h('h3', {}, title),
+                        // Date
+                        formattedDate ? h('time', { className: 'feed-entry-date' }, formattedDate) : null,
+                        // Thumbnail (basic preview)
+                        thumbnailUrl ? h('div', { className: 'thumbnail-preview', style: { marginBottom: '1.5rem', backgroundColor: 'var(--color-border-light)' } },
+                            h('img', { src: thumbnailUrl, alt: `Thumbnail for ${title}`, style: { display: 'block', width: '100%', height: 'auto', maxWidth: '100%', objectFit: 'cover' } })
+                        ) : null,
+                        // Content Blocks
+                        h('div', { className: 'feed-entry-blocks' }, blockElements), // Pass array directly
+                        // Separator
+                        h('hr', { className: 'entry-separator' })
+                    )
+                );
+            }; // End of FeedEntryPreview function definition
+    
+            // --- Register the Preview Template ---
+            try {
+                CMS.registerPreviewTemplate('feed', FeedEntryPreview);
+                console.log("Feed entry preview template registered successfully.");
+            } catch (error) {
+                 console.error("Error registering preview template:", error);
+            }
+    
+        } // End of CMS/h check
+      </script>
+</body>
+</html># public/admin/config.yml
+backend:
+  name: git-gateway
+  repo: giacovecci/mittel
+  branch: adam-feedback-2
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
+  gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.reiseburo.workers.dev
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        typeKey: type
+        types:
+          - label: "Two Column Block"
+            name: "twoColumn"
+            widget: "object"
+            fields:
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
+          - label: "Full Width Image"
+            name: "fullWidthImage"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          - label: "Full Width Embed"
+            name: "fullWidthEmbed"
+            widget: "object"
+            fields:
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
+          - label: "Full Width Text"
+            name: "fullWidthText"
+            widget: "object"
+            fields:
+              - { label: "Text Content", name: "text", widget: "markdown" }
+          - label: "Horizontal Gallery"
+            name: "horizontalGallery"
+            widget: "object"
+            fields:
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                fields:
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+
+  # ADDED: Highlights Collection
+  - name: "highlights" # Matches folder src/content/highlights/
+    label: "Highlights"
+    folder: "src/content/highlights" # Store each highlight as a separate file
+    create: true
+    slug: "{{slug}}" # User can define slug for each highlight item
+    identifier_field: title # Show title in the list view
+    summary: "{{title}} (Order: {{order | default('N/A')}})" # Summary in CMS list view
+    fields:
+      - { label: "Highlight Title", name: "title", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Lower numbers appear first." }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
+      - { label: "Summary Text", name: "summary", widget: "markdown" }
+      - { label: "Slug of Linked Feed Entry", name: "linkedFeedSlug", widget: "string", hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
+
+  - name: "general_content"
+    label: "General Content"
+    files:
+      - label: "Static Info (Left Column)" # Clarified label
+        name: "static_info_content"
+        file: "src/content/general_content/static_info.md"
+        fields:
+          - { label: "Introductory Text", name: "introText", widget: "markdown" }
+      # ADDED: About Page Content File
+      - label: "About Page"
+        name: "about_page_content"
+        file: "src/content/general_content/about_page.md"
+        fields:
+          - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }

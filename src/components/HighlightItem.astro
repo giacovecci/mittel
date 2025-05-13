@@ -1,0 +1,136 @@
+---
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+export interface Props {
+  highlight: {
+    title: string;
+    summary: string; 
+    thumbnail: string; 
+    linkedFeedSlug: string;
+  };
+}
+
+const { highlight } = Astro.props;
+---
+
+<div class="highlight-item">
+  <a href={`#${highlight.linkedFeedSlug}`} class="highlight-link-wrapper" data-target-id={highlight.linkedFeedSlug} aria-label={`Read more about ${highlight.title}`}>
+    <div class="highlight-content-flex">
+      {highlight.thumbnail && (
+        <div class="highlight-thumbnail-container">
+          <Image 
+            src={highlight.thumbnail} 
+            alt={`Thumbnail for ${highlight.title}`} 
+            width={200} 
+            height={150} 
+            format="webp"
+            quality={70}
+            loading="lazy" 
+          />
+        </div>
+      )}
+      <div class="highlight-text-container">
+        <h4 class="highlight-title">{highlight.title}</h4>
+        {highlight.summary && (
+          <div class="highlight-summary markdown-content" set:html={parseMarkdown(highlight.summary)}>
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  .highlight-item {
+    margin-bottom: var(--spacing-md);
+    background-color: transparent;
+    overflow: hidden; 
+    transition: background-color 0.2s ease;
+  }
+  .highlight-item:hover {
+    background-color: var(--color-surface-light);
+  }
+  .highlight-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+  }
+  .highlight-content-flex {
+    display: flex;
+    /* MODIFIED: align items to the top */
+    align-items: flex-start; 
+    gap: var(--spacing-sm);
+  }
+  .highlight-thumbnail-container {
+    flex-shrink: 0; 
+    flex-grow: 0;   
+    flex-basis: 25%; 
+    max-width: 25%;  
+    background-color: var(--color-background-muted);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    height: 180px; 
+  }
+  .highlight-thumbnail-container :global(img) {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+  }
+  .highlight-text-container {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 0;  
+  }
+  .highlight-title {
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+    margin-top: 0; /* Ensure no extra margin at the top */
+    margin-bottom: var(--spacing-xxs);
+    color: var(--color-text-unified);
+    line-height: 1.3;
+  }
+  .highlight-item:hover .highlight-title {
+    color: var(--color-accent);
+  }
+  .highlight-summary {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    hyphens: auto;
+  }
+  .highlight-summary :global(p) {
+    margin-bottom: var(--spacing-xxs); 
+  }
+  .highlight-summary > :global(p):last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .highlight-content-flex {
+      gap: var(--spacing-xs); 
+    }
+    .highlight-thumbnail-container {
+      flex-basis: 35%; 
+      max-width: 35%;
+      height: auto; 
+      aspect-ratio: 4 / 3; 
+    }
+    .highlight-title {
+      font-size: 0.9em; 
+      line-height: 1.25;
+    }
+    .highlight-summary {
+      font-size: 0.8em; 
+      line-height: 1.35;
+    }
+    .highlight-summary :global(p) {
+        margin-bottom: var(--spacing-xxs);
+    }
+  }
+</style>
