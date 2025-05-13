@@ -5,7 +5,7 @@ introText: >-
   documentary production.
 
 
-  I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. I'm based in Berlin and Warsaw, and highly mobile.
+  I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond. I'm based in Berlin and Warsaw.
 
 
   Clients who have relied on my services include Channel 4 News, NPR, The New York Times, The Washington Post and many others. 
