@@ -2,33 +2,34 @@
 // src/components/IdentityHeader.astro
 const siteName = "Piotr Żakowiecki";
 const tagline = "field producer | researcher | videojournalist";
+const location = "Berlin/Warsaw"; // New variable
 ---
 <div class="identity-header-wrapper">
     <span class="identity-site-name-text">{siteName}</span>
     <span class="identity-tagline">{tagline}</span>
+    <span class="identity-location">{location}</span> {/* New element */}
 </div>
 
 <style>
     .identity-header-wrapper {
         display: flex;
         flex-direction: column;
-        /* --- Alignment: TOP --- */
         align-items: flex-start;
-        justify-content: flex-start; /* Align to top */
+        justify-content: flex-start;
         line-height: 1.2;
         width: 100%;
-        height: 100%; /* Fill parent height */
+        height: 100%;
         box-sizing: border-box;
-        font-size: inherit; /* Inherit base size (1.5em on desktop) */
-        padding-left: 0; /* Padding is on parent grid area */
-        padding-right: var(--header-internal-padding); /* Space before divider */
+        font-size: inherit;
+        padding-left: 0;
+        padding-right: var(--header-internal-padding); /* Assuming this var is defined or not critical */
         text-align: left;
     }
     .identity-site-name-text {
         display: inline-block;
         margin: 0; padding: 0;
         font-weight: var(--font-weight-bold);
-        margin-bottom: 0;
+        margin-bottom: 0; /* Adjusted slightly for closer spacing if needed */
         font-size: 1.1em;
         text-align: left;
     }
@@ -38,6 +39,16 @@ const tagline = "field producer | researcher | videojournalist";
         font-size: 0.7em;
         font-weight: var(--font-weight-regular);
         line-height: inherit;
+        margin: 0; /* Adjusted slightly for closer spacing if needed */
+        text-align: left;
+    }
+    /* New style for location */
+    .identity-location {
+        display: block;
+        color: var(--color-text-secondary); /* Same as tagline */
+        font-size: 5em; /* Same as tagline, or adjust if needed */
+        font-weight: var(--font-weight-bold); /* Same as tagline */
+        line-height: inherit;
         margin: 0;
         text-align: left;
     }
@@ -45,12 +56,23 @@ const tagline = "field producer | researcher | videojournalist";
      @media (max-width: 768px) {
          .identity-header-wrapper {
              font-size: inherit;
-             height: auto; /* Let parent control height */
-             padding: 0.3rem 0; /* Padding on parent */
-             justify-content: flex-start; /* Ensure top alignment */
+             height: auto;
+             padding: 0.3rem 0;
+             justify-content: flex-start;
              align-items: flex-start;
+             /* Add a small gap between text lines if they are too close */
+             /* gap: var(--spacing-xxs); */ /* Optional */
          }
-         .identity-site-name-text { font-size: 1em; }
-         .identity-tagline { font-size: 0.6em; }
+         .identity-site-name-text {
+             font-size: 1em;
+             margin-bottom: 0; /* Ensure no large gap */
+         }
+         .identity-tagline {
+             font-size: 0.6em;
+             margin-bottom: 0; /* Ensure no large gap */
+         }
+         .identity-location {
+             font-size: 0.6em; /* Match tagline on mobile */
+         }
      }
 </style>
