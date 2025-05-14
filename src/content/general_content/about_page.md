@@ -1,6 +1,6 @@
 ---
 aboutPageContent: >-
-  <span class="accent-text">### Background and Experience</span>
+  ### Background and Experience
 
 
   With nearly 15 years of professional experience in research, journalism and project management, I am level-headed and responsible, while staying curious and creative.
@@ -15,7 +15,7 @@ aboutPageContent: >-
   Originally from Gdańsk, Poland I graduated from the London School of Economics and Political Science as well as the National University of Singapore, with a concentration in social studies and public policy.
 
 
-  <span class="accent-text">### Key skills and proficiencies</span>
+  ### Key skills and proficiencies
 
 
   * In-depth, well-structured, multi-lingual desk research
