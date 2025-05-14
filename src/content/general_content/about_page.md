@@ -1,6 +1,6 @@
 ---
 aboutPageContent: >-
-  ### Background and Experience
+  <span class="accent-text">### Background and Experience</span>
 
 
   With nearly 15 years of professional experience in research, journalism and project management, I am level-headed and responsible, while staying curious and creative.
@@ -23,7 +23,7 @@ aboutPageContent: >-
 
   * Field audio and video recording, with own equipment
 
-  * Video editing and post-production, including advanced AI applications
+  * Video editing and post-production, including the latest AI applications
 
   * Personel transport and logistics
 
