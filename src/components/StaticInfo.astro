@@ -1,7 +1,5 @@
 ---
 // src/components/StaticInfo.astro
-import { Image } from 'astro:assets';
-import headshotImage from '/src/assets/headshot-2.jpg';
 import { getEntry } from 'astro:content';
 // MODIFICATION: Import render function from MarkdownRenderer
 import { render as parseMarkdown } from './MarkdownRenderer.astro';
@@ -18,23 +16,8 @@ if (entry && entry.data && typeof entry.data.introText === 'string') {
 // MODIFICATION: Use imported parseMarkdown function
 const htmlIntroText = parseMarkdown(rawIntroText);
 
-const imageAltText = "a picture of Piotr Żakowiecki";
-const imageWidth = 854;
-const imageHeight = 854;
 ---
 <div class="static-info-wrapper">
-    <div class="static-visual-container">
-        <Image 
-            src={headshotImage} 
-            alt={imageAltText} 
-            width={imageWidth} 
-            height={imageHeight}
-            format="webp"
-            quality={80}      
-            densities={[1, 1.5, 2]}
-            loading="lazy"
-        />
-    </div>
     <div class="static-text-container markdown-content" set:html={htmlIntroText}>
         {htmlIntroText === "" && <p>Error: Intro text not loaded or empty.</p>}
     </div>
