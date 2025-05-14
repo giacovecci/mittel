@@ -1,6 +1,6 @@
 ---
-title: "Video: riesa rising"
-order: 2
+title: "Reportage/YT/Germany: riesa rising"
+order: 3
 thumbnail: /uploads/250120-riesa-rising-thumb.png
 summary: |-
   What the hell even happened here?\
