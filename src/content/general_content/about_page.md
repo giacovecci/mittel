@@ -34,4 +34,16 @@ aboutPageContent: >-
 
 
   I work in English, Polish and German, with intermediate proficiency in Russian and Ukrainian.
+
+
+  ### My approach
+
+
+  I am driven by both personal stories and global developments, hoping to make sense of both and share that which matters.
+
+
+  I aim to reach that which remains, and will remain, outside of search engine indexing and AI training data.
+
+
+  I always keep my cheer, optimism and open mind, while staying in control and thinking several steps ahead.
 ---
