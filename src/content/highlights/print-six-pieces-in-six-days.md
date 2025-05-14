@@ -1,6 +1,6 @@
 ---
 title: "Print: Six pieces in six days"
-order: 1
+order: 6
 thumbnail: /uploads/nyt-2411-thumb.jpg
 summary: |-
   This was pretty insane, ain't gonna lie.\
