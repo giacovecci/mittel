@@ -12,7 +12,7 @@ aboutPageContent: >-
   Originally from Gdańsk, Poland I graduated from the London School of Economics and Political Science as well as the National University of Singapore, with a concentration in social studies and public policy.
 
 
-  ### Key skills and proficiencies
+  <span class="accent-text">### Key skills and proficiencies</span>
 
 
   * In-depth, well-structured, multi-lingual desk research
