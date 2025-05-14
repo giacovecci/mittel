@@ -9,6 +9,9 @@ aboutPageContent: >-
   Over the years I have worked on a broad range of projects: from analysing pharma industry policy to coordinating strategy development at a major bank, from organising government-level public consultations to running an impactful podcast/newsletter combo during the COVID-19 pandemic.
 
 
+  Since 2022 I focus on production for media organisations as well as producing my own content. 
+
+
   Originally from Gdańsk, Poland I graduated from the London School of Economics and Political Science as well as the National University of Singapore, with a concentration in social studies and public policy.
 
 
