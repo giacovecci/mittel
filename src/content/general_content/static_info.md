@@ -5,6 +5,9 @@ introText: >-
   documentary production.
 
 
+  ![](/uploads/żako-8_websize.jpg)
+
+
   I'll gladly help you out with a variety of tasks related to on-the-ground reporting and media production in Poland, Germany and beyond.
 
 
