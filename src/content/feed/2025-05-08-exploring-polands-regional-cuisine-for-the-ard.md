@@ -46,5 +46,5 @@ contentBlocks:
       look and sound their best.
 
 
-      The documentary is a part of series produced by Alpha Container Pictures, available here: https://www.ardmediathek.de/sendung/Y3JpZDovL3N3ci5kZS9zZGIvc3RJZC8xNzMw
+      The documentary is a part of series produced by Alpha Container Pictures, [available here](https://www.ardmediathek.de/sendung/Y3JpZDovL3N3ci5kZS9zZGIvc3RJZC8xNzMw).
 ---
