@@ -97,15 +97,17 @@ const { highlight } = Astro.props;
     color: var(--color-accent);
   }
   .highlight-summary {
-    font-size: 0.85em;
-    line-height: 1.4;
+    font-size: 1em;
+    line-height: var(--line-height-unified);
     color: var(--color-text-secondary);
     overflow-wrap: break-word;
     word-wrap: break-word; 
     hyphens: auto;
   }
   .highlight-summary :global(p) {
-    margin-bottom: var(--spacing-xxs); 
+    margin-bottom: var(--spacing-xxs);
+    font-size: inherit;
+    line-height: inherit; 
   }
   .highlight-summary > :global(p):last-child {
     margin-bottom: 0;
@@ -122,12 +124,12 @@ const { highlight } = Astro.props;
       aspect-ratio: 4 / 3; 
     }
     .highlight-title {
-      font-size: 0.9em; 
+      font-size: 1em; 
       line-height: 1.25;
     }
     .highlight-summary {
-      font-size: 0.8em; 
-      line-height: 1.35;
+      font-size: 1em; 
+      line-height: var(--line-height-unified);
     }
     .highlight-summary :global(p) {
         margin-bottom: var(--spacing-xxs);
