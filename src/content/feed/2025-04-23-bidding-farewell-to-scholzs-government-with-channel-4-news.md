@@ -5,6 +5,13 @@ thumbnail: /uploads/img_20241214_133736.jpg
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
 contentBlocks:
+  - type: fullWidthEmbed
+    embedCode: <iframe width="560" height="315"
+      src="https://www.youtube.com/embed/RLBPB523xhs?si=NiTu4hUngg7EI-HA"
+      title="YouTube video player" frameborder="0" allow="accelerometer;
+      autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
+      web-share" referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
   - type: twoColumn
     left: >-
       I worked with Channel 4 News covering the no-confidence vote, which ended
@@ -25,11 +32,4 @@ contentBlocks:
       <span class="accent-text">Presenter:</span> Matt Frei
 
       <span class="accent-text">Camera:</span> Wil Davies
-  - type: fullWidthEmbed
-    embedCode: <iframe width="560" height="315"
-      src="https://www.youtube.com/embed/RLBPB523xhs?si=NiTu4hUngg7EI-HA"
-      title="YouTube video player" frameborder="0" allow="accelerometer;
-      autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
-      web-share" referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen></iframe>
 ---
