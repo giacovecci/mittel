@@ -1,6 +1,6 @@
 ---
 title: "Reportage/YT/Germany: RIESA RISING"
-order: 3
+order: 2
 thumbnail: /uploads/250120-riesa-rising-thumb.png
 summary: >-
   What happens when AfD organises its conference in a small Saxon town and then
