@@ -14,7 +14,7 @@ backend:
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-site_url: https://mittel.reiseburo.workers.dev
+site_url: https://mittel.tv
 publish_mode: editorial_workflow
 
 media_folder: "public/uploads"
