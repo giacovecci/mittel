@@ -1,14 +1,16 @@
 ---
-title: Highlight number 4
+title: "Fixing/Press/Poland: The Monitor"
 order: 4
-thumbnail: /uploads/ds-2409-thumb.jpg
-summary: |-
-  I fucking love men in uniform.
+thumbnail: /uploads/240225-csm-thumb.jpg
+summary: >-
+  Polish voters pushed back on the eight years of right-wing dominance and
+  Donald Tusk's centrist coalition is back in power. So everyone lives happily
+  ever after? Not so fast.
 
-  This one goes out to all those bla bla bla.
 
-  And this is a link that I won't have here: mittel.tv
+  The Monitor wanted its readers to understand how does one bring back the rule of law, and was among the first outlets to *actually* show how complicated that is.
 
-  * And this is not a link
+
+  Fixed and fact-checked by yours truly.
 linkedFeedSlug: 2025-04-23-into-the-disaster-zone-with-de-standaard
 ---
