@@ -1,23 +1,21 @@
 ---
-aboutPageContent: >+
+aboutPageContent: >
   ### My approach
 
 
-  I am driven by both personal stories and global developments, hoping to make sense of both and share that which matters.
+  I am driven by personal stories and global developments, making sense of both and sharing that which matters.
 
 
-  I aim to reach that which remains, and will remain, outside of search engine indexing and AI training data.
+  I reach that which remains, and will remain, outside of search engine indexing and AI training data.
 
 
-  I always keep my cheer, optimism and open mind, while staying in control and thinking several steps 
-
-  ahead.
+  I keep my cheer and open mind, while staying in control and thinking several steps ahead.
 
 
   ###  What I offer
 
 
-  * In-depth, well-structured, multi-lingual desk research
+  * In-depth, well-structured, multi-lingual desk research and fixing
 
   * Broad network of experts and notable individuals, as well as interesting characters from all walks of life in Poland and Germany
 
