@@ -2,17 +2,40 @@
 import { defineCollection, z } from 'astro:content';
 
 // --- Block Schemas (Used by 'feed' collection) ---
-const twoColumnBlockSchema = z.object({ /* ... */ });
-const fullWidthImageBlockSchema = z.object({ /* ... */ });
-const fullWidthEmbedBlockSchema = z.object({ /* ... */ });
-const fullWidthTextBlockSchema = z.object({ /* ... */ });
-const horizontalGalleryBlockSchema = z.object({ /* ... */ });
-twoColumnBlockSchema.extend({ type: z.literal('twoColumn'), left: z.string().optional(), right: z.string().optional() });
-fullWidthImageBlockSchema.extend({ type: z.literal('fullWidthImage'), image: z.string(), alt: z.string().optional() });
-fullWidthEmbedBlockSchema.extend({ type: z.literal('fullWidthEmbed'), embedCode: z.string() });
-fullWidthTextBlockSchema.extend({ type: z.literal('fullWidthText'), text: z.string() });
-horizontalGalleryBlockSchema.extend({ type: z.literal('horizontalGallery'), images: z.array(z.object({ image: z.string(), alt: z.string().optional() })).optional() });
+// MODIFIED: Define 'type' directly in the initial z.object()
+const twoColumnBlockSchema = z.object({
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional()
+});
 
+const fullWidthImageBlockSchema = z.object({
+    type: z.literal('fullWidthImage'),
+    image: z.string(), // Assuming image path is a string
+    alt: z.string().optional()
+});
+
+const fullWidthEmbedBlockSchema = z.object({
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string()
+});
+
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string() // Assuming markdown string
+});
+
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(), // Assuming image path is a string
+            alt: z.string().optional()
+        })
+    ).optional()
+});
+
+// The .extend() calls are no longer needed as fields are defined above.
 
 // --- Collection Definition: feed ---
 const feed = defineCollection({
@@ -20,7 +43,7 @@ const feed = defineCollection({
     schema: z.object({
         title: z.string(),
         date: z.date().optional(),
-        thumbnail: z.string().optional(),
+        thumbnail: z.string().optional(), // Assuming image path is a string
         contentBlocks: z.array(
             z.discriminatedUnion('type', [
                 twoColumnBlockSchema,
@@ -39,20 +62,18 @@ const general_content = defineCollection({
     schema: z.object({
         introText: z.string().optional(),
         aboutPageContent: z.string().optional(),
-    }).passthrough(),
+    }).passthrough(), // .passthrough() allows fields not defined in schema
 });
 
-// --- MODIFIED: Collection Definition: highlights ---
+// --- Collection Definition: highlights ---
 const highlights = defineCollection({
     type: 'content',
     schema: z.object({
         title: z.string(),
         order: z.number().optional(),
-        // MODIFIED: Make these fields optional
         summary: z.string().optional(),
-        thumbnail: z.string().optional(), // Astro Image component handles missing images gracefully if path is invalid/null
+        thumbnail: z.string().optional(), // Assuming image path is a string
         linkedFeedSlug: z.string().optional(),
-        // ADDED: New field for separators
         isSeparator: z.boolean().optional(),
     }),
 });
