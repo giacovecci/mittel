@@ -15,5 +15,5 @@ introText: >-
   Clients who have relied on my services include [Channel 4 News](https://www.youtube.com/watch?v=UyiyQUq7jlM), [NPR](https://www.npr.org/2023/10/02/1201688645/poland-belarus-migrants-border-wall-polish-election), [The New York Times](https://www.nytimes.com/2025/04/02/opinion/poland-democracy-us.html), [The Washington Post](https://www.washingtonpost.com/world/2022/04/13/poland-refugees-wall-belarus/) and many others. 
 
 
-  Have a look at some of my recent work highlights and don't hesitate to get in touch if I can support your assignment.
+  Check out my recent work highlights and do get in touch if I can support your assignment.
 ---
