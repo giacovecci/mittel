@@ -1,6 +1,6 @@
 ---
-title: "Fixing/TV/Germany: Channel 4 News"
-order: 1
+title: "Fixing/TV: Channel 4 News"
+order: 2
 thumbnail: /uploads/josh-pic-2.jpg
 summary: >-
   Ahead of the pivotal federal election I provided the necessary local
