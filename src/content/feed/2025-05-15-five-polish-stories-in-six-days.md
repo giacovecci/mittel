@@ -29,7 +29,18 @@ contentBlocks:
 
       * translating interviews (on location and in post)
 
-      * shooting BTS
+      * photographing the characters
 
       * post-production fact-checking and liaising with the characters
+  - type: fullWidthText
+    text: "Lenora's coverage is available here:"
+  - type: twoColumn
+    left: |-
+      ![](/uploads/csm-link-1.png)
+
+      ![](/uploads/csm-link-2.jpg)
+    right: |-
+      ![](/uploads/csm-link-3.jpg)
+
+      ![](/uploads/csm-link-3.png)
 ---
