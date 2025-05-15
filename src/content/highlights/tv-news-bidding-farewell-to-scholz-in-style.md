@@ -8,6 +8,6 @@ summary: >-
   exciting and poignant coverage.
 
 
-  Where is Germany headed? See for yourselves!
+  Where is Germany headed in 2025? See for yourselves!
 linkedFeedSlug: 2025-04-22-february-2025
 ---
