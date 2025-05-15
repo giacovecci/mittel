@@ -2,69 +2,36 @@
 // src/components/HighlightsColumn.astro
 import { getCollection } from 'astro:content';
 import HighlightItem from './HighlightItem.astro';
-// Removed: type CollectionEntry - not strictly needed here with the mapping
-
-// Define a more specific type for the items after mapping, including isSeparator
-interface ProcessedHighlight {
-  id: string;
-  title: string;
-  order?: number;
-  summary?: string;
-  thumbnail?: string;
-  linkedFeedSlug?: string;
-  isSeparator?: boolean;
-}
+import type { CollectionEntry } from 'astro:content';
 
 const allHighlightsRaw = await getCollection('highlights');
-
-const allProcessedHighlights: ProcessedHighlight[] = allHighlightsRaw
-  .map(item => ({
-    id: item.id, // Keep the original slug/id for keys
-    ...item.data, // Spread the frontmatter data
-  }))
-  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+const allHighlights = allHighlightsRaw
+  .map(item => ({ ...item.data, id: item.id })) 
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)); 
 ---
 
 <div class="highlights-column-wrapper">
-  {allProcessedHighlights.length > 0 ? (
+  {/* REMOVED: <h3>Highlights</h3> */}
+  {allHighlights.length > 0 ? (
     <div class="highlights-list">
-      {allProcessedHighlights.map(item => (
-        item.isSeparator ? (
-          <div class="highlight-separator" id={`separator-${item.id}`}>
-            <h3 class="separator-title">{item.title}</h3>
-          </div>
-        ) : (
-          // Pass the whole item, HighlightItem.astro expects a 'highlight' prop
-          // which is an object matching its Props.highlight structure.
-          // Since item already matches this structure (with optional fields), this is fine.
-          <HighlightItem highlight={item} />
-        )
+      {allHighlights.map(highlight => (
+        <HighlightItem highlight={highlight} />
       ))}
     </div>
   ) : (
-    <p>No highlights or separators available at the moment.</p>
+    <p>No highlights available at the moment.</p>
   )}
 </div>
 
 <style>
   .highlights-column-wrapper {
-    /* Styles for the column itself */
+    /* Padding or other styles for the column itself, if needed */
+    /* For example, if it needs padding from the edges of its container in BaseLayout */
+    /* padding: 0 var(--spacing-xs); */ 
   }
+  /* REMOVED: .highlights-column-wrapper h3 styles */
+  
   .highlights-list {
-    /* Container for highlight items and separators */
-  }
-  .highlight-separator {
-    padding: var(--spacing-sm) var(--spacing-xs); /* Match HighlightItem padding for alignment */
-    margin-bottom: var(--spacing-md); /* Same as HighlightItem */
-    /* border-bottom: 1px solid var(--color-border-light); */ /* Optional: if separators need a line */
-  }
-  .separator-title {
-    font-size: 1.2em; /* Make separator titles a bit larger or distinct */
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-unified); /* Or var(--color-accent) for emphasis */
-    margin: 0; /* Reset margin from global h3 styles */
-    line-height: 1.3;
-    text-align: left; /* Override global text-align: justify if needed */
-    hyphens: none; /* Separators usually shouldn't hyphenate */
+    /* Container for highlight items */
   }
 </style>
