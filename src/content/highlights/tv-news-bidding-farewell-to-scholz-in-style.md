@@ -4,13 +4,10 @@ order: 1
 thumbnail: /uploads/josh-pic-2.jpg
 summary: >-
   Ahead of the pivotal federal election I provided the necessary local
-  expertise, contacts and production assistance, for exciting and poignant
-  Channel 4 News coverage.
+  expertise, contacts and production assistance, for Channel 4 News trademark
+  exciting and poignant coverage.
 
 
-  Together with Matt Frei's team we spanned the worlds of parliamentary politics, societal tension and deep questions about Germany's present and future.
-
-
-  And there's still so many more stories to tell!
-linkedFeedSlug: 2025-04-23-bidding-farewell-to-scholzs-government-with-channel-4-news
+  Where is Germany headed? See for yourselves!
+linkedFeedSlug: 2025-04-22-february-2025
 ---
