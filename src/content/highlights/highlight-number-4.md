@@ -1,5 +1,5 @@
 ---
-title: "Fixing/Press/Poland: The Monitor"
+title: "Fixing/Press: The Monitor"
 order: 5
 thumbnail: /uploads/240225-csm-thumb.jpg
 summary: >-
