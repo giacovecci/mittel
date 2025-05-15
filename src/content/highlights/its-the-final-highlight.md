@@ -1,6 +1,6 @@
 ---
-title: "Fixing/Doc/Poland: Alpha Container Pictures for ARD/SWR"
-order: 2
+title: "Fixing/Documentary: Alpha Container Pictures for ARD/SWR"
+order: 3
 thumbnail: /uploads/ddd05654.jpg
 summary: >-
   Fancy a taste of real Poland? Traditional dishes made with love in some of
