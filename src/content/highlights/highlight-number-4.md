@@ -12,5 +12,5 @@ summary: >-
 
 
   Fixed and fact-checked by yours truly.
-linkedFeedSlug: 2025-04-23-into-the-disaster-zone-with-de-standaard
+linkedFeedSlug: 2025-05-15-five-polish-stories-in-six-days
 ---
