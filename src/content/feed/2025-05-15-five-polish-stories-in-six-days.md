@@ -27,7 +27,7 @@ contentBlocks:
 
       * managing access and logistics
 
-      * translating interviews (on location and in post)
+      * translating interviews (on location and during editing)
 
       * photographing the characters
 
@@ -36,11 +36,13 @@ contentBlocks:
     text: "Lenora's coverage is available here:"
   - type: twoColumn
     left: |-
-      ![](/uploads/csm-link-1.png)
+      ![](/uploads/screenshot-2025-05-15-101214.png)
 
-      ![](/uploads/csm-link-2.jpg)
+      ![](/uploads/screenshot-2025-05-15-101320.png)
     right: |-
-      ![](/uploads/csm-link-3.jpg)
+      ![](/uploads/screenshot-2025-05-15-101300.png)
 
-      ![](/uploads/csm-link-3.png)
+      ![](/uploads/screenshot-2025-05-15-101311.png)
+
+      ![](/uploads/screenshot-2025-05-15-101224.png)
 ---
