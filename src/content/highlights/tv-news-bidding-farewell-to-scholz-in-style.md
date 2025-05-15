@@ -4,7 +4,7 @@ order: 1
 thumbnail: /uploads/josh-pic-2.jpg
 summary: >-
   Ahead of the pivotal federal election I provided the necessary local
-  expertise, contacts and production assistance, for Channel 4 News trademark
+  expertise, contacts and production assistance, for Channel 4's trademark
   exciting and poignant coverage.
 
 
