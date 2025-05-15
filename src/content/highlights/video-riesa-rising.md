@@ -8,6 +8,6 @@ summary: >-
   10,000 protesters show up and turn the place into an Antifa festival?
 
 
-  Together with *Unignorierbar* we went to Riesa to see this for ourselves.
+  Together with *Unignorierbar* we went to Riesa to find out and tell the story.
 linkedFeedSlug: 2025-04-22-january-2025
 ---
