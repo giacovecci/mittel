@@ -2,7 +2,7 @@
 backend:
   name: git-gateway
   repo: giacovecci/mittel
-  branch: adam-feedback-2
+  branch: hello-version
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
