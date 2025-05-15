@@ -1,13 +1,12 @@
 ---
-title: "Reportage/YT/Germany: riesa rising"
+title: "Reportage/YT/Germany: RIESA RISING"
 order: 3
 thumbnail: /uploads/250120-riesa-rising-thumb.png
 summary: >-
-  What happens when a far-right party organises its conference in a small Saxon
-  town and then more than 10,000 protesters show up and turn the place into an
-  Antifa festival?
+  What happens when AfD organises its conference in a small Saxon town and then
+  more than 10,000 protesters show up and turn the place into an Antifa fest?
 
 
-  Together with *Unignorierbar* we went to Riesa to find out and tell the story.
+  Together with *Unignorierbar* I went to Riesa to find out!
 linkedFeedSlug: 2025-04-22-january-2025
 ---
