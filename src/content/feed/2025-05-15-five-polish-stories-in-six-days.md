@@ -35,14 +35,34 @@ contentBlocks:
   - type: fullWidthText
     text: "Lenora's coverage is available here:"
   - type: twoColumn
-    left: |-
-      ![](/uploads/screenshot-2025-05-15-101214.png)
+    left: >-
+      <a
+      href="https://www.csmonitor.com/World/Europe/2024/0508/poland-young-voters-participation-tusk"
+      target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/screenshot-2025-05-15-101214.png" alt="Screenshot of an article: Young Poles led a political revolition. Now they need to learn patience.">
+      </a>
 
-      ![](/uploads/screenshot-2025-05-15-101320.png)
-    right: |-
-      ![](/uploads/screenshot-2025-05-15-101300.png)
+      <br>
 
-      ![](/uploads/screenshot-2025-05-15-101311.png)
+      <a href="https://www.csmonitor.com/World/Europe/2024/0220/New-leader-wants-to-clean-up-Poland.-Does-public-trust-him-to-do-so" target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/screenshot-2025-05-15-101320.png" alt="Screenshot of an article: New leader wants to 'clean up' Poland. Does public trust him to do so?">
+      </a>
+    right: >-
+      <a
+      href="https://www.csmonitor.com/World/Europe/2024/0301/Expecting-goodness-to-prevail-journalists-clean-up-Poland-s-state-media"
+      target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/screenshot-2025-05-15-101300.png" alt="Screenshot of an article: ‘Expecting goodness to prevail,’ journalists clean up Poland’s state media">
+      </a>
 
-      ![](/uploads/screenshot-2025-05-15-101224.png)
+      <br>
+
+      <a href="https://www.csmonitor.com/World/Europe/2024/0209/Poland-appears-torn-by-abortion.-Research-hints-divide-isn-t-so-deep" target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/screenshot-2025-05-15-101311.png" alt="Screenshot of an article: Poland appears torn by abortion. Research hints divide isn’t so deep.">
+      </a>
+
+      <br>
+
+      <a href="https://www.csmonitor.com/World/Europe/2024/1002/influencer-Ewa-Letowska-Poland-democracy-Facebook" target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/screenshot-2025-05-15-101224.png" alt="Screenshot of an article: Her power in Poland came accidentally. She kept it with stamina – and Facebook.">
+      </a>
 ---
