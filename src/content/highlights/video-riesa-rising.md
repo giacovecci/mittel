@@ -1,5 +1,5 @@
 ---
-title: "Reportage/Youtube: RIESA RISING"
+title: "Camera/Youtube: RIESA RISING"
 order: 2
 thumbnail: /uploads/250120-riesa-rising-thumb.png
 summary: >-
