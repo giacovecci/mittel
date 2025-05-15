@@ -1,6 +1,7 @@
 ---
 title: Exploring Poland's regional cuisine for the ARD
 date: 2025-05-08T20:30:00.000Z
+thumbnail: /uploads/ddd05654.jpg
 contentBlocks:
   - type: fullWidthEmbed
     embedCode: >-
