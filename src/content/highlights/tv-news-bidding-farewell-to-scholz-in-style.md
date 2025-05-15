@@ -1,5 +1,5 @@
 ---
-title: "Fixing/TV/Germany: Channel 4 News"
+title: "Fixing/TV: Channel 4 News"
 order: 1
 thumbnail: /uploads/josh-pic-2.jpg
 summary: >-
