@@ -27,7 +27,7 @@ contentBlocks:
 
       * managing access and logistics
 
-      * translating interviews (on location and in post)
+      * translating interviews (on location and during editing)
 
       * photographing the characters
 
