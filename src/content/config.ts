@@ -66,7 +66,8 @@ const highlights = defineCollection({
         summary: z.string(), 
         thumbnail: z.string(), 
         linkedFeedSlug: z.string(), 
-        order: z.number().optional(), 
+        order: z.number().optional(),
+        isSeparator: z.boolean().optional(), // New field 
     }),
 });
 
