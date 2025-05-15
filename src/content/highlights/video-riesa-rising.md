@@ -4,8 +4,8 @@ order: 3
 thumbnail: /uploads/250120-riesa-rising-thumb.png
 summary: >-
   What happens when a far-right party organises its conference in a small Saxon
-  town, in hopes of staying out of reach of the radical left? And then more than
-  10,000 protesters show up and turn the place into an Antifa festival?
+  town and then more than 10,000 protesters show up and turn the place into an
+  Antifa festival?
 
 
   Together with *Unignorierbar* we went to Riesa to find out and tell the story.
