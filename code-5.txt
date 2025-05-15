@@ -1,0 +1,336 @@
+// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+// --- Block Schemas (Used by 'feed' collection) ---
+const twoColumnBlockSchema = z.object({ /* ... */ });
+const fullWidthImageBlockSchema = z.object({ /* ... */ });
+const fullWidthEmbedBlockSchema = z.object({ /* ... */ });
+const fullWidthTextBlockSchema = z.object({ /* ... */ });
+const horizontalGalleryBlockSchema = z.object({ /* ... */ });
+twoColumnBlockSchema.extend({ type: z.literal('twoColumn'), left: z.string().optional(), right: z.string().optional() });
+fullWidthImageBlockSchema.extend({ type: z.literal('fullWidthImage'), image: z.string(), alt: z.string().optional() });
+fullWidthEmbedBlockSchema.extend({ type: z.literal('fullWidthEmbed'), embedCode: z.string() });
+fullWidthTextBlockSchema.extend({ type: z.literal('fullWidthText'), text: z.string() });
+horizontalGalleryBlockSchema.extend({ type: z.literal('horizontalGallery'), images: z.array(z.object({ image: z.string(), alt: z.string().optional() })).optional() });
+
+
+// --- Collection Definition: feed ---
+const feed = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(),
+        contentBlocks: z.array(
+            z.discriminatedUnion('type', [
+                twoColumnBlockSchema,
+                fullWidthImageBlockSchema,
+                fullWidthEmbedBlockSchema,
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+            ])
+        ).optional(),
+    }),
+});
+
+// --- Collection Definition: general_content ---
+const general_content = defineCollection({
+    type: 'content',
+    schema: z.object({
+        introText: z.string().optional(),
+        aboutPageContent: z.string().optional(),
+    }).passthrough(),
+});
+
+// --- MODIFIED: Collection Definition: highlights ---
+const highlights = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        order: z.number().optional(),
+        // MODIFIED: Make these fields optional
+        summary: z.string().optional(),
+        thumbnail: z.string().optional(), // Astro Image component handles missing images gracefully if path is invalid/null
+        linkedFeedSlug: z.string().optional(),
+        // ADDED: New field for separators
+        isSeparator: z.boolean().optional(),
+    }),
+});
+
+// --- Export Collections ---
+export const collections = {
+  feed,
+  general_content,
+  highlights,
+};# public/admin/config.yml
+backend:
+  name: git-gateway
+  repo: giacovecci/mittel
+  branch: adam-feedback-2
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
+  gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.tv
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        typeKey: type
+        types:
+          - label: "Two Column Block"
+            name: "twoColumn"
+            widget: "object"
+            fields:
+              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
+              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
+          - label: "Full Width Image"
+            name: "fullWidthImage"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          - label: "Full Width Embed"
+            name: "fullWidthEmbed"
+            widget: "object"
+            fields:
+              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
+          - label: "Full Width Text"
+            name: "fullWidthText"
+            widget: "object"
+            fields:
+              - { label: "Text Content", name: "text", widget: "markdown" }
+          - label: "Horizontal Gallery"
+            name: "horizontalGallery"
+            widget: "object"
+            fields:
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                fields:
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+
+  # ADDED: Highlights Collection
+  - name: "highlights" # Matches folder src/content/highlights/
+    label: "Highlights"
+    folder: "src/content/highlights" # Store each highlight as a separate file
+    create: true
+    slug: "{{slug}}" # User can define slug for each highlight item
+    identifier_field: title # Show title in the list view
+    summary: "{{title}} (Order: {{order | default('N/A')}})" # Summary in CMS list view
+    fields:
+      - { label: "Highlight Title", name: "title", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Lower numbers appear first." }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
+      - { label: "Summary Text", name: "summary", widget: "markdown" }
+      - { label: "Slug of Linked Feed Entry", name: "linkedFeedSlug", widget: "string", hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
+
+  - name: "general_content"
+    label: "General Content"
+    files:
+      - label: "Static Info (Left Column)" # Clarified label
+        name: "static_info_content"
+        file: "src/content/general_content/static_info.md"
+        fields:
+          - { label: "Introductory Text", name: "introText", widget: "markdown" }
+      # ADDED: About Page Content File
+      - label: "About Page"
+        name: "about_page_content"
+        file: "src/content/general_content/about_page.md"
+        fields:
+          - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }---
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+export interface Props {
+  highlight: {
+    title: string;
+    summary: string; 
+    thumbnail: string; 
+    linkedFeedSlug: string;
+  };
+}
+
+const { highlight } = Astro.props;
+---
+
+<div class="highlight-item">
+  <a href={`#${highlight.linkedFeedSlug}`} class="highlight-link-wrapper" data-target-id={highlight.linkedFeedSlug} aria-label={`Read more about ${highlight.title}`}>
+    <div class="highlight-content-flex">
+      {highlight.thumbnail && (
+        <div class="highlight-thumbnail-container">
+          <Image 
+            src={highlight.thumbnail} 
+            alt={`Thumbnail for ${highlight.title}`} 
+            width={200} 
+            height={150} 
+            format="webp"
+            quality={70}
+            loading="lazy" 
+          />
+        </div>
+      )}
+      <div class="highlight-text-container">
+        <h4 class="highlight-title">{highlight.title}</h4>
+        {highlight.summary && (
+          <div class="highlight-summary markdown-content" set:html={parseMarkdown(highlight.summary)}>
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  .highlight-item {
+    margin-bottom: var(--spacing-md);
+    background-color: transparent;
+    overflow: hidden; 
+    transition: background-color 0.2s ease;
+  }
+  .highlight-item:hover {
+    background-color: var(--color-surface-light);
+  }
+  .highlight-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+  }
+  .highlight-content-flex {
+    display: flex;
+    /* MODIFIED: align items to the top */
+    align-items: flex-start; 
+    gap: var(--spacing-sm);
+  }
+  .highlight-thumbnail-container {
+    flex-shrink: 0; 
+    flex-grow: 0;   
+    flex-basis: 25%; 
+    max-width: 25%;  
+    background-color: var(--color-background-muted);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    height: 180px; 
+  }
+  .highlight-thumbnail-container :global(img) {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+  }
+  .highlight-text-container {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 0;  
+  }
+  .highlight-title {
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+    margin-top: 0; /* Ensure no extra margin at the top */
+    margin-bottom: var(--spacing-xxs);
+    color: var(--color-text-unified);
+    line-height: 1.3;
+  }
+  .highlight-item:hover .highlight-title {
+    color: var(--color-accent);
+  }
+  .highlight-summary {
+    font-size: 1em;
+    line-height: var(--line-height-unified);
+    color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    hyphens: auto;
+  }
+  .highlight-summary :global(p) {
+    margin-bottom: var(--spacing-xxs);
+    font-size: inherit;
+    line-height: inherit; 
+  }
+  .highlight-summary > :global(p):last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .highlight-content-flex {
+      gap: var(--spacing-xs); 
+    }
+    .highlight-thumbnail-container {
+      flex-basis: 35%; 
+      max-width: 35%;
+      height: auto; 
+      aspect-ratio: 4 / 3; 
+    }
+    .highlight-title {
+      font-size: 1em; 
+      line-height: 1.25;
+    }
+    .highlight-summary {
+      font-size: 1em; 
+      line-height: var(--line-height-unified);
+    }
+    .highlight-summary :global(p) {
+        margin-bottom: var(--spacing-xxs);
+    }
+  }
+</style>---
+// src/components/HighlightsColumn.astro
+import { getCollection } from 'astro:content';
+import HighlightItem from './HighlightItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const allHighlightsRaw = await getCollection('highlights');
+const allHighlights = allHighlightsRaw
+  .map(item => ({ ...item.data, id: item.id })) 
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)); 
+---
+
+<div class="highlights-column-wrapper">
+  {/* REMOVED: <h3>Highlights</h3> */}
+  {allHighlights.length > 0 ? (
+    <div class="highlights-list">
+      {allHighlights.map(highlight => (
+        <HighlightItem highlight={highlight} />
+      ))}
+    </div>
+  ) : (
+    <p>No highlights available at the moment.</p>
+  )}
+</div>
+
+<style>
+  .highlights-column-wrapper {
+    /* Padding or other styles for the column itself, if needed */
+    /* For example, if it needs padding from the edges of its container in BaseLayout */
+    /* padding: 0 var(--spacing-xs); */ 
+  }
+  /* REMOVED: .highlights-column-wrapper h3 styles */
+  
+  .highlights-list {
+    /* Container for highlight items */
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+// src/layouts/BaseLayout.astro
 interface Props {
     title?: string;
 }
@@ -17,26 +18,25 @@ const { title = 'Portfolio' } = Astro.props;
         @import '../styles/global.css';
 
        :root {
-          --scrollbar-track-color: #222;
-          --scrollbar-thumb-color: #555;
-          --scrollbar-width: 8px;
           --desktop-identity-width: 31.8%;
           --desktop-divider-width: 2%;
           --desktop-main-header-width: 66.2%;
-          --desktop-content-padding: var(--content-padding-x-desktop, 20px);
-          --header-area-height: 90px;
           --desktop-content-padding-top: var(--spacing-xl);
           --desktop-content-padding-bottom: var(--spacing-lg);
           --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
-          --mobile-header-height: 125px;
+          /* MODIFIED: Potentially increase mobile header height slightly if needed */
+          --mobile-header-height: 80px; /* Was 70px, try 80px or 85px */
+          --header-area-height: 90px; /* Desktop header height */
        }
 
         html { height: 100%; box-sizing: border-box; }
         *, *:before, *:after { box-sizing: inherit; }
 
         body {
-            background-color: var(--color-background); margin: 0;
             overscroll-behavior: none; min-height: 100%;
+        }
+        body.mobile-menu-open {
+            overflow: hidden;
         }
 
         #app-container {
@@ -48,6 +48,7 @@ const { title = 'Portfolio' } = Astro.props;
 
 
         @media (min-width: 769px) { /* DESKTOP */
+            /* ... (Desktop styles remain the same) ... */
             body { overflow: hidden; height: 100%; }
             #app-container { height: 100%; }
             #app-container.is-desktop {
@@ -61,7 +62,7 @@ const { title = 'Portfolio' } = Astro.props;
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
                 grid-row: 1 / 2; position: relative; overflow: hidden;
-                border-bottom: var(--line-thickness) solid var(--color-border);
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
                 font-size: 1.5em; z-index: 20; background-color: var(--color-background);
                 height: var(--header-area-height);
                 display: flex;
@@ -70,12 +71,12 @@ const { title = 'Portfolio' } = Astro.props;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
                  grid-column: 1 / 2;
-                 padding-left: var(--desktop-content-padding);
+                 padding-left: var(--spacing-content-side-padding);
                  padding-right: var(--spacing-md);
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
                  grid-column: 3 / 4;
-                 padding-right: var(--desktop-content-padding);
+                 padding-right: var(--spacing-content-side-padding);
                  padding-left: var(--spacing-md);
             }
             #app-container.is-desktop > #divider-area {
@@ -84,77 +85,72 @@ const { title = 'Portfolio' } = Astro.props;
             }
             #app-container.is-desktop > #divider-area::before {
                  content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
-                 transform: translateX(-50%); width: 1px; background-color: #ffffff; opacity: 0.6;
+                 transform: translateX(-50%);
+                 width: var(--line-thickness-subtle);
+                 background-color: var(--color-border-subtle);
+                 opacity: 1;
             }
+
             #app-container.is-desktop > #info-content-area,
-            #app-container.is-desktop > #feed-content-area,
             #app-container.is-desktop > #dynamic-content-area,
             #app-container.is-desktop > #all-feed-content-area,
-            #app-container.is-desktop > #overview-content-area {
+            #app-container.is-desktop > #overview-content-area,
+            #app-container.is-desktop > #feed-content-area {
                 overflow-y: auto;
                 scrollbar-width: thin;
-                scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+                scrollbar-color: var(--scrollbar-thumb-color, #555) var(--scrollbar-track-color, #222);
             }
-            #app-container.is-desktop > #info-content-area::-webkit-scrollbar,
+             #app-container.is-desktop > #info-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width); }
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
             #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color); }
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
             #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
+
 
             #app-container.is-desktop > #info-content-area {
                 grid-column: 1 / 2; grid-row: 2 / 3; display: block;
-                padding: var(--desktop-content-padding-top) 0 var(--desktop-content-padding-bottom) var(--desktop-content-padding);
-                padding-right: var(--spacing-md);
+                padding: var(--desktop-content-padding-top) var(--spacing-md) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
-            #app-container.is-desktop > #feed-content-area,
             #app-container.is-desktop > #dynamic-content-area,
-            #app-container.is-desktop > #all-feed-content-area {
+            #app-container.is-desktop > #all-feed-content-area,
+            #app-container.is-desktop > #feed-content-area {
                 grid-column: 3 / 4; grid-row: 2 / 3; display: none;
-                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom) 0;
-                padding-left: var(--spacing-md);
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
             }
             #app-container.is-desktop > #overview-content-area {
                 grid-column: 1 / 4; grid-row: 2 / 3; display: none;
-                padding: var(--desktop-content-padding-top) var(--desktop-content-padding) var(--desktop-content-padding-bottom);
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
-
-             /* Desktop View Switching Logic */
+             /* Desktop View Switching Logic ... */
              #app-container.is-desktop.view-home > #info-content-area { display: block; }
              #app-container.is-desktop.view-home > #dynamic-content-area { display: block; }
-             #app-container.is-desktop.view-home > #feed-content-area { display: none; }
              #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-home > #overview-content-area { display: none; }
              #app-container.is-desktop.view-home > #divider-area { display: block; }
+
              #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
              #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; }
              #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
-             #app-container.is-desktop.view-all-feed > #feed-content-area { display: none; }
              #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
              #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
-             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
-             #app-container.is-desktop.view-feed > #feed-content-area { display: block; }
-             #app-container.is-desktop.view-feed > #dynamic-content-area { display: none; }
-             #app-container.is-desktop.view-feed > #all-feed-content-area { display: none; }
-             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+            
              #app-container.is-desktop.view-about > #info-content-area { display: block; }
              #app-container.is-desktop.view-about > #dynamic-content-area { display: block; }
-             #app-container.is-desktop.view-about > #feed-content-area { display: none; }
              #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-about > #overview-content-area { display: none; }
              #app-container.is-desktop.view-about > #divider-area { display: block; }
+
              #app-container.is-desktop.view-overview > #info-content-area { display: none; }
-             #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
              #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
              #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
@@ -163,101 +159,58 @@ const { title = 'Portfolio' } = Astro.props;
 
         @media (max-width: 768px) { /* MOBILE */
             body {
-                height: auto;
-                overflow-y: auto;
-                overflow-x: hidden;
+                height: auto; overflow-y: auto; overflow-x: hidden;
             }
             #app-container.is-mobile {
-                display: flex; flex-direction: column;
-                min-height: 100vh;
-                height: auto;
-                position: relative;
-                padding-top: var(--mobile-header-height);
+                display: flex; flex-direction: column; min-height: 100vh;
+                height: auto; position: relative; padding-top: var(--mobile-header-height);
             }
             #app-container.is-mobile > #mobile-header-sticky-container {
-                display: flex; flex-direction: row;
-                width: 100%;
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                background-color: var(--color-background);
-                z-index: 1000;
-                border-bottom: var(--line-thickness) solid var(--color-border);
-                box-sizing: border-box;
+                display: flex; flex-direction: row; width: 100%;
+                position: fixed; top: 0; left: 0; right: 0;
+                background-color: var(--color-background); z-index: 1000;
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                box-sizing: border-box; height: var(--mobile-header-height);
             }
             #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
-                 /* MODIFICATION: Adjust flex-basis for 67% width */
-                 flex-grow: 0;
-                 flex-shrink: 0;
-                 flex-basis: 67%;
-                 min-width: 0;
-                 display: flex;
-                 flex-direction: column;
-                 justify-content: flex-start;
-                 height: var(--mobile-header-height);
-                 padding-top: var(--spacing-xs);
-                 padding-bottom: var(--spacing-xs);
+                 flex-grow: 1; flex-shrink: 1; /* Allow shrinking if name is too long */
+                 min-width: 50px; /* Prevent it from becoming too small */
+                 display: flex; flex-direction: column; justify-content: center;
+                 height: 100%;
+                 padding: 0 var(--spacing-xs) 0 var(--mobile-content-padding-x);
                  font-size: var(--font-size-mobile-header-responsive);
-                 overflow: hidden;
-                 box-sizing: border-box;
-                 padding-left: var(--mobile-content-padding-x);
-                 padding-right: calc(var(--mobile-content-padding-x) / 4);
-                 align-items: flex-start;
+                 overflow: hidden; box-sizing: border-box; align-items: flex-start;
             }
             #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
-                 /* MODIFICATION: Adjust flex-basis for 33% width */
-                 flex-grow: 0;
-                 flex-shrink: 0;
-                 flex-basis: 33%;
-                 min-width: 0;
+                 flex-grow: 0; flex-shrink: 0; /* Does not grow or shrink, fixed width by content */
                  display: flex;
-                 flex-direction: column;
-                 justify-content: flex-start;
-                 height: var(--mobile-header-height);
-                 padding-top: var(--spacing-xs);
-                 padding-bottom: var(--spacing-xs);
+                 /* MODIFIED: justify-content to center to allow Header.astro's content to define its own width and be centered */
+                 justify-content: center; 
+                 align-items: center;
+                 height: 100%;
+                 /* MODIFIED: Symmetrical padding for this area */
+                 padding: 0 var(--spacing-sm); /* Adjust as needed */
                  font-size: var(--font-size-mobile-header-responsive);
-                 overflow: hidden;
                  box-sizing: border-box;
-                 padding-right: var(--mobile-content-padding-x);
-                 padding-left: calc(var(--mobile-content-padding-x) / 4);
-                 align-items: flex-end;
+                 /* max-width: 50%; /* Optional: prevent it from taking too much space */
             }
-            #app-container.is-mobile > #divider-area {
-                order: 2; display: none;
-            }
+            #app-container.is-mobile > #divider-area { display: none; }
 
             #app-container.is-mobile > #info-content-area,
             #app-container.is-mobile > #feed-content-area,
             #app-container.is-mobile > #overview-content-area,
             #app-container.is-mobile > #dynamic-content-area,
             #app-container.is-mobile > #all-feed-content-area {
-                 order: 3;
-                 width: 100%;
-                 position: static;
+                 order: 3; width: 100%; position: static;
                  border: none; max-height: none;
                  padding: var(--spacing-lg) var(--mobile-content-padding-x);
-                 display: none;
-                 box-sizing: border-box;
+                 display: none; box-sizing: border-box;
             }
-
-            /* Mobile View Logic */
-            #app-container.is-mobile.view-home > #info-content-area { display: none; }
+            /* Mobile View Logic ... */
             #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
-
             #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
-            #app-container.is-mobile.view-all-feed > #info-content-area { display: none; }
-            #app-container.is-mobile.view-all-feed > #dynamic-content-area { display: none; }
-            #app-container.is-mobile.view-all-feed > #feed-content-area { display: none; }
-            #app-container.is-mobile.view-all-feed > #overview-content-area { display: none; }
-
-            #app-container.is-mobile.view-feed > #feed-content-area { display: block; }
-
             #app-container.is-mobile.view-info > #info-content-area { display: block; }
             #app-container.is-mobile.view-info > #dynamic-content-area { display: block; }
-            #app-container.is-mobile.view-info > #feed-content-area { display: none; }
-            #app-container.is-mobile.view-info > #overview-content-area { display: none; }
-            #app-container.is-mobile.view-info > #all-feed-content-area { display: none; }
-
             #app-container.is-mobile.view-about > #dynamic-content-area { display: block; }
             #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
         }

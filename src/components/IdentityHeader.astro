@@ -1,13 +1,13 @@
 ---
 // src/components/IdentityHeader.astro
 const siteName = "Piotr Żakowiecki";
-const tagline = "field producer | researcher | videojournalist";
-const location = "Berlin/Warsaw"; // New variable
+const tagline = "field producer ● researcher ● videojournalist";
+const location = "Berlin/Warsaw";
 ---
 <div class="identity-header-wrapper">
     <span class="identity-site-name-text">{siteName}</span>
     <span class="identity-tagline">{tagline}</span>
-    <span class="identity-location">{location}</span> {/* New element */}
+    <span class="identity-location">{location}</span>
 </div>
 
 <style>
@@ -15,39 +15,39 @@ const location = "Berlin/Warsaw"; // New variable
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: flex-start;
+        justify-content: flex-start; /* Changed from center for more consistent top alignment */
         line-height: 1.2;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         font-size: inherit;
-        padding-left: 0;
-        padding-right: var(--header-internal-padding); /* Assuming this var is defined or not critical */
+        padding-left: 0; /* Will be handled by parent #identity-header-area */
+        padding-right: 0; /* Will be handled by parent #identity-header-area */
         text-align: left;
     }
     .identity-site-name-text {
         display: inline-block;
         margin: 0; padding: 0;
         font-weight: var(--font-weight-bold);
-        margin-bottom: 0; /* Adjusted slightly for closer spacing if needed */
+        margin-bottom: 0;
         font-size: 1.1em;
         text-align: left;
     }
     .identity-tagline {
         display: block;
-        color: var(--color-accent);
+        color: var(--color-accent); /* Uses original accent */
         font-size: 0.7em;
         font-weight: var(--font-weight-regular);
         line-height: inherit;
-        margin: 0; /* Adjusted slightly for closer spacing if needed */
+        margin: 0;
         text-align: left;
     }
-    /* New style for location */
     .identity-location {
         display: block;
-        color: var(--color-text-secondary); /* Same as tagline */
-        font-size: 0.7em; /* Same as tagline, or adjust if needed */
-        font-weight: var(--font-weight-bold); /* Same as tagline */
+        /* MODIFIED: Darker color for Berlin/Warsaw */
+        color: #666; /* Example darker grey, adjust as needed. Could be a new var like --color-text-tertiary */
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular); /* Changed from bold to match tagline visual hierarchy */
         line-height: inherit;
         margin: 0;
         text-align: left;
@@ -57,22 +57,20 @@ const location = "Berlin/Warsaw"; // New variable
          .identity-header-wrapper {
              font-size: inherit;
              height: auto;
-             padding: 0.3rem 0;
+             padding: 0; /* Padding handled by parent #identity-header-area */
              justify-content: flex-start;
              align-items: flex-start;
-             /* Add a small gap between text lines if they are too close */
-             /* gap: var(--spacing-xxs); */ /* Optional */
          }
          .identity-site-name-text {
              font-size: 1em;
-             margin-bottom: 0; /* Ensure no large gap */
+             margin-bottom: 0;
          }
          .identity-tagline {
              font-size: 0.6em;
-             margin-bottom: 0; /* Ensure no large gap */
+             margin-bottom: 0;
          }
          .identity-location {
-             font-size: 0.6em; /* Match tagline on mobile */
+             font-size: 0.6em;
          }
      }
 </style>

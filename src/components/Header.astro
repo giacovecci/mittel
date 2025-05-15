@@ -2,170 +2,142 @@
 // src/components/Header.astro
 const contactEmail = "hey@mittel.tv";
 ---
-<div class="main-header-wrapper">
-    {/* ... HTML for buttons ... */}
-    <div class="header-sub-col feed-button-desktop-container">
-        <button type="button" id="home-feed-view-btn" class="desktop-only">
-            Feed
-        </button>
-    </div>
-    <div class="header-sub-col overview-button-container">
-        <button type="button" id="overview-view-btn" class="nav-button">
-           Projects
-        </button>
-    </div>
-    <div class="header-sub-col about-button-container">
-        <button type="button" id="about-view-btn" class="nav-button">
-           About
-        </button>
-    </div>
-    <div class="header-sub-col header-contact-item">
-        <button type="button" id="contact-link" class="nav-button">
-           Contact
-        </button>
-    </div>
-    <div class="header-sub-col info-button-mobile-container">
-        <button type="button" id="mobile-feed-highlights-btn" class="mobile-only nav-button">
-            {/* Text set by JS */}
-        </button>
-    </div>
+<!-- Desktop Header Structure -->
+<div class="desktop-header-nav desktop-only">
+    <button type="button" id="highlights-view-btn-desktop" class="nav-button-item">Highlights</button>
+    <button type="button" id="all-feed-view-btn-desktop" class="nav-button-item">Feed</button>
+    <button type="button" id="overview-view-btn-desktop" class="nav-button-item">Projects</button>
+    <button type="button" id="about-view-btn-desktop" class="nav-button-item">About</button>
+    <button type="button" id="contact-link-desktop" class="nav-button-item">Contact</button>
 </div>
 
+<!-- Mobile Header Structure - MODIFIED: Title Removed -->
+<div class="mobile-header-nav mobile-only">
+    <!-- mobile-section-title SPAN REMOVED -->
+    <button type="button" id="hamburger-menu-btn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-panel">
+        <svg class="hamburger-icon icon-open" viewBox="0 0 100 80" width="20" height="20" fill="currentColor"><rect width="100" height="15" rx="8"></rect><rect y="30" width="100" height="15" rx="8"></rect><rect y="60" width="100" height="15" rx="8"></rect></svg>
+        <svg class="hamburger-icon icon-close" viewBox="0 0 100 100" width="20" height="20" fill="currentColor" style="display:none;"><line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/><line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/></svg>
+    </button>
+    <button type="button" id="contact-link-mobile" class="contact-btn-mobile nav-button-item">Contact</button>
+</div>
+
+<!-- Mobile Navigation Panel (remains the same) -->
+<nav id="mobile-nav-panel" class="mobile-nav-panel mobile-only" aria-hidden="true">
+    <ul>
+        <li><button type="button" data-viewtarget="info" class="mobile-nav-link">Highlights</button></li>
+        <li><button type="button" data-viewtarget="all-feed" class="mobile-nav-link">Feed</button></li>
+        <li><button type="button" data-viewtarget="overview" class="mobile-nav-link">Projects</button></li>
+        <li><button type="button" data-viewtarget="about" class="mobile-nav-link">About</button></li>
+    </ul>
+</nav>
+
 <style>
-    .main-header-wrapper {
+    /* Common Nav Button Item Style */
+    .nav-button-item {
+        padding: 2px 0; margin: 0; font-size: inherit; font-family: inherit;
+        font-weight: var(--font-weight-bold); line-height: 1.3; color: inherit;
+        background: none; border: none; cursor: pointer; white-space: nowrap;
+        transition: color 0.2s ease;
+    }
+    .nav-button-item:hover,
+    .nav-button-item.active {
+        color: var(--color-accent-hover-custom);
+    }
+
+    /* Desktop Header Styles */
+    .desktop-header-nav {
+        display: flex; justify-content: flex-start; align-items: center;
+        width: 100%; height: 100%; gap: var(--spacing-lg);
+    }
+
+    /* --- REVISED Mobile Header Styles --- */
+    .mobile-header-nav {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        width: 100%;
-        height: 100%;
+        flex-direction: column;
+        align-items: flex-end;   /* Align items to the right */
+        /* MODIFIED: Adjust justify-content for two items */
+        justify-content: space-around; /* Or 'center' if they should be closer, or 'space-between' to push to edges */
+        width: auto; 
+        height: 100%; 
+        padding: var(--spacing-xxs) 0; 
         box-sizing: border-box;
-        font-size: inherit;
+        /* gap: var(--spacing-sm); /* Use justify-content for spacing now, or a smaller gap if preferred */
     }
+    /* .mobile-title styles can be removed if no other element uses this class */
 
-    .main-header-wrapper > div.header-sub-col {
-        box-sizing: border-box;
-        flex-grow: 0;
-        flex-shrink: 0;
-        flex-basis: auto;
-        display: flex;
-        align-items: baseline; /* Default for desktop */
-    }
-
-    .feed-button-desktop-container {
-        justify-content: flex-start;
-        text-align: left;
-    }
-    .overview-button-container,
-    .about-button-container {
-        justify-content: center;
-        text-align: center;
-    }
-    .header-contact-item {
-        justify-content: flex-end;
-        text-align: right;
-    }
-
-    .main-header-wrapper button {
-        padding: 2px 0;
-        margin: 0;
-        font-size: inherit;
-        font-family: inherit;
-        font-weight: var(--font-weight-bold);
-        line-height: 1.3;
-        color: inherit;
-        background: none;
-        border: none;
+    .hamburger-btn {
+        background: none; border: none; color: inherit;
+        padding: 2px; 
         cursor: pointer;
-        white-space: nowrap;
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1; 
+    }
+    .hamburger-btn .icon-close { display: none; }
+    .hamburger-btn.is-active .icon-open { display: none; }
+    .hamburger-btn.is-active .icon-close { display: block; }
+    .hamburger-btn svg { 
+        width: 22px; /* Slightly larger for better tap target */
+        height: 22px;
     }
 
-    .main-header-wrapper button.nav-button {
-        display: inline-flex; /* Default for nav-buttons */
-        align-items: center;
-        justify-content: center;
+    .contact-btn-mobile {
+        font-size: 0.85em; /* Keep it readable */
+        font-weight: var(--font-weight-bold);
+        line-height: 1.2; 
     }
 
-    /* Default visibility rules */
+    /* Mobile Navigation Panel Styles (remain the same) */
+    .mobile-nav-panel {
+        position: fixed; top: var(--mobile-header-height); left: 0; right: 0;
+        background-color: var(--color-background); z-index: 999;
+        border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+        padding: var(--spacing-sm) 0; max-height: calc(100vh - var(--mobile-header-height));
+        overflow-y: auto; transform: translateY(-100%); visibility: hidden;
+        transition: transform 0.3s ease-out, visibility 0.3s ease-out;
+        display: flex;
+    }
+    .mobile-nav-panel.is-open { transform: translateY(0); visibility: visible; }
+    .mobile-nav-panel ul { list-style: none; padding: 0; margin: 0; width: 100%; }
+    .mobile-nav-panel li { margin: 0; }
+    .mobile-nav-link {
+        display: block; width: 100%;
+        padding: var(--spacing-sm) var(--mobile-content-padding-x);
+        text-align: right; font-size: 1.1em; font-weight: var(--font-weight-medium);
+        color: var(--color-text-unified); background: none; border: none;
+        border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+        cursor: pointer;
+    }
+    .mobile-nav-panel li:last-child .mobile-nav-link { border-bottom: none; }
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active-menu-item {
+        color: var(--color-accent-hover-custom);
+        background-color: var(--color-surface-light);
+    }
+
+    /* Visibility utilities */
+    .desktop-only { display: none !important; }
     .mobile-only { display: none !important; }
-    .desktop-only { display: inline-block !important; } /* Or inline-flex if it's always a nav-button */
-    .info-button-mobile-container { display: none !important; }
 
-
-    @media (max-width: 768px) { /* MOBILE STYLES */
-        .main-header-wrapper {
-            flex-direction: column;
-            align-items: stretch; /* CRITICAL: Make children (.header-sub-col) stretch horizontally */
-            justify-content: space-around; /* Distribute .header-sub-col items vertically */
-            gap: 0px;
-            height: 100%;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .main-header-wrapper > div.header-sub-col {
-            display: block; /* MODIFICATION: Change from flex to block */
-            width: 100%;    /* CRITICAL: Ensure it takes full width provided by stretched parent */
-            box-sizing: border-box;
-            text-align: right; /* CRITICAL: Align its inline/inline-block children (the button) to the right */
-            /* Remove flex-specific properties from desktop if they were here:
-               justify-content: flex-end;
-               align-items: center;
-            */
-            /* Add a little padding for vertical rhythm if needed, e.g. */
-            /* padding: 2px 0; */ /* This might affect vertical distribution by space-around */
-        }
-
-        /* Ensure the desktop-specific button container is hidden on mobile */
-        .feed-button-desktop-container {
-             display: none !important;
-        }
-        /* Ensure mobile-specific containers are displayed as blocks to respect ordering */
-        .info-button-mobile-container,
-        .overview-button-container,
-        .about-button-container,
-        .header-contact-item { /* header-contact-item is also a .header-sub-col */
-            display: block !important; /* Ensure it's block to respect parent's text-align */
-        }
-
-        /* Ordering for mobile */
-        .info-button-mobile-container { order: 1; }
-        .overview-button-container { order: 2; }
-        .about-button-container { order: 3; }
-        .header-contact-item { order: 4; }
-
-
-        .mobile-only { /* This class is on the button itself */
-            display: inline-flex !important; /* Button behaves like an inline-block, respects text-align of parent */
-        }
-        .desktop-only { /* This class is on the button itself */
-            display: none !important;
-        }
-
-        .main-header-wrapper button {
-             padding: 2px 0; /* Original vertical padding for the button text */
-             margin: 0;
-             line-height: 1.3;
-             white-space: normal;
-             overflow-wrap: break-word;
-             word-break: break-all;
-             text-align: right; /* Text *within* the button should also be right-aligned if it wraps */
-             /* The button element itself is display: inline-flex */
-        }
-
-        .main-header-wrapper button:not(.active):hover {
-            color: var(--color-text-unified);
-        }
-        .main-header-wrapper button.active:hover {
-            color: var(--color-accent);
-        }
-        /* .main-header-wrapper button.nav-button styling is already applied by default */
+    @media (min-width: 769px) { /* DESKTOP */
+        .desktop-only { display: flex !important; }
+        .mobile-only { display: none !important; }
+    }
+    @media (max-width: 768px) { /* MOBILE */
+        .desktop-only { display: none !important; }
+        .mobile-only { display: flex !important; }
     }
 </style>
 
 <script define:vars={{ contactEmail }}>
-    const contactButton = document.getElementById('contact-link');
-    if (contactButton) {
-        contactButton.addEventListener('click', () => {
+    const contactButtonDesktop = document.getElementById('contact-link-desktop');
+    if (contactButtonDesktop) {
+        contactButtonDesktop.addEventListener('click', () => {
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    }
+    const contactButtonMobile = document.getElementById('contact-link-mobile');
+    if (contactButtonMobile) {
+        contactButtonMobile.addEventListener('click', () => {
             window.location.href = `mailto:${contactEmail}`;
         });
     }

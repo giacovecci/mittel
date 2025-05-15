@@ -69,20 +69,24 @@ collections:
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
 
   # ADDED: Highlights Collection
-  - name: "highlights" # Matches folder src/content/highlights/
-    label: "Highlights"
-    folder: "src/content/highlights" # Store each highlight as a separate file
+  - name: "highlights"
+    label: "Highlights & Separators" # Updated label for clarity
+    folder: "src/content/highlights"
     create: true
-    slug: "{{slug}}" # User can define slug for each highlight item
-    identifier_field: title # Show title in the list view
-    summary: "{{title}} (Order: {{order | default('N/A')}})" # Summary in CMS list view
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: >
+      {{title}}
+      {{#if isSeparator}} (SEPARATOR) {{else}} (Order: {{order | default('N/A')}}) {{/if}}
+      {{#if linkedFeedSlug}} -> {{linkedFeedSlug}} {{/if}}
     fields:
-      - { label: "Highlight Title", name: "title", widget: "string" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Lower numbers appear first." }
-      - { label: "Thumbnail Image", name: "thumbnail", widget: "image" }
-      - { label: "Summary Text", name: "summary", widget: "markdown" }
-      - { label: "Slug of Linked Feed Entry", name: "linkedFeedSlug", widget: "string", hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
-
+      - { label: "Title (or Separator Text)", name: "title", widget: "string" }
+      - { label: "Is this a Separator?", name: "isSeparator", widget: "boolean", default: false, required: false }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Used for both highlights and separators. Lower numbers appear first." }
+      # Fields below are optional, especially for separators
+      - { label: "Thumbnail Image (for Highlights)", name: "thumbnail", widget: "image", required: false }
+      - { label: "Summary Text (for Highlights)", name: "summary", widget: "markdown", required: false }
+      - { label: "Slug of Linked Feed Entry (for Highlights)", name: "linkedFeedSlug", widget: "string", required: false, hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
   - name: "general_content"
     label: "General Content"
     files:

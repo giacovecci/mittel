@@ -1,0 +1,832 @@
+---
+// src/components/Header.astro
+const contactEmail = "hey@mittel.tv";
+---
+<div class="main-header-wrapper">
+    <!-- DESKTOP BUTTONS -->
+    <div class="header-sub-col highlights-button-desktop-container">
+        <button type="button" id="highlights-view-btn-desktop" class="desktop-only nav-button-item">
+            Highlights
+        </button>
+    </div>
+    <div class="header-sub-col feed-button-desktop-container">
+        <button type="button" id="all-feed-view-btn-desktop" class="desktop-only nav-button-item">
+            Feed
+        </button>
+    </div>
+
+    <!-- COMMON BUTTONS (Projects, About, Contact) -->
+    <div class="header-sub-col overview-button-container">
+        <button type="button" id="overview-view-btn" class="nav-button nav-button-item">
+           Projects
+        </button>
+    </div>
+    <div class="header-sub-col about-button-container">
+        <button type="button" id="about-view-btn" class="nav-button nav-button-item">
+           About
+        </button>
+    </div>
+    <div class="header-sub-col header-contact-item">
+        <button type="button" id="contact-link" class="nav-button nav-button-item">
+           Contact
+        </button>
+    </div>
+
+    <!-- MOBILE BUTTONS -->
+    <div class="header-sub-col highlights-button-mobile-container">
+        <button type="button" id="highlights-view-btn-mobile" class="mobile-only nav-button nav-button-item">
+            Highlights <!-- Or "Info" if you prefer that label for mobile context -->
+        </button>
+    </div>
+    <div class="header-sub-col feed-button-mobile-container">
+        <button type="button" id="all-feed-view-btn-mobile" class="mobile-only nav-button nav-button-item">
+            Feed
+        </button>
+    </div>
+</div>
+
+<style>
+    .main-header-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+        gap: var(--spacing-lg);
+    }
+
+    .main-header-wrapper > div.header-sub-col {
+        box-sizing: border-box;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        display: flex;
+        align-items: baseline;
+    }
+
+    .highlights-button-desktop-container, /* New */
+    .feed-button-desktop-container,
+    .overview-button-container,
+    .about-button-container,
+    .header-contact-item {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .main-header-wrapper button.nav-button-item {
+        padding: 2px 0;
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: var(--font-weight-bold);
+        line-height: 1.3;
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s ease;
+    }
+
+    .main-header-wrapper button.nav-button-item:hover,
+    .main-header-wrapper button.nav-button-item.active:hover {
+        color: var(--color-accent-hover-custom);
+    }
+    .main-header-wrapper button.nav-button-item.active {
+      color: var(--color-accent-hover-custom);
+    }
+
+    /* Visibility rules */
+    .mobile-only { display: none !important; }
+    .desktop-only { display: inline-block !important; }
+    
+    /* Hide new mobile button containers by default on desktop */
+    .highlights-button-mobile-container,
+    .feed-button-mobile-container {
+        display: none !important;
+    }
+
+
+    @media (max-width: 768px) { /* MOBILE STYLES */
+        .main-header-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: var(--spacing-xxs);
+            height: 100%;
+            width: 100%;
+            padding-top: var(--spacing-xs);
+        }
+
+        .main-header-wrapper > div.header-sub-col {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        /* Hide desktop-specific button containers on mobile */
+        .highlights-button-desktop-container,
+        .feed-button-desktop-container {
+             display: none !important;
+        }
+        
+        /* Show mobile-specific button containers and common ones */
+        .highlights-button-mobile-container, /* New */
+        .feed-button-mobile-container,       /* New */
+        .overview-button-container,
+        .about-button-container,
+        .header-contact-item {
+            display: block !important;
+        }
+
+        /* Ordering for mobile */
+        .highlights-button-mobile-container { order: 1; }
+        .feed-button-mobile-container { order: 2; }
+        .overview-button-container { order: 3; }
+        .about-button-container { order: 4; }
+        .header-contact-item { order: 5; }
+
+
+        .mobile-only {
+            display: inline-flex !important; /* Or inline-block if flex behavior not needed */
+        }
+        .desktop-only {
+            display: none !important;
+        }
+
+        .main-header-wrapper button.nav-button-item {
+             padding: 2px 0;
+             margin: 0;
+             line-height: 1.3;
+             white-space: normal;
+             text-align: right;
+        }
+    }
+</style>
+
+<script define:vars={{ contactEmail }}>
+    const contactButton = document.getElementById('contact-link');
+    if (contactButton) {
+        contactButton.addEventListener('click', () => {
+            window.location.href = `mailto:${contactEmail}`;
+        });
+    }
+</script>---
+// src/components/IdentityHeader.astro
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer ● researcher ● videojournalist";
+const location = "Berlin/Warsaw";
+---
+<div class="identity-header-wrapper">
+    <span class="identity-site-name-text">{siteName}</span>
+    <span class="identity-tagline">{tagline}</span>
+    <span class="identity-location">{location}</span>
+</div>
+
+<style>
+    .identity-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start; /* Changed from center for more consistent top alignment */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+        padding-left: 0; /* Will be handled by parent #identity-header-area */
+        padding-right: 0; /* Will be handled by parent #identity-header-area */
+        text-align: left;
+    }
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0;
+        font-size: 1.1em;
+        text-align: left;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-accent); /* Uses original accent */
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+    .identity-location {
+        display: block;
+        /* MODIFIED: Darker color for Berlin/Warsaw */
+        color: #666; /* Example darker grey, adjust as needed. Could be a new var like --color-text-tertiary */
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular); /* Changed from bold to match tagline visual hierarchy */
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+
+     @media (max-width: 768px) {
+         .identity-header-wrapper {
+             font-size: inherit;
+             height: auto;
+             padding: 0; /* Padding handled by parent #identity-header-area */
+             justify-content: flex-start;
+             align-items: flex-start;
+         }
+         .identity-site-name-text {
+             font-size: 1em;
+             margin-bottom: 0;
+         }
+         .identity-tagline {
+             font-size: 0.6em;
+             margin-bottom: 0;
+         }
+         .identity-location {
+             font-size: 0.6em;
+         }
+     }
+</style>---
+// src/layouts/BaseLayout.astro
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <style is:global>
+        @import '../styles/global.css'; /* global.css already imported */
+
+       :root {
+          /* These are already in global.css, but if specific overrides are needed for layout, they can go here */
+          /* --scrollbar-track-color: #222; */
+          /* --scrollbar-thumb-color: #555; */
+          /* --scrollbar-width: 8px; */
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%; /* This seems quite wide for a subtle divider */
+          /* Consider reducing --desktop-divider-width if the visual divider line is thin */
+          /* For example: --desktop-divider-width: 20px; if the line is centered in it */
+          --desktop-main-header-width: 66.2%;
+          
+          /* Using the new spacing variable for content padding */
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 125px;
+          --header-area-height: 90px;
+       }
+
+        html { height: 100%; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            /* Styles from global.css apply */
+            overscroll-behavior: none; min-height: 100%;
+        }
+
+        #app-container {
+            box-sizing: border-box;
+            position: relative;
+        }
+        #app-container > div:not(#mobile-header-sticky-container) { box-sizing: border-box; }
+        #mobile-header-sticky-container { box-sizing: border-box; }
+
+
+        @media (min-width: 769px) { /* DESKTOP */
+            body { overflow: hidden; height: 100%; }
+            #app-container { height: 100%; }
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-template-rows: var(--header-area-height) 1fr;
+                height: 100vh; overflow: hidden;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container { display: contents; }
+
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                grid-row: 1 / 2; position: relative; overflow: hidden;
+                /* MODIFIED: Use new subtle border variables */
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                font-size: 1.5em; z-index: 20; background-color: var(--color-background);
+                height: var(--header-area-height);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
+                 grid-column: 1 / 2;
+                 /* MODIFIED: Use new side padding variable */
+                 padding-left: var(--spacing-content-side-padding);
+                 padding-right: var(--spacing-md); /* Padding towards the divider */
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                 grid-column: 3 / 4;
+                 /* MODIFIED: Use new side padding variable for outer edge */
+                 /* The inner edge (towards divider) will align with content column's padding */
+                 padding-right: var(--spacing-content-side-padding);
+                 padding-left: var(--spacing-md); /* Padding from divider, adjust to match content column */
+            }
+            #app-container.is-desktop > #divider-area {
+                grid-column: 2 / 3; grid-row: 1 / 3; background-color: var(--color-background);
+                z-index: 10; position: relative; display: block;
+            }
+            #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%);
+                 /* MODIFIED: Use new subtle border variables */
+                 width: var(--line-thickness-subtle);
+                 background-color: var(--color-border-subtle);
+                 opacity: 1; /* Ensure it's visible if color is dark */
+            }
+
+            /* Scrollbar styling (assuming vars are defined in global.css or here) */
+            #app-container.is-desktop > #info-content-area,
+            #app-container.is-desktop > #feed-content-area, /* This is for all-feed-content-area */
+            #app-container.is-desktop > #dynamic-content-area,
+            #app-container.is-desktop > #all-feed-content-area,
+            #app-container.is-desktop > #overview-content-area {
+                overflow-y: auto;
+                scrollbar-width: thin; /* Or var(--scrollbar-width) if defined */
+                scrollbar-color: var(--scrollbar-thumb-color, #555) var(--scrollbar-track-color, #222);
+            }
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
+
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
+
+            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
+
+
+            #app-container.is-desktop > #info-content-area {
+                grid-column: 1 / 2; grid-row: 2 / 3; display: block;
+                /* MODIFIED: Use new side padding variable */
+                padding: var(--desktop-content-padding-top) var(--spacing-md) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
+                /* padding-right is towards the divider */
+            }
+            #app-container.is-desktop > #dynamic-content-area, /* This holds highlights or about */
+            #app-container.is-desktop > #all-feed-content-area { /* This holds all feed entries */
+                grid-column: 3 / 4; grid-row: 2 / 3; display: none;
+                /* MODIFIED: Use new side padding variable for outer edge */
+                /* padding-left is from the divider, should align with header's padding-left */
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
+            }
+             /* Ensure feed-content-area (unused slot) also gets this padding if it were used */
+            #app-container.is-desktop > #feed-content-area {
+                grid-column: 3 / 4; grid-row: 2 / 3; display: none;
+                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
+            }
+
+            #app-container.is-desktop > #overview-content-area {
+                grid-column: 1 / 4; grid-row: 2 / 3; display: none;
+                /* MODIFIED: Use new side padding variable for overview */
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
+            }
+
+             /* Desktop View Switching Logic (remains the same) */
+             #app-container.is-desktop.view-home > #info-content-area { display: block; }
+             #app-container.is-desktop.view-home > #dynamic-content-area { display: block; }
+             #app-container.is-desktop.view-home > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-home > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-home > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
+            
+             /* view-feed is not used by JS, but if it were, it shows info + feed-content-area */
+             #app-container.is-desktop.view-feed > #info-content-area { display: block; }
+             #app-container.is-desktop.view-feed > #feed-content-area { display: block; } 
+             #app-container.is-desktop.view-feed > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-feed > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-about > #info-content-area { display: block; }
+             #app-container.is-desktop.view-about > #dynamic-content-area { display: block; } /* About section is inside dynamic */
+             #app-container.is-desktop.view-about > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-about > #overview-content-area { display: none; }
+             #app-container.is-desktop.view-about > #divider-area { display: block; }
+
+             #app-container.is-desktop.view-overview > #info-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
+             #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
+             #app-container.is-desktop.view-overview > #divider-area { display: none; }
+        }
+
+        @media (max-width: 768px) { /* MOBILE */
+            body {
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            #app-container.is-mobile {
+                display: flex; flex-direction: column;
+                min-height: 100vh;
+                height: auto;
+                position: relative;
+                padding-top: var(--mobile-header-height);
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container {
+                display: flex; flex-direction: row;
+                width: 100%;
+                position: fixed;
+                top: 0; left: 0; right: 0;
+                background-color: var(--color-background);
+                z-index: 1000;
+                /* MODIFIED: Use new subtle border variables */
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                box-sizing: border-box;
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
+                 flex-grow: 0;
+                 flex-shrink: 0;
+                 flex-basis: 67%;
+                 min-width: 0;
+                 display: flex;
+                 flex-direction: column;
+                 justify-content: center; /* Vertically center content in allocated space */
+                 height: var(--mobile-header-height);
+                 padding-top: var(--spacing-xs);
+                 padding-bottom: var(--spacing-xs);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 overflow: hidden;
+                 box-sizing: border-box;
+                 padding-left: var(--mobile-content-padding-x);
+                 padding-right: calc(var(--mobile-content-padding-x) / 4);
+                 align-items: flex-start;
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 flex-grow: 0;
+                 flex-shrink: 0;
+                 flex-basis: 33%;
+                 min-width: 0;
+                 display: flex;
+                 flex-direction: column;
+                 justify-content: center; /* Vertically center content in allocated space */
+                 height: var(--mobile-header-height);
+                 padding-top: var(--spacing-xs);
+                 padding-bottom: var(--spacing-xs);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 overflow: hidden;
+                 box-sizing: border-box;
+                 padding-right: var(--mobile-content-padding-x);
+                 padding-left: calc(var(--mobile-content-padding-x) / 4);
+                 align-items: flex-end;
+            }
+            #app-container.is-mobile > #divider-area {
+                order: 2; display: none;
+            }
+
+            #app-container.is-mobile > #info-content-area,
+            #app-container.is-mobile > #feed-content-area,
+            #app-container.is-mobile > #overview-content-area,
+            #app-container.is-mobile > #dynamic-content-area,
+            #app-container.is-mobile > #all-feed-content-area {
+                 order: 3;
+                 width: 100%;
+                 position: static;
+                 border: none; max-height: none;
+                 /* MODIFIED: Use consistent padding for mobile content areas */
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none;
+                 box-sizing: border-box;
+            }
+
+            /* Mobile View Logic (remains the same) */
+            #app-container.is-mobile.view-home > #info-content-area { display: none; } /* Home on mobile is info view */
+            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
+
+
+            #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
+            #app-container.is-mobile.view-all-feed > #info-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #dynamic-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #feed-content-area { display: none; }
+            #app-container.is-mobile.view-all-feed > #overview-content-area { display: none; }
+
+            /* view-feed is not used by JS */
+            #app-container.is-mobile.view-feed > #feed-content-area { display: block; }
+
+            #app-container.is-mobile.view-info > #info-content-area { display: block; } /* This will be static info */
+            #app-container.is-mobile.view-info > #dynamic-content-area { display: block; } /* This will be highlights */
+            #app-container.is-mobile.view-info > #feed-content-area { display: none; }
+            #app-container.is-mobile.view-info > #overview-content-area { display: none; }
+            #app-container.is-mobile.view-info > #all-feed-content-area { display: none; }
+
+            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; } /* About section is inside dynamic */
+            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div id="mobile-header-sticky-container">
+             <div id="identity-header-area"><slot name="identity-header" /></div>
+             <div id="main-header-area"><slot name="main-header" /></div>
+        </div>
+        <div id="divider-area"></div>
+        <div id="info-content-area"><slot name="info-content" /></div>
+        <div id="feed-content-area"><slot name="feed-content" /></div> <!-- Unused by JS for single entry -->
+        <div id="overview-content-area"><slot name="overview-content" /></div>
+        <div id="dynamic-content-area"><slot name="dynamic-content" /></div> <!-- Holds Highlights or About -->
+        <div id="all-feed-content-area"><slot name="all-feed-content" /></div> <!-- Holds AllFeedColumn -->
+    </div>
+</body>
+</html>---
+// src/pages/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
+    altText: entry.data.title || 'Feed item thumbnail'
+}));
+---
+<BaseLayout title="Żakowiecki | Portfolio">
+
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
+
+    <section slot="feed-content" id="feed-content-wrapper">
+    </section>
+
+    <div slot="overview-content" id="overview-content-wrapper">
+        <div id="overview-grid-wrapper"><OverviewGrid items={overviewItems} /></div>
+    </div>
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn />
+    </div>
+</BaseLayout>
+
+<style>
+    #highlights-content-wrapper-actual,
+    #about-content-wrapper-actual {
+        display: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const appContainer = document.getElementById('app-container');
+        const infoContentArea = document.getElementById('info-content-area');
+        const dynamicContentArea = document.getElementById('dynamic-content-area');
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area');
+        const overviewContentArea = document.getElementById('overview-content-area');
+        const singleFeedContentArea = document.getElementById('feed-content-area');
+
+        // MODIFIED: Button References
+        const desktopHighlightsBtn = document.getElementById('highlights-view-btn-desktop') as HTMLButtonElement | null;
+        const desktopAllFeedBtn = document.getElementById('all-feed-view-btn-desktop') as HTMLButtonElement | null;
+        const mobileHighlightsBtn = document.getElementById('highlights-view-btn-mobile') as HTMLButtonElement | null;
+        const mobileAllFeedBtn = document.getElementById('all-feed-view-btn-mobile') as HTMLButtonElement | null;
+
+        const overviewBtn = document.getElementById('overview-view-btn') as HTMLButtonElement | null;
+        const aboutBtn = document.getElementById('about-view-btn') as HTMLButtonElement | null;
+
+        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
+
+        if (!appContainer || !infoContentArea || !dynamicContentArea || !highlightsContentWrapper ||
+            !aboutContentWrapper || !allFeedContentArea || !overviewContentArea || !singleFeedContentArea ||
+            !desktopHighlightsBtn || !desktopAllFeedBtn || !mobileHighlightsBtn || !mobileAllFeedBtn || // Check new buttons
+            !overviewBtn || !aboutBtn) {
+            console.error("Essential elements missing for view switching. Check IDs.");
+            return;
+        }
+
+        const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; // Default view
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
+
+        // MODIFIED: updateButtonLabelAndState no longer changes text, only active class
+        function updateButtonLabelAndState() {
+            const activeButtons: string[] = [];
+
+            if (currentView === 'home' || currentView === 'info') { // Highlights view
+                if (desktopHighlightsBtn && !isMobile()) activeButtons.push(desktopHighlightsBtn.id);
+                if (mobileHighlightsBtn && isMobile()) activeButtons.push(mobileHighlightsBtn.id);
+            } else if (currentView === 'all-feed') { // All Feed view
+                if (desktopAllFeedBtn && !isMobile()) activeButtons.push(desktopAllFeedBtn.id);
+                if (mobileAllFeedBtn && isMobile()) activeButtons.push(mobileAllFeedBtn.id);
+            }
+            
+            if (currentView === 'about' && aboutBtn) activeButtons.push(aboutBtn.id);
+            if (currentView === 'overview' && overviewBtn) activeButtons.push(overviewBtn.id);
+            
+            [
+                desktopHighlightsBtn, desktopAllFeedBtn,
+                mobileHighlightsBtn, mobileAllFeedBtn,
+                overviewBtn, aboutBtn
+            ].forEach(btn => {
+                if (btn) {
+                    btn.classList.toggle('active', activeButtons.includes(btn.id));
+                }
+            });
+        }
+
+        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about'): void {
+            currentView = view;
+
+            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'is-mobile', 'is-desktop');
+
+            if (isMobile()) appContainer.classList.add('is-mobile');
+            else appContainer.classList.add('is-desktop');
+
+            if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'none';
+            if (aboutContentWrapper) aboutContentWrapper.style.display = 'none';
+
+            switch (view) {
+                case 'home': // Desktop highlights view
+                    appContainer.classList.add('view-home');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'info': // Mobile highlights view
+                    appContainer.classList.add('view-info');
+                    if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'all-feed':
+                    appContainer.classList.add('view-all-feed');
+                    break;
+                case 'overview':
+                    appContainer.classList.add('view-overview');
+                    break;
+                case 'about':
+                    appContainer.classList.add('view-about');
+                    if (aboutContentWrapper) aboutContentWrapper.style.display = 'block';
+                    break;
+                default: 
+                    if (isMobile()) {
+                        appContainer.classList.add('view-info'); // Default to highlights on mobile
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    } else {
+                        appContainer.classList.add('view-home'); // Default to highlights on desktop
+                        if (highlightsContentWrapper) highlightsContentWrapper.style.display = 'block';
+                    }
+            }
+            updateButtonLabelAndState();
+        }
+
+        // MODIFIED: Event Listeners for new buttons
+        if (desktopHighlightsBtn) {
+            desktopHighlightsBtn.addEventListener('click', () => setMainView('home'));
+        }
+        if (desktopAllFeedBtn) {
+            desktopAllFeedBtn.addEventListener('click', () => setMainView('all-feed'));
+        }
+        if (mobileHighlightsBtn) {
+            mobileHighlightsBtn.addEventListener('click', () => setMainView('info'));
+        }
+        if (mobileAllFeedBtn) {
+            mobileAllFeedBtn.addEventListener('click', () => setMainView('all-feed'));
+        }
+        
+        if (overviewBtn) {
+            overviewBtn.addEventListener('click', () => setMainView('overview'));
+        }
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', () => setMainView('about'));
+        }
+
+        function navigateToFeedItem(targetId: string) {
+            setMainView('all-feed'); 
+
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    const targetElement = document.getElementById(targetId);
+                    const scrollContainer = allFeedContentArea;
+
+                    if (targetElement) {
+                        if (scrollContainer && scrollContainer.contains(targetElement)) {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                            console.error("Target element found, but NOT within #all-feed-content-area.");
+                        }
+                    } else {
+                        console.error(`Target feed element '${targetId}' NOT FOUND.`);
+                    }
+                }, 100); 
+            });
+        }
+
+        if (overviewGridWrapper) {
+            overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.grid-item');
+                if (link && link.dataset.targetId) {
+                    event.preventDefault();
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        if (highlightsListWrapper) {
+            highlightsListWrapper.addEventListener('click', (event: MouseEvent) => {
+                 if (!(event.target instanceof Element)) return;
+                const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper');
+                if (link && link.dataset.targetId) {
+                    event.preventDefault();
+                    navigateToFeedItem(link.dataset.targetId);
+                }
+            });
+        }
+
+        if (allFeedListWrapper) {
+            allFeedListWrapper.addEventListener('click', (event: MouseEvent) => {
+                if (!(event.target instanceof Element)) return;
+                const clickedLink = event.target.closest('a');
+                if (clickedLink) {
+                    return; 
+                }
+                const feedEntryElement = event.target.closest<HTMLElement>('.feed-entry');
+                if (feedEntryElement && feedEntryElement.id) {
+                    event.preventDefault();
+                    // navigateToFeedItem(feedEntryElement.id); // Clicking a feed entry in all-feed view should not re-navigate
+                }
+            });
+        }
+
+        // Initial view setup: Default to highlights
+        if (isMobile()) {
+            setMainView('info'); 
+        } else {
+            setMainView('home'); 
+        }
+        wasMobile = isMobile();
+
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                // Device type changed
+                let targetView = currentView;
+                if (isNowMobile) { // Switched to Mobile
+                    if (currentView === 'home') targetView = 'info'; // home (desktop highlights) becomes info (mobile highlights)
+                    // other views (all-feed, overview, about) remain the same name
+                } else { // Switched to Desktop
+                    if (currentView === 'info') targetView = 'home'; // info (mobile highlights) becomes home (desktop highlights)
+                    // other views (all-feed, overview, about) remain the same name
+                }
+                setMainView(targetView as 'home' | 'all-feed' | 'overview' | 'info' | 'about'); // Recast as type is known
+                wasMobile = isNowMobile;
+            } else {
+                updateButtonLabelAndState(); // Update active states if only width changed but not mode
+            }
+        });
+        resizeObserver.observe(document.body);
+    });
+</script>
