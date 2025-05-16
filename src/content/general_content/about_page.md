@@ -1,6 +1,6 @@
 ---
 aboutPageContent: >-
-  ### My approach
+  ## My approach
 
 
   I am driven by personal stories and global developments, making sense of both and sharing that which matters.
@@ -12,7 +12,7 @@ aboutPageContent: >-
   I keep my cheer and open mind, while staying in control and thinking several steps ahead.
 
 
-  ### What I offer
+  ## What I offer
 
 
   * In-depth, well-structured, multi-lingual desk research and fixing
@@ -33,7 +33,7 @@ aboutPageContent: >-
   I work in English, Polish and German, I use Ukrainian and Russian too.
 
 
-  ### Background and Experience
+  ## Background and Experience
 
 
   With nearly 15 years of professional experience in research, journalism and project management, I am level-headed and responsible, while staying curious and creative.
