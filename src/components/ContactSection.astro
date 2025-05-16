@@ -43,16 +43,22 @@ if (contactEntry && contactEntry.data) {
     flex: 1 1 45%; /* Adjust flex-basis for desired image width */
     min-width: 0; /* Prevent overflow */
     max-width: 50%; /* Ensure it doesn't get too large */
+    /* ADDED: Ensure the container itself respects the max-height of the image for aspect ratio control */
+    max-height: 70vh; 
+    overflow: hidden; /* Good practice if image somehow tries to exceed container */
+    border-radius: var(--border-radius-sm); /* Apply radius to container if image is 100% */
+    background-color: var(--color-border-light); /* Background for container */
   }
 
   .contact-image-container :global(img) {
     display: block;
     width: 100%;
-    height: auto;
-    max-height: 70vh; /* Limit image height */
-    object-fit: cover; /* Or 'contain' if you prefer */
-    border-radius: var(--border-radius-sm);
-    background-color: var(--color-border-light);
+    height: 100%; /* Make image fill the container's height */
+    max-height: 70vh; /* This is somewhat redundant if container has max-height, but good for safety */
+    object-fit: cover; 
+    object-position: top center; /* MODIFIED: Ensures top of image is visible, crops from bottom */
+    border-radius: var(--border-radius-sm); /* Can be removed if container has it and overflow:hidden */
+    /* background-color: var(--color-border-light); Removed, container has it */
   }
 
   .contact-text-container {
@@ -73,9 +79,11 @@ if (contactEntry && contactEntry.data) {
       flex-basis: auto; /* Reset basis */
       width: 100%;
       max-width: 100%;
+      max-height: 50vh; /* Adjust mobile image container height */
     }
     .contact-image-container :global(img) {
       max-height: 50vh; /* Adjust mobile image height */
+      /* object-position: top center; will be inherited */
     }
     .contact-text-container {
       flex-basis: auto; /* Reset basis */
