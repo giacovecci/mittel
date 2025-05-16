@@ -12,7 +12,7 @@ introText: >-
   Clients who have relied on my services include [Channel 4 News](<>), [NPR](<>), [The New York Times](<>), [The Washington Post](<>) and many others. 
 
 
-  Check out my recent work highlights and do get in touch if I can support your assignment.
+  Check out my recent work highlights and let me know if I can support your assignment!
 
 
   ![An image of Piotr Żakowiecki](/uploads/żako-8_websize.jpg)
