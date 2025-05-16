@@ -63,10 +63,10 @@ const highlights = defineCollection({
     type: 'content', // CHANGED from 'data' to 'content'
     schema: z.object({ // Schema defines the frontmatter for the .md files
         title: z.string(),
-        summary: z.string(), 
-        thumbnail: z.string(), 
-        linkedFeedSlug: z.string(), 
         order: z.number().optional(),
+        summary: z.string().optional(),      // Marked as optional
+        thumbnail: z.string().optional(),    // Marked as optional
+        linkedFeedSlug: z.string().optional(),// Marked as optional
         isSeparator: z.boolean().optional(), // New field 
     }),
 });
