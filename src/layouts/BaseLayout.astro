@@ -14,6 +14,7 @@ const { title = 'Portfolio' } = Astro.props;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <title>{title}</title>
+      
     <style is:global>
         @import '../styles/global.css';
 
@@ -25,7 +26,7 @@ const { title = 'Portfolio' } = Astro.props;
           --desktop-content-padding-bottom: var(--spacing-lg);
           --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
           --mobile-header-height: 80px;
-          --header-area-height: 90px;
+          --header-area-height: 90px; /* This variable is crucial for the gradient */
        }
 
         html { height: 100%; box-sizing: border-box; }
@@ -55,46 +56,78 @@ const { title = 'Portfolio' } = Astro.props;
                 grid-template-rows: var(--header-area-height) 1fr;
                 height: 100vh; overflow: hidden;
             }
-            #app-container.is-desktop > #mobile-header-sticky-container { display: contents; }
+
+            #app-container.is-desktop > #mobile-header-sticky-container {
+                display: grid;
+                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-column: 1 / 4; 
+                grid-row: 1 / 2;    
+                height: var(--header-area-height);
+                background-color: var(--color-background);
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                position: relative; 
+                z-index: 20; /* Header container z-index */
+            }
 
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
-                grid-row: 1 / 2; position: relative; overflow: hidden;
-                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
-                font-size: 1.5em; z-index: 20; background-color: var(--color-background);
-                height: var(--header-area-height);
+                position: relative;
+                overflow: hidden;
+                font-size: 1.5em;
+                height: 100%; 
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
-                 grid-column: 1 / 2;
+                 grid-column: 1 / 2; 
                  padding-left: var(--spacing-content-side-padding);
                  padding-right: var(--spacing-md);
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
-                 grid-column: 3 / 4;
+                 grid-column: 3 / 4; 
                  padding-right: var(--spacing-content-side-padding);
                  padding-left: var(--spacing-md);
             }
+
+            /* MODIFIED: #divider-area styles */
             #app-container.is-desktop > #divider-area {
-                grid-column: 2 / 3; grid-row: 1 / 3; background-color: var(--color-background);
-                z-index: 10; position: relative; display: block;
+                grid-column: 2 / 3; 
+                grid-row: 1 / 3;    
+                /* Use a gradient for background: transparent for header height, then solid */
+                background: linear-gradient(to bottom, 
+                    transparent 0, 
+                    transparent var(--header-area-height), 
+                    var(--color-background) var(--header-area-height), 
+                    var(--color-background) 100%
+                );
+                z-index: 30; /* Higher than header, so its ::before can be on top */
+                position: relative; 
+                display: block;
             }
+            /* MODIFIED: #divider-area::before styles */
             #app-container.is-desktop > #divider-area::before {
-                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 content: ''; 
+                 position: absolute; 
+                 top: 0; 
+                 bottom: 0; 
+                 left: 50%;
                  transform: translateX(-50%);
                  width: var(--line-thickness-subtle);
-                 background-color: var(--color-border-subtle);
+                 background-color: var(--color-border-subtle); /* This is the vertical line color */
                  opacity: 1;
+                 /* z-index for ::before is not strictly needed here as its parent (#divider-area) 
+                    already has a high z-index (30) ensuring it's above the header (20). 
+                    The ::before will render on top of its parent's transparent/solid background. */
             }
 
+            /* ... rest of the scrollbar and content area styles ... */
             #app-container.is-desktop > #info-content-area,
             #app-container.is-desktop > #dynamic-content-area,
             #app-container.is-desktop > #all-feed-content-area,
             #app-container.is-desktop > #overview-content-area,
-            #app-container.is-desktop > #contact-content-area, /* ADDED */
-            #app-container.is-desktop > #feed-content-area { /* feed-content-area is not actively used but keep for consistency */
+            #app-container.is-desktop > #contact-content-area,
+            #app-container.is-desktop > #feed-content-area {
                 overflow-y: auto;
                 scrollbar-width: thin;
                 scrollbar-color: var(--scrollbar-thumb-color, #555) var(--scrollbar-track-color, #222);
@@ -103,21 +136,21 @@ const { title = 'Portfolio' } = Astro.props;
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar, /* ADDED */
+            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar,
             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
 
             #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-track, /* ADDED */
+            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-track,
             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
 
             #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-thumb, /* ADDED */
+            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-thumb,
             #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
 
 
@@ -132,8 +165,8 @@ const { title = 'Portfolio' } = Astro.props;
                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
             }
             #app-container.is-desktop > #overview-content-area,
-            #app-container.is-desktop > #contact-content-area { /* ADDED #contact-content-area */
-                grid-column: 1 / 4; grid-row: 2 / 3; display: none; /* Spans all 3 columns */
+            #app-container.is-desktop > #contact-content-area {
+                grid-column: 1 / 4; grid-row: 2 / 3; display: none;
                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
 
@@ -142,31 +175,30 @@ const { title = 'Portfolio' } = Astro.props;
              #app-container.is-desktop.view-home > #dynamic-content-area { display: block; }
              #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-home > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-home > #contact-content-area { display: none; } /* ADDED */
+             #app-container.is-desktop.view-home > #contact-content-area { display: none; }
              #app-container.is-desktop.view-home > #divider-area { display: block; }
 
              #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
              #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; }
              #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
              #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-all-feed > #contact-content-area { display: none; } /* ADDED */
+             #app-container.is-desktop.view-all-feed > #contact-content-area { display: none; }
              #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
-
+            
              #app-container.is-desktop.view-about > #info-content-area { display: block; }
              #app-container.is-desktop.view-about > #dynamic-content-area { display: block; }
              #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-about > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-about > #contact-content-area { display: none; } /* ADDED */
+             #app-container.is-desktop.view-about > #contact-content-area { display: none; }
              #app-container.is-desktop.view-about > #divider-area { display: block; }
 
              #app-container.is-desktop.view-overview > #info-content-area { display: none; }
              #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
              #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
              #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
-             #app-container.is-desktop.view-overview > #contact-content-area { display: none; } /* ADDED */
+             #app-container.is-desktop.view-overview > #contact-content-area { display: none; }
              #app-container.is-desktop.view-overview > #divider-area { display: none; }
 
-             /* ADDED: Desktop view for Contact */
              #app-container.is-desktop.view-contact > #info-content-area { display: none; }
              #app-container.is-desktop.view-contact > #dynamic-content-area { display: none; }
              #app-container.is-desktop.view-contact > #all-feed-content-area { display: none; }
@@ -175,6 +207,7 @@ const { title = 'Portfolio' } = Astro.props;
              #app-container.is-desktop.view-contact > #divider-area { display: none; }
         }
 
+        /* ... rest of the mobile styles ... */
         @media (max-width: 768px) { /* MOBILE */
             body {
                 height: auto; overflow-y: auto; overflow-x: hidden;
@@ -215,7 +248,7 @@ const { title = 'Portfolio' } = Astro.props;
             #app-container.is-mobile > #feed-content-area,
             #app-container.is-mobile > #overview-content-area,
             #app-container.is-mobile > #dynamic-content-area,
-            #app-container.is-mobile > #contact-content-area, /* ADDED */
+            #app-container.is-mobile > #contact-content-area,
             #app-container.is-mobile > #all-feed-content-area {
                  order: 3; width: 100%; position: static;
                  border: none; max-height: none;
@@ -223,16 +256,15 @@ const { title = 'Portfolio' } = Astro.props;
                  display: none; box-sizing: border-box;
             }
             /* Mobile View Logic ... */
-            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; } /* Home on mobile shows highlights */
+            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
             #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
-            #app-container.is-mobile.view-info > #info-content-area { display: block; } /* This is actually for highlights on mobile */
-            #app-container.is-mobile.view-info > #dynamic-content-area { display: block; } /* Shows highlights */
-            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; } /* Shows about */
+            #app-container.is-mobile.view-info > #info-content-area { display: block; }
+            #app-container.is-mobile.view-info > #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; }
             #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
-            #app-container.is-mobile.view-contact > #contact-content-area { display: block; } /* ADDED */
+            #app-container.is-mobile.view-contact > #contact-content-area { display: block; }
         }
     </style>
-</head>
 <body>
     <div id="app-container">
         <div id="mobile-header-sticky-container">

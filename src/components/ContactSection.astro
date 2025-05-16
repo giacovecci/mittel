@@ -34,35 +34,43 @@ if (contactEntry && contactEntry.data) {
 
 <style>
   .contact-section-wrapper {
-    display: flex;
-    gap: var(--column-gap-desktop, var(--spacing-lg));
-    align-items: flex-start; /* Align items to the top */
+    display: grid; /* CHANGED to grid for desktop */
+    /* Define 3 columns using the global variables for desktop column widths */
+    /* These percentages will apply to the width of .contact-section-wrapper itself */
+    grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+    align-items: flex-start;
+    /* No 'gap' property here; the middle column acts as the conceptual gap,
+       or padding on the text container will create visual separation. */
   }
 
   .contact-image-container {
-    flex: 1 1 45%; /* Adjust flex-basis for desired image width */
+    /* Image container will span the first two columns (identity + divider width) */
+    grid-column: 1 / span 2; /* Start at column 1, span 2 columns */
+    
     min-width: 0; /* Prevent overflow */
-    max-width: 50%; /* Ensure it doesn't get too large */
-    /* ADDED: Ensure the container itself respects the max-height of the image for aspect ratio control */
     max-height: 70vh; 
-    overflow: hidden; /* Good practice if image somehow tries to exceed container */
-    border-radius: var(--border-radius-sm); /* Apply radius to container if image is 100% */
-    background-color: var(--color-border-light); /* Background for container */
+    overflow: hidden;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* Fallback if image doesn't load or has transparency */
+    /* No padding-right needed here as it spans the divider column area */
   }
 
   .contact-image-container :global(img) {
     display: block;
     width: 100%;
-    height: 100%; /* Make image fill the container's height */
-    max-height: 70vh; /* This is somewhat redundant if container has max-height, but good for safety */
+    height: 100%; 
     object-fit: cover; 
-    object-position: top center; /* MODIFIED: Ensures top of image is visible, crops from bottom */
-    border-radius: var(--border-radius-sm); /* Can be removed if container has it and overflow:hidden */
-    /* background-color: var(--color-border-light); Removed, container has it */
+    object-position: top center;
+    /* border-radius can be on the image if it always fills, or on container with overflow:hidden */
   }
 
   .contact-text-container {
-    flex: 1 1 55%; /* Adjust flex-basis for desired text width */
+    /* Text container will occupy the third column (main header width) */
+    grid-column: 3 / 4; 
+    
+    /* This padding-left aligns the text content within this container
+       to match the content start of #main-header-area (e.g., "Highlights" button) */
+    padding-left: var(--spacing-md); 
     min-width: 0; /* Prevent overflow */
   }
 
@@ -71,23 +79,24 @@ if (contactEntry && contactEntry.data) {
   }
 
   @media (max-width: 768px) {
+    /* Mobile: Revert to flex column layout */
     .contact-section-wrapper {
+      display: flex; /* Revert to flex for mobile */
       flex-direction: column;
       gap: var(--column-gap-mobile, var(--spacing-md));
+      /* Reset grid properties if any were inherited that might conflict */
+      grid-template-columns: none; 
     }
     .contact-image-container {
-      flex-basis: auto; /* Reset basis */
+      grid-column: auto; /* Reset grid placement */
       width: 100%;
       max-width: 100%;
-      max-height: 50vh; /* Adjust mobile image container height */
-    }
-    .contact-image-container :global(img) {
-      max-height: 50vh; /* Adjust mobile image height */
-      /* object-position: top center; will be inherited */
+      max-height: 50vh;
     }
     .contact-text-container {
-      flex-basis: auto; /* Reset basis */
+      grid-column: auto; /* Reset grid placement */
       width: 100%;
+      padding-left: 0; /* Reset desktop-specific padding */
     }
   }
 </style>
