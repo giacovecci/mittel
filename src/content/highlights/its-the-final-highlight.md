@@ -1,7 +1,7 @@
 ---
 title: "Fixing/Doc/Poland: Alpha Container Pictures for ARD/SWR"
-order: 2
-thumbnail: /uploads/ddd05654.jpg
+order: 4
+thumbnail: /uploads/ddd05654.png
 summary: >-
   Fancy a taste of real Poland? Traditional dishes made with love in some of
   Europe's most pristine nature? So did my client and I helped them produce the
