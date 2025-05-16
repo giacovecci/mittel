@@ -1,5 +1,5 @@
 ---
-title: GERMANY
+title: Germany
 isSeparator: true
 order: 1
 ---
