@@ -27,21 +27,6 @@ contentBlocks:
       <span class="accent-text">Client:</span> De Standaard
 
       <span class="accent-text">Reporter:</span> Samira Ataei
-  - type: fullWidthText
-    text: >-
-      Samira's coverage is available here:
-
-
-      https://www.standaard.be/buitenland/polen-meet-schade-op-na-doortocht-storm-boris-in-tien-minuten-verdween-alles/40798272.html
-
-
-      https://www.standaard.be/buitenland/polen-na-de-doortocht-van-boris-amfibietanks-rijden-door-de-ondergelopen-straten/40795737.html
-
-
-      https://www.standaard.be/buitenland/waterramp-brengt-polen-bijeen-zonder-elkaar-stellen-we-weinig-voor/40808193.html
-
-
-      https://www.standaard.be/nieuws/waterbom-boris-de-modder-de-miserie-en-de-vraag-naar-de-oorzaak/36219843.html
   - type: twoColumn
     left: >-
       <a
