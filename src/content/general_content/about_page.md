@@ -1,5 +1,5 @@
 ---
-aboutPageContent: >
+aboutPageContent: >-
   ### My approach
 
 
@@ -12,7 +12,7 @@ aboutPageContent: >
   I keep my cheer and open mind, while staying in control and thinking several steps ahead.
 
 
-  ###  What I offer
+  ### What I offer
 
 
   * In-depth, well-structured, multi-lingual desk research and fixing
@@ -25,14 +25,12 @@ aboutPageContent: >
 
   * Field audio and video recording, with own equipment
 
-  * Video editing and post-production, including the latest AI applications
+  * Video editing and post-production
 
   * On-the-ground transport and logistics coordination
 
 
-  I work in English, Polish and German, with intermediate proficiency in Russian and Ukrainia
-
-  n.
+  I work in English, Polish and German, I use Ukrainian and Russian too.
 
 
   ### Background and Experience
