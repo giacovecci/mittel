@@ -2,7 +2,7 @@
 backend:
   name: git-gateway
   repo: giacovecci/mittel
-  branch: hello-version-land # Ensure this is your active development branch
+  branch: hello-version
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
@@ -14,7 +14,7 @@ backend:
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-site_url: https://mittel.tv # Your live site URL
+site_url: https://mittel.tv
 publish_mode: editorial_workflow
 
 media_folder: "public/uploads"
@@ -22,7 +22,6 @@ public_folder: "/uploads"
 
 collections:
   - name: "feed"
-    # ... (feed collection definition remains the same) ...
     label: "Feed Entries"
     folder: "src/content/feed"
     create: true
@@ -70,7 +69,6 @@ collections:
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
 
   - name: "highlights"
-    # ... (highlights collection definition remains the same) ...
     label: "Highlights & Separators"
     folder: "src/content/highlights"
     create: true
@@ -87,7 +85,7 @@ collections:
       - { label: "Thumbnail Image (for Highlights)", name: "thumbnail", widget: "image", required: false }
       - { label: "Summary Text (for Highlights)", name: "summary", widget: "markdown", required: false }
       - { label: "Slug of Linked Feed Entry (for Highlights)", name: "linkedFeedSlug", widget: "string", required: false, hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
-      
+
   - name: "general_content"
     label: "General Content"
     files:
@@ -101,19 +99,11 @@ collections:
         file: "src/content/general_content/about_page.md"
         fields:
           - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }
+      # ADDED: Contact Page Content File
       - label: "Contact Page"
         name: "contact_page_content"
-        file: "src/content/general_content/contact_page.md"
+        file: "src/content/general_content/contact_page.md" # This file will need to be created
         fields:
           - { label: "Contact Page Image", name: "contactPageImage", widget: "image", required: false }
           - { label: "Contact Page Image Alt Text", name: "contactPageImageAlt", widget: "string", required: false }
           - { label: "Contact Page Text (Markdown)", name: "contactPageText", widget: "markdown", required: false }
-      - label: "Landing Page"
-        name: "landing_page_content"
-        file: "src/content/general_content/landing_page.md" # This file will need to be created
-        fields:
-          - { label: "Background Image", name: "landingPageBackgroundImage", widget: "image", required: false }
-          - { label: "Background Image Alt Text", name: "landingPageBackgroundImageAlt", widget: "string", required: false, hint: "Describe the image for accessibility." }
-          - { label: "Site Name (for Landing Page)", name: "landingPageSiteName", widget: "string", required: false }
-          - { label: "Tagline (for Landing Page)", name: "landingPageTagline", widget: "string", required: false }
-          - { label: "Location (for Landing Page)", name: "landingPageLocation", widget: "string", required: false }
