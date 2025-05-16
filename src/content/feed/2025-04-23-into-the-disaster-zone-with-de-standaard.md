@@ -42,4 +42,29 @@ contentBlocks:
 
 
       https://www.standaard.be/nieuws/waterbom-boris-de-modder-de-miserie-en-de-vraag-naar-de-oorzaak/36219843.html
+  - type: twoColumn
+    left: >-
+      <a
+      href="https://www.standaard.be/buitenland/polen-meet-schade-op-na-doortocht-storm-boris-in-tien-minuten-verdween-alles/40798272.html"
+      target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/flut-1a.png" alt="Screenshot of a linked article">
+      </a>
+
+      <br>
+
+      <a href="https://www.standaard.be/nieuws/waterbom-boris-de-modder-de-miserie-en-de-vraag-naar-de-oorzaak/36219843.html" target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/flut-2a.png" alt="Screenshot of a linked article">
+      </a>
+    right: >-
+      <a
+      href="https://www.standaard.be/buitenland/waterramp-brengt-polen-bijeen-zonder-elkaar-stellen-we-weinig-voor/40808193.html"
+      rel="noopener noreferrer">
+        <img src="/uploads/flut-1b.png" alt="Screenshot of a linked article">
+      </a>
+
+      <br>
+
+      <a href="https://www.standaard.be/buitenland/polen-na-de-doortocht-van-boris-amfibietanks-rijden-door-de-ondergelopen-straten/40795737.html" target="_blank" rel="noopener noreferrer">
+        <img src="/uploads/flut-2b.png" alt="Screenshot of a linked article">
+      </a>
 ---
