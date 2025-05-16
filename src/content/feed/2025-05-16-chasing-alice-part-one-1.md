@@ -1,6 +1,6 @@
 ---
 title: Chasing Alice, part one
-date: 2025-09-12T10:15:00.000Z
+date: 2024-09-12T12:15:00.000Z
 thumbnail: /uploads/j1nfkas2.png
 contentBlocks:
   - type: fullWidthEmbed
