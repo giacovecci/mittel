@@ -1,6 +1,6 @@
 ---
 // src/components/Header.astro
-const contactEmail = "hey@mittel.tv";
+// const contactEmail = "hey@mittel.tv"; // This can be removed if not used elsewhere
 ---
 <!-- Desktop Header Structure -->
 <div class="desktop-header-nav desktop-only">
@@ -11,9 +11,8 @@ const contactEmail = "hey@mittel.tv";
     <button type="button" id="contact-link-desktop" class="nav-button-item">Contact</button>
 </div>
 
-<!-- Mobile Header Structure - MODIFIED: Title Removed -->
+<!-- Mobile Header Structure -->
 <div class="mobile-header-nav mobile-only">
-    <!-- mobile-section-title SPAN REMOVED -->
     <button type="button" id="hamburger-menu-btn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-panel">
         <svg class="hamburger-icon icon-open" viewBox="0 0 100 80" width="20" height="20" fill="currentColor"><rect width="100" height="15" rx="8"></rect><rect y="30" width="100" height="15" rx="8"></rect><rect y="60" width="100" height="15" rx="8"></rect></svg>
         <svg class="hamburger-icon icon-close" viewBox="0 0 100 100" width="20" height="20" fill="currentColor" style="display:none;"><line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/><line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/></svg>
@@ -21,13 +20,14 @@ const contactEmail = "hey@mittel.tv";
     <button type="button" id="contact-link-mobile" class="contact-btn-mobile nav-button-item">Contact</button>
 </div>
 
-<!-- Mobile Navigation Panel (remains the same) -->
+<!-- Mobile Navigation Panel -->
 <nav id="mobile-nav-panel" class="mobile-nav-panel mobile-only" aria-hidden="true">
     <ul>
         <li><button type="button" data-viewtarget="info" class="mobile-nav-link">Highlights</button></li>
         <li><button type="button" data-viewtarget="all-feed" class="mobile-nav-link">Feed</button></li>
         <li><button type="button" data-viewtarget="overview" class="mobile-nav-link">Projects</button></li>
         <li><button type="button" data-viewtarget="about" class="mobile-nav-link">About</button></li>
+        <!-- Contact is not in the panel, it's a direct button in mobile-header-nav -->
     </ul>
 </nav>
 
@@ -40,7 +40,7 @@ const contactEmail = "hey@mittel.tv";
         transition: color 0.2s ease;
     }
     .nav-button-item:hover,
-    .nav-button-item.active {
+    .nav-button-item.active { /* .active class will be managed by index.astro JS */
         color: var(--color-accent-hover-custom);
     }
 
@@ -50,43 +50,38 @@ const contactEmail = "hey@mittel.tv";
         width: 100%; height: 100%; gap: var(--spacing-lg);
     }
 
-    /* --- REVISED Mobile Header Styles --- */
     .mobile-header-nav {
         display: flex;
         flex-direction: column;
-        align-items: flex-end;   /* Align items to the right */
-        /* MODIFIED: Adjust justify-content for two items */
-        justify-content: space-around; /* Or 'center' if they should be closer, or 'space-between' to push to edges */
-        width: auto; 
-        height: 100%; 
-        padding: var(--spacing-xxs) 0; 
+        align-items: flex-end;
+        justify-content: space-around;
+        width: auto;
+        height: 100%;
+        padding: var(--spacing-xxs) 0;
         box-sizing: border-box;
-        /* gap: var(--spacing-sm); /* Use justify-content for spacing now, or a smaller gap if preferred */
     }
-    /* .mobile-title styles can be removed if no other element uses this class */
 
     .hamburger-btn {
         background: none; border: none; color: inherit;
-        padding: 2px; 
+        padding: 2px;
         cursor: pointer;
         display: flex; align-items: center; justify-content: center;
-        line-height: 1; 
+        line-height: 1;
     }
     .hamburger-btn .icon-close { display: none; }
     .hamburger-btn.is-active .icon-open { display: none; }
     .hamburger-btn.is-active .icon-close { display: block; }
-    .hamburger-btn svg { 
-        width: 22px; /* Slightly larger for better tap target */
+    .hamburger-btn svg {
+        width: 22px;
         height: 22px;
     }
 
     .contact-btn-mobile {
-        font-size: 0.85em; /* Keep it readable */
+        font-size: 0.85em;
         font-weight: var(--font-weight-bold);
-        line-height: 1.2; 
+        line-height: 1.2;
     }
 
-    /* Mobile Navigation Panel Styles (remain the same) */
     .mobile-nav-panel {
         position: fixed; top: var(--mobile-header-height); left: 0; right: 0;
         background-color: var(--color-background); z-index: 999;
@@ -114,7 +109,6 @@ const contactEmail = "hey@mittel.tv";
         background-color: var(--color-surface-light);
     }
 
-    /* Visibility utilities */
     .desktop-only { display: none !important; }
     .mobile-only { display: none !important; }
 
@@ -128,17 +122,7 @@ const contactEmail = "hey@mittel.tv";
     }
 </style>
 
-<script define:vars={{ contactEmail }}>
-    const contactButtonDesktop = document.getElementById('contact-link-desktop');
-    if (contactButtonDesktop) {
-        contactButtonDesktop.addEventListener('click', () => {
-            window.location.href = `mailto:${contactEmail}`;
-        });
-    }
-    const contactButtonMobile = document.getElementById('contact-link-mobile');
-    if (contactButtonMobile) {
-        contactButtonMobile.addEventListener('click', () => {
-            window.location.href = `mailto:${contactEmail}`;
-        });
-    }
+<script>
+  // Mailto functionality removed from here.
+  // Event listeners for contact buttons will be handled in src/pages/index.astro
 </script>

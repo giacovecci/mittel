@@ -1,6 +1,5 @@
 ---
 // src/pages/index.astro
-// ... (imports and data fetching remain the same) ...
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import IdentityHeader from '../components/IdentityHeader.astro';
@@ -10,6 +9,7 @@ import OverviewGrid from '../components/OverviewGrid.astro';
 import HighlightsColumn from '../components/HighlightsColumn.astro';
 import AboutSection from '../components/AboutSection.astro';
 import AllFeedColumn from '../components/AllFeedColumn.astro';
+import ContactSection from '../components/ContactSection.astro'; // ADDED
 import type { CollectionEntry } from 'astro:content';
 
 const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
@@ -21,7 +21,7 @@ const feedEntries = feedEntriesFetched.sort((a, b) => {
 const overviewItems = feedEntries.map(entry => ({
     id: entry.slug,
     title: entry.data.title || 'Untitled',
-    imageUrl: entry.data.thumbnail || '/placeholder.jpg',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', // Ensure you have a placeholder or handle missing images
     altText: entry.data.title || 'Feed item thumbnail'
 }));
 ---
@@ -29,9 +29,9 @@ const overviewItems = feedEntries.map(entry => ({
     <div slot="identity-header"><IdentityHeader /></div>
     <div slot="main-header"><Header /></div>
     <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
-    <section slot="feed-content" id="feed-content-wrapper"></section>
+    <section slot="feed-content" id="feed-content-wrapper"></section> {/* Not actively used for single entry display */}
     <div slot="overview-content" id="overview-content-wrapper">
-        <div id="overview-grid-wrapper"><OverviewGrid items={overviewItems} /></div>
+        <div id="overview-grid-container"><OverviewGrid items={overviewItems} /></div> {/* Changed ID for clarity if needed */}
     </div>
     <div slot="dynamic-content" id="dynamic-content-wrapper">
         <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
@@ -40,96 +40,117 @@ const overviewItems = feedEntries.map(entry => ({
     <div slot="all-feed-content" id="all-feed-content-wrapper">
         <AllFeedColumn />
     </div>
+    <div slot="contact-content" id="contact-content-slot-wrapper"> {/* ADDED: Slot for ContactSection */}
+        <ContactSection />
+    </div>
 </BaseLayout>
 
 <style>
     #highlights-content-wrapper-actual,
     #about-content-wrapper-actual {
-        display: none;
+        display: none; /* Initially hidden, controlled by JS */
+    }
+    /* Ensure overview grid items are clickable */
+    #overview-grid-container :global(.grid-item) {
+        cursor: pointer;
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const appContainer = document.getElementById('app-container');
-        const infoContentArea = document.getElementById('info-content-area');
-        const dynamicContentArea = document.getElementById('dynamic-content-area');
+        const infoContentArea = document.getElementById('info-content-area'); // Left column on desktop
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); // Right column on desktop (for highlights, about)
         const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
         const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
         const allFeedContentArea = document.getElementById('all-feed-content-area');
         const overviewContentArea = document.getElementById('overview-content-area');
-        
+        const contactContentArea = document.getElementById('contact-content-area'); // Main wrapper for contact view
+
         // Desktop Buttons
         const desktopHighlightsBtn = document.getElementById('highlights-view-btn-desktop') as HTMLButtonElement | null;
         const desktopAllFeedBtn = document.getElementById('all-feed-view-btn-desktop') as HTMLButtonElement | null;
         const desktopOverviewBtn = document.getElementById('overview-view-btn-desktop') as HTMLButtonElement | null;
         const desktopAboutBtn = document.getElementById('about-view-btn-desktop') as HTMLButtonElement | null;
+        const desktopContactBtn = document.getElementById('contact-link-desktop') as HTMLButtonElement | null; // ADDED
 
         // Mobile Header Elements
-        // const mobileSectionTitleEl = document.getElementById('mobile-section-title') as HTMLSpanElement | null; // REMOVED
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn') as HTMLButtonElement | null;
         const mobileNavPanel = document.getElementById('mobile-nav-panel') as HTMLElement | null;
         const mobileNavLinks = mobileNavPanel?.querySelectorAll<HTMLButtonElement>('.mobile-nav-link');
+        const mobileContactBtn = document.getElementById('contact-link-mobile') as HTMLButtonElement | null; // ADDED
 
-        const overviewGridWrapper = document.getElementById('overview-grid-wrapper');
-        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
-        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
+        // Clickable content wrappers
+        const overviewGridContainer = document.getElementById('overview-grid-container'); // Ensure this ID matches your OverviewGrid wrapper
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual'); // This is already the parent of HighlightItem
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper'); // Parent of FeedEntry items
 
-        if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper ||
-            !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn ||
-            /* !mobileSectionTitleEl || */ !hamburgerMenuBtn || !mobileNavPanel || !mobileNavLinks) { // mobileSectionTitleEl removed from check
-            console.error("Essential elements missing. Check IDs.");
+        if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper || !contactContentArea ||
+            !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn || !desktopContactBtn ||
+            !hamburgerMenuBtn || !mobileNavPanel || !mobileNavLinks || !mobileContactBtn ||
+            !overviewGridContainer || !allFeedListWrapper /* highlightsListWrapper is already checked */ ) {
+            console.error("Essential elements missing. Check IDs and ensure all expected elements are present in the DOM.");
             return;
         }
 
         const MOBILE_BREAKPOINT = 768;
-        let currentView = 'home'; 
+        let currentView = 'home';
         let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
         function isMobile(): boolean { return window.innerWidth <= MOBILE_BREAKPOINT; }
 
         function updateActiveStates() {
-            // Desktop buttons
+            const allDesktopButtons = [desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn, desktopContactBtn];
+            allDesktopButtons.forEach(btn => btn?.classList.remove('active'));
+
+            const allMobileHeaderButtons = [mobileContactBtn]; // Buttons directly in mobile header, not panel
+            allMobileHeaderButtons.forEach(btn => btn?.classList.remove('active'));
+
+
             if (!isMobile()) {
-                [desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn].forEach(btn => btn?.classList.remove('active'));
                 if (currentView === 'home') desktopHighlightsBtn.classList.add('active');
                 else if (currentView === 'all-feed') desktopAllFeedBtn.classList.add('active');
                 else if (currentView === 'overview') desktopOverviewBtn.classList.add('active');
                 else if (currentView === 'about') desktopAboutBtn.classList.add('active');
+                else if (currentView === 'contact') desktopContactBtn.classList.add('active');
+            } else {
+                 // For mobile, the contact button in the header might need an active state
+                if (currentView === 'contact') mobileContactBtn.classList.add('active');
             }
 
-            // Mobile menu items active state
             mobileNavLinks.forEach(link => {
                 link.classList.remove('active-menu-item');
                 const linkTarget = link.dataset.viewtarget;
                 let isActive = linkTarget === currentView;
-                // Adjust for 'info' view on mobile mapping to 'highlights' conceptually
-                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') isActive = true;
+                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') isActive = true; // 'info' on mobile maps to 'home'
                 if (isActive) {
                     link.classList.add('active-menu-item');
                 }
             });
         }
-        
-        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about'): void {
-            currentView = view;
 
-            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'is-mobile', 'is-desktop');
+        function setMainView(view: 'home' | 'all-feed' | 'overview' | 'info' | 'about' | 'contact'): void {
+            currentView = view;
+            console.log("Setting view to:", currentView);
+
+            appContainer.classList.remove('view-home', 'view-all-feed', 'view-overview', 'view-info', 'view-about', 'view-contact', 'is-mobile', 'is-desktop');
 
             if (isMobile()) appContainer.classList.add('is-mobile');
             else appContainer.classList.add('is-desktop');
 
+            // Hide dynamic sub-sections by default
             highlightsContentWrapper.style.display = 'none';
             aboutContentWrapper.style.display = 'none';
 
+            // Apply view class to appContainer (CSS will handle showing/hiding main content areas)
             switch (view) {
-                case 'home': 
+                case 'home': // Desktop: Static Info + Highlights
                     appContainer.classList.add('view-home');
                     highlightsContentWrapper.style.display = 'block';
                     break;
-                case 'info': 
-                    appContainer.classList.add('view-info');
-                    highlightsContentWrapper.style.display = 'block';
+                case 'info': // Mobile: Static Info + Highlights (stacked)
+                    appContainer.classList.add('view-info'); // This class shows #info-content-area and #dynamic-content-area on mobile
+                    highlightsContentWrapper.style.display = 'block'; // Ensure highlights are visible within #dynamic-content-area
                     break;
                 case 'all-feed':
                     appContainer.classList.add('view-all-feed');
@@ -137,16 +158,19 @@ const overviewItems = feedEntries.map(entry => ({
                 case 'overview':
                     appContainer.classList.add('view-overview');
                     break;
-                case 'about':
+                case 'about': // Desktop: Static Info + About. Mobile: Just About.
                     appContainer.classList.add('view-about');
                     aboutContentWrapper.style.display = 'block';
                     break;
+                case 'contact': // Full width contact section
+                    appContainer.classList.add('view-contact');
+                    break;
             }
             updateActiveStates();
+            window.scrollTo(0, 0); // Scroll to top on view change
         }
 
         function toggleMobileMenu(forceClose = false) {
-            // ... (function remains the same) ...
             const isOpen = mobileNavPanel.classList.contains('is-open');
             if (forceClose || isOpen) {
                 mobileNavPanel.classList.remove('is-open');
@@ -165,10 +189,10 @@ const overviewItems = feedEntries.map(entry => ({
 
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
-                const targetView = link.dataset.viewtarget as 'home' | 'all-feed' | 'overview' | 'info' | 'about';
+                const targetView = link.dataset.viewtarget as 'home' | 'all-feed' | 'overview' | 'info' | 'about' | 'contact';
                 if (targetView) {
                     setMainView(targetView);
-                    toggleMobileMenu(true); 
+                    toggleMobileMenu(true);
                 }
             });
         });
@@ -178,21 +202,28 @@ const overviewItems = feedEntries.map(entry => ({
         desktopAllFeedBtn.addEventListener('click', () => setMainView('all-feed'));
         desktopOverviewBtn.addEventListener('click', () => setMainView('overview'));
         desktopAboutBtn.addEventListener('click', () => setMainView('about'));
-        
-        // Navigation and other event listeners (navigateToFeedItem, overviewGridWrapper, etc.)
-        // remain the same as the previous correct version.
+        desktopContactBtn.addEventListener('click', () => setMainView('contact')); // ADDED
+
+        // Mobile Button Listeners
+        mobileContactBtn.addEventListener('click', () => { // ADDED
+            setMainView('contact');
+            // No need to toggleMobileMenu(true) as this button is outside the panel
+        });
+
+
         let navigateToFeedItem = (targetId: string) => {
-            setMainView('all-feed'); 
+            setMainView('all-feed');
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     const targetElement = document.getElementById(targetId);
                     if (targetElement && allFeedContentArea && allFeedContentArea.contains(targetElement)) {
                         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else { console.error(`Target feed element '${targetId}' not found or not in scroll container.`); }
-                }, 100); 
+                }, 100);
             });
         };
-        overviewGridWrapper.addEventListener('click', (event: MouseEvent) => {
+
+        overviewGridContainer.addEventListener('click', (event: MouseEvent) => {
             if (!(event.target instanceof Element)) return;
             const link = event.target.closest<HTMLAnchorElement>('.grid-item');
             if (link && link.dataset.targetId) {
@@ -200,40 +231,55 @@ const overviewItems = feedEntries.map(entry => ({
                 navigateToFeedItem(link.dataset.targetId);
             }
         });
+
         highlightsListWrapper.addEventListener('click', (event: MouseEvent) => {
-                if (!(event.target instanceof Element)) return;
-            const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper');
+            if (!(event.target instanceof Element)) return;
+            const link = event.target.closest<HTMLAnchorElement>('.highlight-link-wrapper.is-clickable'); // Ensure only clickable links
             if (link && link.dataset.targetId) {
                 event.preventDefault();
                 navigateToFeedItem(link.dataset.targetId);
             }
         });
+        
+        // Prevent default for external links within feed entries if they are handled differently,
+        // but typically, external links should just work. This listener might be redundant if all links are internal SPA-like navs or actual external.
         allFeedListWrapper.addEventListener('click', (event: MouseEvent) => {
             if (!(event.target instanceof Element)) return;
             const clickedLink = event.target.closest('a');
-            if (clickedLink) { return; }
+            if (clickedLink && clickedLink.getAttribute('href')?.startsWith('http')) { // If it's an external link
+                // Allow default behavior (open in new tab or navigate)
+                return;
+            }
+            // If it's an internal anchor link for SPA-like behavior (e.g. #some-id),
+            // and you are NOT handling it with navigateToFeedItem or similar, preventDefault if needed.
+            // Currently, FeedEntry links are to external sites or are not interactive beyond that.
         });
 
 
         // Initial setup
-        if (isMobile()) { setMainView('info'); } 
-        else { setMainView('home'); }
+        if (isMobile()) {
+            // On mobile, 'info' shows highlights. If you want a true "home" that's different, define it.
+            // Defaulting to 'info' which shows highlights + static info (though static info is less prominent on mobile usually)
+             setMainView('info');
+        }
+        else { setMainView('home'); } // Default desktop view
         wasMobile = isMobile();
 
         const resizeObserver = new ResizeObserver(() => {
             const isNowMobile = isMobile();
             if (isNowMobile !== wasMobile) {
                 let targetView = currentView;
-                if (isNowMobile) { 
-                    if (currentView === 'home') targetView = 'info';
-                } else { 
-                    if (currentView === 'info') targetView = 'home';
-                    toggleMobileMenu(true); 
+                if (isNowMobile) { // Switched to Mobile
+                    if (currentView === 'home') targetView = 'info'; // 'home' (desktop highlights) becomes 'info' (mobile highlights)
+                    // If current view is 'contact', 'overview', 'all-feed', 'about', it remains the same conceptually
+                } else { // Switched to Desktop
+                    if (currentView === 'info') targetView = 'home'; // 'info' (mobile highlights) becomes 'home' (desktop highlights)
+                    toggleMobileMenu(true); // Close mobile menu if open
                 }
-                setMainView(targetView as 'home' | 'all-feed' | 'overview' | 'info' | 'about');
+                setMainView(targetView as 'home' | 'all-feed' | 'overview' | 'info' | 'about' | 'contact');
                 wasMobile = isNowMobile;
-            } else { 
-                updateActiveStates(); 
+            } else {
+                updateActiveStates(); // Update active states if resize didn't change mode but might affect layout
             }
         });
         resizeObserver.observe(document.body);

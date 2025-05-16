@@ -1,0 +1,85 @@
+---
+// src/components/ContactSection.astro
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+const contactEntry = await getEntry('general_content', 'contact_page');
+
+let imageUrl: string | undefined = undefined;
+let imageAlt: string = "";
+let htmlContactText: string = "<p>Error: Contact content not loaded or empty.</p>";
+
+if (contactEntry && contactEntry.data) {
+  imageUrl = contactEntry.data.contactPageImage;
+  imageAlt = contactEntry.data.contactPageImageAlt || "Contact image";
+  if (typeof contactEntry.data.contactPageText === 'string') {
+    htmlContactText = parseMarkdown(contactEntry.data.contactPageText);
+  }
+} else {
+  console.error("ContactSection.astro: Could not load content from 'general_content/contact_page.md'. Entry:", contactEntry);
+}
+---
+
+<div class="contact-section-wrapper">
+  {imageUrl && (
+    <div class="contact-image-container">
+      <Image src={imageUrl} alt={imageAlt} width={1000} height={750} format="webp" quality={80} loading="lazy" />
+    </div>
+  )}
+  <div class="contact-text-container markdown-content" set:html={htmlContactText}>
+    {/* Content injected by set:html */}
+  </div>
+</div>
+
+<style>
+  .contact-section-wrapper {
+    display: flex;
+    gap: var(--column-gap-desktop, var(--spacing-lg));
+    align-items: flex-start; /* Align items to the top */
+  }
+
+  .contact-image-container {
+    flex: 1 1 45%; /* Adjust flex-basis for desired image width */
+    min-width: 0; /* Prevent overflow */
+    max-width: 50%; /* Ensure it doesn't get too large */
+  }
+
+  .contact-image-container :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 70vh; /* Limit image height */
+    object-fit: cover; /* Or 'contain' if you prefer */
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light);
+  }
+
+  .contact-text-container {
+    flex: 1 1 55%; /* Adjust flex-basis for desired text width */
+    min-width: 0; /* Prevent overflow */
+  }
+
+  .contact-text-container :global(h3:first-child) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    .contact-section-wrapper {
+      flex-direction: column;
+      gap: var(--column-gap-mobile, var(--spacing-md));
+    }
+    .contact-image-container {
+      flex-basis: auto; /* Reset basis */
+      width: 100%;
+      max-width: 100%;
+    }
+    .contact-image-container :global(img) {
+      max-height: 50vh; /* Adjust mobile image height */
+    }
+    .contact-text-container {
+      flex-basis: auto; /* Reset basis */
+      width: 100%;
+    }
+  }
+</style>

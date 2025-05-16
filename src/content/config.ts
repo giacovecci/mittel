@@ -9,7 +9,7 @@ const twoColumnBlockSchema = z.object({
 });
 const fullWidthImageBlockSchema = z.object({
     type: z.literal('fullWidthImage'),
-    image: z.string(), 
+    image: z.string(),
     alt: z.string().optional(),
 });
 const fullWidthEmbedBlockSchema = z.object({
@@ -24,7 +24,7 @@ const horizontalGalleryBlockSchema = z.object({
     type: z.literal('horizontalGallery'),
     images: z.array(
         z.object({
-            image: z.string(), 
+            image: z.string(),
             alt: z.string().optional(),
         })
     ).optional(),
@@ -36,7 +36,7 @@ const feed = defineCollection({
     schema: z.object({
         title: z.string(),
         date: z.date().optional(),
-        thumbnail: z.string().optional(), 
+        thumbnail: z.string().optional(),
         contentBlocks: z.array(
             z.discriminatedUnion('type', [
                 twoColumnBlockSchema,
@@ -51,23 +51,27 @@ const feed = defineCollection({
 
 // --- Collection Definition: general_content ---
 const general_content = defineCollection({
-    type: 'content', 
+    type: 'content',
     schema: z.object({
-        introText: z.string().optional(), 
-        aboutPageContent: z.string().optional(), 
-    }).passthrough(),
+        introText: z.string().optional(),
+        aboutPageContent: z.string().optional(),
+        // ADDED: Fields for the Contact page
+        contactPageImage: z.string().optional(),
+        contactPageImageAlt: z.string().optional(),
+        contactPageText: z.string().optional(),
+    }).passthrough(), // passthrough allows other fields not strictly defined, useful for CMS flexibility
 });
 
 // --- MODIFIED: Collection Definition: highlights ---
 const highlights = defineCollection({
-    type: 'content', // CHANGED from 'data' to 'content'
-    schema: z.object({ // Schema defines the frontmatter for the .md files
+    type: 'content',
+    schema: z.object({
         title: z.string(),
         order: z.number().optional(),
-        summary: z.string().optional(),      // Marked as optional
-        thumbnail: z.string().optional(),    // Marked as optional
-        linkedFeedSlug: z.string().optional(),// Marked as optional
-        isSeparator: z.boolean().optional(), // New field 
+        summary: z.string().optional(),
+        thumbnail: z.string().optional(),
+        linkedFeedSlug: z.string().optional(),
+        isSeparator: z.boolean().optional(),
     }),
 });
 

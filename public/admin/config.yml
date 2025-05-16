@@ -68,9 +68,8 @@ collections:
                   - { label: "Image", name: "image", widget: "image" }
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
 
-  # ADDED: Highlights Collection
-  - name: "highlights" # Matches folder src/content/highlights/
-    label: "Highlights & Separators" # Updated label for clarity
+  - name: "highlights"
+    label: "Highlights & Separators"
     folder: "src/content/highlights"
     create: true
     slug: "{{slug}}"
@@ -83,22 +82,28 @@ collections:
       - { label: "Title (or Separator Text)", name: "title", widget: "string" }
       - { label: "Is this a Separator?", name: "isSeparator", widget: "boolean", default: false, required: false }
       - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Used for both highlights and separators. Lower numbers appear first." }
-      # Fields below are optional, especially for separators
       - { label: "Thumbnail Image (for Highlights)", name: "thumbnail", widget: "image", required: false }
       - { label: "Summary Text (for Highlights)", name: "summary", widget: "markdown", required: false }
       - { label: "Slug of Linked Feed Entry (for Highlights)", name: "linkedFeedSlug", widget: "string", required: false, hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
-      
+
   - name: "general_content"
     label: "General Content"
     files:
-      - label: "Static Info (Left Column)" # Clarified label
+      - label: "Static Info (Left Column)"
         name: "static_info_content"
         file: "src/content/general_content/static_info.md"
         fields:
           - { label: "Introductory Text", name: "introText", widget: "markdown" }
-      # ADDED: About Page Content File
       - label: "About Page"
         name: "about_page_content"
         file: "src/content/general_content/about_page.md"
         fields:
           - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }
+      # ADDED: Contact Page Content File
+      - label: "Contact Page"
+        name: "contact_page_content"
+        file: "src/content/general_content/contact_page.md" # This file will need to be created
+        fields:
+          - { label: "Contact Page Image", name: "contactPageImage", widget: "image", required: false }
+          - { label: "Contact Page Image Alt Text", name: "contactPageImageAlt", widget: "string", required: false }
+          - { label: "Contact Page Text (Markdown)", name: "contactPageText", widget: "markdown", required: false }
