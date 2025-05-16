@@ -1,7 +1,7 @@
 ---
 title: "Videography/Youtube: RIESA RISING"
 order: 3
-thumbnail: /uploads/250120-riesa-rising-thumb.png
+thumbnail: /uploads/riesa-thumb.png
 summary: >-
   What happens when AfD organises its conference in a small Saxon town and then
   more than 10,000 protesters show up and turn the place into an Antifa fest?
