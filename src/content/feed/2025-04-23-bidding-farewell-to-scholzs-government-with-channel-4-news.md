@@ -1,5 +1,5 @@
 ---
-title: Bidding farewell to Scholz's government with Channel 4 News
+title: Bidding farewell to Scholz's government
 date: 2024-12-16T01:01:00.000Z
 thumbnail: /uploads/img_20241214_133736.jpg
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
