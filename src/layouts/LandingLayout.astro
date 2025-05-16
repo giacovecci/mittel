@@ -84,7 +84,8 @@ const { title = 'Mittel.TV', backgroundImageUrl = '/uploads/placeholder-landing-
             background-color: var(--color-background); /* This will now react to theme change */
         }
     </style>
-    <style define:vars={{ landingBgImageUrl: `url('${backgroundImageUrl}')` }}>
+    <style define:vars={{ 'landing-bg-image-url': `url('${backgroundImageUrl}')` }}>
+        {/* This variable name now matches var(--landing-bg-image-url) used above */}
     </style>
 </head>
 <body class="landing-body-fullscreen">
