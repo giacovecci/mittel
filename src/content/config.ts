@@ -53,16 +53,24 @@ const feed = defineCollection({
 const general_content = defineCollection({
     type: 'content',
     schema: z.object({
+        // Existing fields
         introText: z.string().optional(),
         aboutPageContent: z.string().optional(),
-        // ADDED: Fields for the Contact page
         contactPageImage: z.string().optional(),
         contactPageImageAlt: z.string().optional(),
         contactPageText: z.string().optional(),
-    }).passthrough(), // passthrough allows other fields not strictly defined, useful for CMS flexibility
+
+        // ADDED: Fields for the Landing Page
+        landingPageBackgroundImage: z.string().optional(),
+        landingPageBackgroundImageAlt: z.string().optional(), // Good practice for accessibility
+        landingPageSiteName: z.string().optional(),
+        landingPageTagline: z.string().optional(),
+        landingPageLocation: z.string().optional(),
+
+    }).passthrough(),
 });
 
-// --- MODIFIED: Collection Definition: highlights ---
+// --- Collection Definition: highlights ---
 const highlights = defineCollection({
     type: 'content',
     schema: z.object({

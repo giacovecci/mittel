@@ -1,0 +1,311 @@
+---
+// src/pages/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro';
+import ContactSection from '../components/ContactSection.astro'; // ADDED
+import type { CollectionEntry } from 'astro:content';
+
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', // Ensure you have a placeholder or handle missing images
+    altText: entry.data.title || 'Feed item thumbnail'
+}));
+---
+<BaseLayout title="Żakowiecki | Portfolio">
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
+    <section slot="feed-content" id="feed-content-wrapper"></section> {/* Not actively used for single entry display */}
+    <div slot="overview-content" id="overview-content-wrapper">
+        <div id="overview-grid-container"><OverviewGrid items={overviewItems} /></div> {/* Changed ID for clarity if needed */}
+    </div>
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn />
+    </div>
+    <div slot="contact-content" id="contact-content-slot-wrapper"> {/* ADDED: Slot for ContactSection */}
+        <ContactSection />
+    </div>
+</BaseLayout>
+
+<style>
+    #highlights-content-wrapper-actual,
+    #about-content-wrapper-actual {
+        display: none; /* Initially hidden, controlled by JS */
+    }
+    /* Ensure overview grid items are clickable */
+    #overview-grid-container :global(.grid-item) {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const appContainer = document.getElementById('app-container');
+        // ... (all other element getters remain the same)
+        const infoContentArea = document.getElementById('info-content-area'); 
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); 
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area');
+        const overviewContentArea = document.getElementById('overview-content-area');
+        const contactContentArea = document.getElementById('contact-content-area'); 
+
+        const desktopHighlightsBtn = document.getElementById('highlights-view-btn-desktop');
+        const desktopAllFeedBtn = document.getElementById('all-feed-view-btn-desktop');
+        const desktopOverviewBtn = document.getElementById('overview-view-btn-desktop');
+        const desktopAboutBtn = document.getElementById('about-view-btn-desktop');
+        const desktopContactBtn = document.getElementById('contact-link-desktop');
+
+        const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
+        const mobileNavPanel = document.getElementById('mobile-nav-panel');
+        const mobileNavLinks = mobileNavPanel?.querySelectorAll('.mobile-nav-link');
+        const mobileContactBtn = document.getElementById('contact-link-mobile');
+
+        const overviewGridContainer = document.getElementById('overview-grid-container');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
+
+        // Type assertion for buttons to satisfy TypeScript if it complains about classList/dataset
+        const allDesktopButtonsTyped = [
+            desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn, desktopContactBtn
+        ].filter(Boolean); // Filter out nulls if any ID is mistyped
+
+        const allMobileHeaderButtonsTyped = [mobileContactBtn].filter(Boolean);
+
+
+        if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper || !contactContentArea ||
+            !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn || !desktopContactBtn ||
+            !hamburgerMenuBtn || !mobileNavPanel || !mobileNavLinks || !mobileContactBtn ||
+            !overviewGridContainer || !allFeedListWrapper ) {
+            console.error("Essential elements missing in portfolio.astro. Check IDs.");
+            return;
+        }
+
+        const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; 
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile() { return window.innerWidth <= MOBILE_BREAKPOINT; }
+
+        function updateActiveStates() {
+            allDesktopButtonsTyped.forEach(btn => btn.classList.remove('active'));
+            allMobileHeaderButtonsTyped.forEach(btn => btn.classList.remove('active'));
+
+            if (!isMobile()) {
+                if (currentView === 'home') desktopHighlightsBtn.classList.add('active');
+                else if (currentView === 'all-feed') desktopAllFeedBtn.classList.add('active');
+                else if (currentView === 'overview') desktopOverviewBtn.classList.add('active');
+                else if (currentView === 'about') desktopAboutBtn.classList.add('active');
+                else if (currentView === 'contact') desktopContactBtn.classList.add('active');
+            } else {
+                if (currentView === 'contact') mobileContactBtn.classList.add('active');
+            }
+
+            mobileNavLinks.forEach(link => {
+                const htmlLink = link as HTMLButtonElement; // Type assertion
+                htmlLink.classList.remove('active-menu-item');
+                const linkTarget = htmlLink.dataset.viewtarget;
+                let isActive = linkTarget === currentView;
+                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') isActive = true;
+                if (isActive) {
+                    htmlLink.classList.add('active-menu-item');
+                }
+            });
+        }
+        
+        function setMainView(view) {
+            currentView = view;
+            // console.log("Portfolio view set to:", currentView); // For debugging
+
+            appContainer.className = ''; // Clear all view classes
+            appContainer.classList.add('app-container'); // Re-add base class if you have one
+
+            if (isMobile()) appContainer.classList.add('is-mobile');
+            else appContainer.classList.add('is-desktop');
+
+            highlightsContentWrapper.style.display = 'none';
+            aboutContentWrapper.style.display = 'none';
+
+            switch (view) {
+                case 'home': 
+                    appContainer.classList.add('view-home');
+                    highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'info': 
+                    appContainer.classList.add('view-info');
+                    highlightsContentWrapper.style.display = 'block';
+                    break;
+                case 'all-feed':
+                    appContainer.classList.add('view-all-feed');
+                    break;
+                case 'overview':
+                    appContainer.classList.add('view-overview');
+                    break;
+                case 'about':
+                    appContainer.classList.add('view-about');
+                    aboutContentWrapper.style.display = 'block';
+                    break;
+                case 'contact':
+                    appContainer.classList.add('view-contact');
+                    break;
+            }
+            updateActiveStates();
+            if (window.location.hash) { // If we're setting view due to a hash, don't scroll immediately if it's for a section
+                if (view !== 'all-feed') { // Only scroll to top if not navigating to a specific feed item
+                     window.scrollTo(0, 0);
+                }
+            } else {
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function toggleMobileMenu(forceClose = false) {
+            const isOpen = mobileNavPanel.classList.contains('is-open');
+            if (forceClose || isOpen) {
+                mobileNavPanel.classList.remove('is-open');
+                hamburgerMenuBtn.setAttribute('aria-expanded', 'false');
+                hamburgerMenuBtn.classList.remove('is-active');
+                document.body.classList.remove('mobile-menu-open');
+            } else {
+                mobileNavPanel.classList.add('is-open');
+                hamburgerMenuBtn.setAttribute('aria-expanded', 'true');
+                hamburgerMenuBtn.classList.add('is-active');
+                document.body.classList.add('mobile-menu-open');
+            }
+        }
+
+        hamburgerMenuBtn.addEventListener('click', () => toggleMobileMenu());
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const targetView = (link as HTMLButtonElement).dataset.viewtarget;
+                if (targetView) {
+                    setMainView(targetView);
+                    toggleMobileMenu(true); 
+                }
+            });
+        });
+
+        desktopHighlightsBtn.addEventListener('click', () => setMainView('home'));
+        desktopAllFeedBtn.addEventListener('click', () => setMainView('all-feed'));
+        desktopOverviewBtn.addEventListener('click', () => setMainView('overview'));
+        desktopAboutBtn.addEventListener('click', () => setMainView('about'));
+        desktopContactBtn.addEventListener('click', () => setMainView('contact'));
+        mobileContactBtn.addEventListener('click', () => setMainView('contact'));
+
+        let navigateToFeedItem = (targetId) => {
+            // Clear hash before setting view to prevent re-triggering contact view if hash was #show-contact
+            if (window.location.hash === '#show-contact') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+            setMainView('all-feed'); 
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement && allFeedContentArea && allFeedContentArea.contains(targetElement)) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else { console.error(`Target feed element '${targetId}' not found or not in scroll container.`); }
+                }, 100); 
+            });
+        };
+
+        overviewGridContainer.addEventListener('click', (event) => {
+            if (!(event.target instanceof Element)) return;
+            const link = event.target.closest('a.grid-item');
+            if (link && link.dataset.targetId) {
+                event.preventDefault();
+                navigateToFeedItem(link.dataset.targetId);
+            }
+        });
+
+        highlightsListWrapper.addEventListener('click', (event) => {
+            if (!(event.target instanceof Element)) return;
+            const link = event.target.closest('a.highlight-link-wrapper.is-clickable');
+            if (link && link.dataset.targetId) {
+                event.preventDefault();
+                navigateToFeedItem(link.dataset.targetId);
+            }
+        });
+        
+        allFeedListWrapper.addEventListener('click', (event) => {
+            // This listener seems mostly for external links, which should work by default.
+            // If specific SPA-like handling is needed for internal links within feed, it would go here.
+        });
+
+        // --- MODIFICATION START: Handle initial view based on URL hash ---
+        function handleInitialLoad() {
+            const hash = window.location.hash;
+            let initialTargetView = isMobile() ? 'info' : 'home'; // Default initial view
+
+            if (hash === '#show-contact') {
+                initialTargetView = 'contact';
+                // Optionally, remove the hash from the URL so it doesn't persist
+                // and cause re-triggering on manual refresh if not desired.
+                // history.replaceState(null, null, ' '); // Clears hash, might affect back button
+            }
+            // Could add more else if (hash === '#some-other-section') here
+
+            setMainView(initialTargetView);
+        }
+        // --- MODIFICATION END ---
+
+        // Initial setup
+        handleInitialLoad(); // MODIFIED: Call new function for initial load
+        wasMobile = isMobile();
+
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) {
+                let targetView = currentView;
+                // Do not change view if it's a specific section like 'contact' or 'overview'
+                // only adjust default views 'home'/'info'
+                if (isNowMobile) { 
+                    if (currentView === 'home') targetView = 'info';
+                } else { 
+                    if (currentView === 'info') targetView = 'home';
+                    toggleMobileMenu(true); 
+                }
+                // Only call setMainView if the targetView actually changed due to resize logic
+                if (targetView !== currentView) {
+                    setMainView(targetView);
+                } else {
+                    // If view didn't change, still ensure layout classes are correct
+                    appContainer.classList.remove('is-mobile', 'is-desktop');
+                    if (isNowMobile) appContainer.classList.add('is-mobile');
+                    else appContainer.classList.add('is-desktop');
+                    updateActiveStates(); // And update active button states
+                }
+                wasMobile = isNowMobile;
+            } else { 
+                updateActiveStates(); 
+            }
+        });
+        resizeObserver.observe(document.body);
+
+        // Listen for hash changes to potentially switch views (e.g., if user uses browser back/forward)
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#show-contact') {
+                setMainView('contact');
+            }
+            // Add other hash-based navigation if needed
+        });
+    });
+</script>

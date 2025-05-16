@@ -1,0 +1,93 @@
+---
+// src/layouts/LandingLayout.astro
+interface Props {
+    title?: string;
+    backgroundImageUrl?: string;
+}
+const { title = 'Mittel.TV', backgroundImageUrl = '/uploads/placeholder-landing-bg.jpg' } = Astro.props;
+---
+<!doctype html>
+<html lang="en"> {/* Initial class will be set by script */}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    
+    {/* ADDED: Inline script for theme management */}
+    <script is:inline>
+      const THEME_KEY = 'theme-preference';
+      const THEME_CLASS_LIGHT = 'light-mode';
+      const THEME_CLASS_DARK = 'dark-mode'; // Optional, if you want an explicit dark class
+
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined') {
+          return localStorage.getItem(THEME_KEY);
+        }
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      };
+
+      const applyTheme = (theme) => {
+        document.documentElement.classList.remove(THEME_CLASS_LIGHT, THEME_CLASS_DARK);
+        if (theme === 'light') {
+          document.documentElement.classList.add(THEME_CLASS_LIGHT);
+        } else {
+          // document.documentElement.classList.add(THEME_CLASS_DARK); // Add if you use .dark-mode selector
+        }
+      };
+
+      let currentTheme = getThemePreference();
+      applyTheme(currentTheme);
+
+      // Expose a function to toggle theme for buttons
+      window.toggleTheme = () => {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, currentTheme);
+        applyTheme(currentTheme);
+        // Optionally, dispatch an event that buttons can listen to update their text/icon
+        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: currentTheme } }));
+      };
+    </script>
+
+    <style is:global>
+        @import '../styles/global.css'; 
+        /* ... (rest of your LandingLayout styles) ... */
+        .landing-body-fullscreen {
+            background-image: var(--landing-bg-image-url);
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed; 
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-unified); 
+            padding: var(--spacing-lg);
+            text-align: center;
+            overflow: hidden; 
+            box-sizing: border-box;
+            /* Smooth transition for background image if it changes with theme (not currently implemented) */
+            /* transition: background-image 0.3s ease; */
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body.landing-body-fullscreen {
+            font-size: var(--font-size-desktop-unified); 
+            line-height: var(--line-height-unified);
+            background-color: var(--color-background); /* This will now react to theme change */
+        }
+    </style>
+    <style define:vars={{ landingBgImageUrl: `url('${backgroundImageUrl}')` }}>
+    </style>
+</head>
+<body class="landing-body-fullscreen">
+    <slot />
+</body>
+</html>
