@@ -1,6 +1,6 @@
 ---
-title: "Fixing/Press/Poland: The Monitor"
-order: 4
+title: "Fixing/Press: The Monitor"
+order: 6
 thumbnail: /uploads/240225-csm-thumb.jpg
 summary: >-
   The Monitor wanted its readers to understand how does one bring back the rule
