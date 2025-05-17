@@ -209,7 +209,13 @@ const overviewItems = feedEntries.map(entry => ({
         desktopOverviewBtn.addEventListener('click', () => setMainView('overview'));
         desktopAboutBtn.addEventListener('click', () => setMainView('about'));
         desktopContactBtn.addEventListener('click', () => setMainView('contact'));
-        mobileContactBtn.addEventListener('click', () => setMainView('contact'));
+        mobileContactBtn.addEventListener('click', () => {
+            setMainView('contact');
+            // ADDED: Force close the mobile nav panel if it's open
+            if (mobileNavPanel.classList.contains('is-open')) {
+                toggleMobileMenu(true); 
+            }
+        });
 
         let navigateToFeedItem = (targetId) => {
             // Clear hash before setting view to prevent re-triggering contact view if hash was #show-contact
