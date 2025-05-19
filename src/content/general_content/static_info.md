@@ -22,7 +22,7 @@ clientLogos:
     alt: BBC logo
     link: https://www.bbc.co.uk/news
     name: BBC News
-  - image: https://upload.wikimedia.org/wikipedia/commons/d/d7/National_Public_Radio_logo.svg
+  - image: https://static.wikia.nocookie.net/logopedia/images/9/9f/NPR-2025.svg
     alt: NPR logo
     name: NPR
     link: https://www.npr.org/2023/09/25/1201454310/migrants-and-borders-are-major-issues-in-polands-upcoming-election
