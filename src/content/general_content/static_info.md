@@ -16,10 +16,13 @@ introText: >-
 
 
   ![An image of Piotr Żakowiecki](/uploads/żako-8_websize.jpg)
-
 clientLogos:
-  - image: "/uploads/nyt-logo.svg"
-    alt: "The New York Times logo"
-    link: "https://www.nytimes.com"
-    name: "The New York Times" 
+  - image: /uploads/nyt-logo.svg
+    alt: The New York Times logo
+    link: https://www.nytimes.com
+    name: The New York Times Opinion Audio
+  - image: https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_Logo_2021.svg
+    alt: BBC logo
+    link: https://www.bbc.co.uk/news
+    name: BBC News
 ---
