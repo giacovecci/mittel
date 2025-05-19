@@ -26,6 +26,7 @@ clientLogos:
     alt: NPR logo
     name: NPR
     link: https://www.npr.org/2023/09/25/1201454310/migrants-and-borders-are-major-issues-in-polands-upcoming-election
+    alreadySuitsDarkMode: true
   - image: https://static.wikia.nocookie.net/logopedia/images/b/b9/Channel_4_News_2015_Print_II.svg
     alt: Channel 4 News logo
     link: https://www.channel4.com/news/
