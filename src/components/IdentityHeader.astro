@@ -1,41 +1,55 @@
 ---
 // src/components/IdentityHeader.astro
+// Values are hardcoded as per current structure.
+// If these need to be dynamic from CMS for the portfolio page header,
+// this component would need to fetch them or receive them as props.
 const siteName = "Piotr Żakowiecki";
 const tagline = "field producer · researcher · videojournalist";
 const location = "Berlin/Warsaw";
 ---
-<div class="identity-header-wrapper">
-    <span class="identity-site-name-text">{siteName}</span>
-    <span class="identity-tagline">{tagline}</span>
-    <span class="identity-location">{location}</span>
-</div>
+<a href="/" class="identity-header-link-mobile-wrapper" aria-label="Go to homepage">
+    <div class="identity-header-content-wrapper">
+        <span class="identity-site-name-text">{siteName}</span>
+        <span class="identity-tagline">{tagline}</span>
+        <span class="identity-location">{location}</span>
+    </div>
+</a>
 
 <style>
-    .identity-header-wrapper {
+    /* This link wrapper will be styled by BaseLayout.astro for mobile behavior */
+    .identity-header-link-mobile-wrapper {
+        text-decoration: none;
+        color: inherit;
+        display: block; /* Make the anchor fill the parent space given by #identity-header-area */
+        width: 100%;
+        height: 100%;
+    }
+
+    .identity-header-content-wrapper { /* Renamed from identity-header-wrapper */
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: flex-start; /* Changed from center for more consistent top alignment */
+        justify-content: center; /* Vertically center content within the link area */
         line-height: 1.2;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         font-size: inherit;
-        padding-left: 0; /* Will be handled by parent #identity-header-area */
-        padding-right: 0; /* Will be handled by parent #identity-header-area */
+        /* Padding is handled by #identity-header-area in BaseLayout.astro */
         text-align: left;
     }
+
     .identity-site-name-text {
         display: inline-block;
         margin: 0; padding: 0;
         font-weight: var(--font-weight-bold);
-        margin-bottom: 0;
-        font-size: 1.1em;
+        margin-bottom: 0; /* Adjusted from 0 for closer spacing if needed */
+        font-size: 1.1em; /* Base size, will be affected by parent's font-size in BaseLayout */
         text-align: left;
     }
     .identity-tagline {
         display: block;
-        color: var(--color-accent); /* Uses original accent */
+        color: var(--color-accent);
         font-size: 0.7em;
         font-weight: var(--font-weight-regular);
         line-height: inherit;
@@ -44,30 +58,34 @@ const location = "Berlin/Warsaw";
     }
     .identity-location {
         display: block;
-        /* MODIFIED: Darker color for Berlin/Warsaw */
-        color: #666; /* Example darker grey, adjust as needed. Could be a new var like --color-text-tertiary */
+        color: #666; 
         font-size: 0.7em;
-        font-weight: var(--font-weight-regular); /* Changed from bold to match tagline visual hierarchy */
+        font-weight: var(--font-weight-regular);
         line-height: inherit;
         margin: 0;
         text-align: left;
     }
 
-     @media (max-width: 768px) {
-         .identity-header-wrapper {
-             font-size: inherit;
-             height: auto;
-             padding: 0; /* Padding handled by parent #identity-header-area */
-             justify-content: flex-start;
-             align-items: flex-start;
+    /* 
+       No specific mobile media queries here for the link itself.
+       The #identity-header-area in BaseLayout.astro controls the context (size, padding).
+       The link wrapper is made to fill whatever space its parent #identity-header-area provides.
+    */
+    @media (max-width: 768px) {
+         .identity-header-content-wrapper {
+             /* font-size: inherit; /* Already inheriting */
+             /* height: auto; /* Parent link controls height */
+             /* padding: 0; /* Padding handled by parent #identity-header-area */
+             justify-content: center; /* Keep it centered for mobile */
+             /* align-items: flex-start; /* Already default */
          }
          .identity-site-name-text {
-             font-size: 1em;
-             margin-bottom: 0;
+             font-size: 1em; /* Relative to parent's font-size in mobile header */
+             /* margin-bottom: 0; */
          }
          .identity-tagline {
              font-size: 0.6em;
-             margin-bottom: 0;
+             /* margin-bottom: 0; */
          }
          .identity-location {
              font-size: 0.6em;

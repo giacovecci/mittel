@@ -59,7 +59,6 @@ const overviewItems = feedEntries.map(entry => ({
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const appContainer = document.getElementById('app-container');
-        // ... (all other element getters remain the same)
         const infoContentArea = document.getElementById('info-content-area'); 
         const dynamicContentArea = document.getElementById('dynamic-content-area'); 
         const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
@@ -76,24 +75,24 @@ const overviewItems = feedEntries.map(entry => ({
 
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
         const mobileNavPanel = document.getElementById('mobile-nav-panel');
-        const mobileNavLinks = mobileNavPanel?.querySelectorAll('.mobile-nav-link');
-        const mobileContactBtn = document.getElementById('contact-link-mobile');
+        const mobileNavLinks = mobileNavPanel?.querySelectorAll('.mobile-nav-link'); // This will now include the new Contact link
+        // const mobileContactBtn = document.getElementById('contact-link-mobile'); // REMOVED
 
         const overviewGridContainer = document.getElementById('overview-grid-container');
         const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
         const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
 
-        // Type assertion for buttons to satisfy TypeScript if it complains about classList/dataset
         const allDesktopButtonsTyped = [
             desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn, desktopContactBtn
-        ].filter(Boolean); // Filter out nulls if any ID is mistyped
+        ].filter(Boolean);
 
-        const allMobileHeaderButtonsTyped = [mobileContactBtn].filter(Boolean);
+        // REMOVED: allMobileHeaderButtonsTyped as there's no longer a separate mobile contact button
+        // const allMobileHeaderButtonsTyped = [mobileContactBtn].filter(Boolean);
 
 
         if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper || !contactContentArea ||
             !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn || !desktopContactBtn ||
-            !hamburgerMenuBtn || !mobileNavPanel || !mobileNavLinks || !mobileContactBtn ||
+            !hamburgerMenuBtn || !mobileNavPanel || !mobileNavLinks || /* !mobileContactBtn REMOVED */
             !overviewGridContainer || !allFeedListWrapper ) {
             console.error("Essential elements missing in portfolio.astro. Check IDs.");
             return;
@@ -107,7 +106,8 @@ const overviewItems = feedEntries.map(entry => ({
 
         function updateActiveStates() {
             allDesktopButtonsTyped.forEach(btn => btn.classList.remove('active'));
-            allMobileHeaderButtonsTyped.forEach(btn => btn.classList.remove('active'));
+            // REMOVED: mobileContactBtn highlighting as it's now part of mobileNavLinks
+            // allMobileHeaderButtonsTyped.forEach(btn => btn.classList.remove('active')); 
 
             if (!isMobile()) {
                 if (currentView === 'home') desktopHighlightsBtn.classList.add('active');
@@ -115,16 +115,24 @@ const overviewItems = feedEntries.map(entry => ({
                 else if (currentView === 'overview') desktopOverviewBtn.classList.add('active');
                 else if (currentView === 'about') desktopAboutBtn.classList.add('active');
                 else if (currentView === 'contact') desktopContactBtn.classList.add('active');
-            } else {
-                if (currentView === 'contact') mobileContactBtn.classList.add('active');
-            }
+            } 
+            // Highlighting for mobile panel items is handled below
 
             mobileNavLinks.forEach(link => {
-                const htmlLink = link as HTMLButtonElement; // Type assertion
+                const htmlLink = link as HTMLButtonElement;
                 htmlLink.classList.remove('active-menu-item');
                 const linkTarget = htmlLink.dataset.viewtarget;
                 let isActive = linkTarget === currentView;
-                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') isActive = true;
+                
+                // Special handling for 'home' vs 'info' if needed, or simplify if 'info' is the true "home" for mobile nav
+                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') {
+                    isActive = true;
+                }
+                // Ensure 'contact' in mobile nav panel is highlighted correctly
+                if (currentView === 'contact' && linkTarget === 'contact') {
+                    isActive = true;
+                }
+
                 if (isActive) {
                     htmlLink.classList.add('active-menu-item');
                 }
@@ -133,10 +141,8 @@ const overviewItems = feedEntries.map(entry => ({
         
         function setMainView(view) {
             currentView = view;
-            // console.log("Portfolio view set to:", currentView); // For debugging
-
-            appContainer.className = ''; // Clear all view classes
-            appContainer.classList.add('app-container'); // Re-add base class if you have one
+            appContainer.className = ''; 
+            // appContainer.classList.add('app-container'); // Base class if you have one, otherwise remove
 
             if (isMobile()) appContainer.classList.add('is-mobile');
             else appContainer.classList.add('is-desktop');
@@ -168,8 +174,8 @@ const overviewItems = feedEntries.map(entry => ({
                     break;
             }
             updateActiveStates();
-            if (window.location.hash) { // If we're setting view due to a hash, don't scroll immediately if it's for a section
-                if (view !== 'all-feed') { // Only scroll to top if not navigating to a specific feed item
+            if (window.location.hash) { 
+                if (view !== 'all-feed' && view !== 'contact') { // Avoid scroll to top if navigating to specific feed or contact
                      window.scrollTo(0, 0);
                 }
             } else {
@@ -194,7 +200,7 @@ const overviewItems = feedEntries.map(entry => ({
 
         hamburgerMenuBtn.addEventListener('click', () => toggleMobileMenu());
 
-        mobileNavLinks.forEach(link => {
+        mobileNavLinks.forEach(link => { // This loop now handles the new Contact link as well
             link.addEventListener('click', () => {
                 const targetView = (link as HTMLButtonElement).dataset.viewtarget;
                 if (targetView) {
@@ -209,16 +215,11 @@ const overviewItems = feedEntries.map(entry => ({
         desktopOverviewBtn.addEventListener('click', () => setMainView('overview'));
         desktopAboutBtn.addEventListener('click', () => setMainView('about'));
         desktopContactBtn.addEventListener('click', () => setMainView('contact'));
-        mobileContactBtn.addEventListener('click', () => {
-            setMainView('contact');
-            // ADDED: Force close the mobile nav panel if it's open
-            if (mobileNavPanel.classList.contains('is-open')) {
-                toggleMobileMenu(true); 
-            }
-        });
+        
+        // REMOVED: mobileContactBtn event listener
+        // mobileContactBtn.addEventListener('click', () => { ... });
 
         let navigateToFeedItem = (targetId) => {
-            // Clear hash before setting view to prevent re-triggering contact view if hash was #show-contact
             if (window.location.hash === '#show-contact') {
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
@@ -251,53 +252,38 @@ const overviewItems = feedEntries.map(entry => ({
             }
         });
         
-        allFeedListWrapper.addEventListener('click', (event) => {
-            // This listener seems mostly for external links, which should work by default.
-            // If specific SPA-like handling is needed for internal links within feed, it would go here.
-        });
+        allFeedListWrapper.addEventListener('click', (event) => { /* ... */ });
 
-        // --- MODIFICATION START: Handle initial view based on URL hash ---
         function handleInitialLoad() {
             const hash = window.location.hash;
-            let initialTargetView = isMobile() ? 'info' : 'home'; // Default initial view
+            let initialTargetView = isMobile() ? 'info' : 'home'; 
 
             if (hash === '#show-contact') {
                 initialTargetView = 'contact';
-                // Optionally, remove the hash from the URL so it doesn't persist
-                // and cause re-triggering on manual refresh if not desired.
-                // history.replaceState(null, null, ' '); // Clears hash, might affect back button
             }
-            // Could add more else if (hash === '#some-other-section') here
-
             setMainView(initialTargetView);
         }
-        // --- MODIFICATION END ---
-
-        // Initial setup
-        handleInitialLoad(); // MODIFIED: Call new function for initial load
+        
+        handleInitialLoad(); 
         wasMobile = isMobile();
 
         const resizeObserver = new ResizeObserver(() => {
             const isNowMobile = isMobile();
             if (isNowMobile !== wasMobile) {
                 let targetView = currentView;
-                // Do not change view if it's a specific section like 'contact' or 'overview'
-                // only adjust default views 'home'/'info'
                 if (isNowMobile) { 
                     if (currentView === 'home') targetView = 'info';
                 } else { 
                     if (currentView === 'info') targetView = 'home';
                     toggleMobileMenu(true); 
                 }
-                // Only call setMainView if the targetView actually changed due to resize logic
                 if (targetView !== currentView) {
                     setMainView(targetView);
                 } else {
-                    // If view didn't change, still ensure layout classes are correct
                     appContainer.classList.remove('is-mobile', 'is-desktop');
                     if (isNowMobile) appContainer.classList.add('is-mobile');
                     else appContainer.classList.add('is-desktop');
-                    updateActiveStates(); // And update active button states
+                    updateActiveStates(); 
                 }
                 wasMobile = isNowMobile;
             } else { 
@@ -306,12 +292,10 @@ const overviewItems = feedEntries.map(entry => ({
         });
         resizeObserver.observe(document.body);
 
-        // Listen for hash changes to potentially switch views (e.g., if user uses browser back/forward)
         window.addEventListener('hashchange', () => {
             if (window.location.hash === '#show-contact') {
                 setMainView('contact');
             }
-            // Add other hash-based navigation if needed
         });
     });
 </script>

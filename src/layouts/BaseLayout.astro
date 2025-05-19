@@ -115,6 +115,14 @@ const { title = 'Portfolio' } = Astro.props;
                  grid-column: 1 / 2; 
                  padding-left: var(--spacing-content-side-padding);
                  padding-right: var(--spacing-md);
+                 pointer-events: none;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper) {
+                 pointer-events: auto; /* Re-enable for content if needed, but for text, none is fine */
+                 cursor: default;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper > .identity-header-content-wrapper) {
+                 pointer-events: auto; /* Ensure text itself is selectable if needed */
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
                  grid-column: 3 / 4; 
@@ -258,11 +266,16 @@ const { title = 'Portfolio' } = Astro.props;
             #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
                  flex-grow: 1; flex-shrink: 1;
                  min-width: 50px;
-                 display: flex; flex-direction: column; justify-content: center;
+                 display: flex; 
+                 flex-direction: column; 
+                 justify-content: center;
                  height: 100%;
                  padding: 0 var(--spacing-xs) 0 var(--mobile-content-padding-x);
                  font-size: var(--font-size-mobile-header-responsive);
-                 overflow: hidden; box-sizing: border-box; align-items: flex-start;
+                 overflow: hidden; 
+                 box-sizing: border-box; 
+                 align-items: flex-start;
+                 cursor: pointer;
             }
             #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
                  flex-grow: 0; flex-shrink: 0;

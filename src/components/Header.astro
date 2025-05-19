@@ -17,7 +17,8 @@
         <svg class="hamburger-icon icon-open" viewBox="0 0 100 80" width="20" height="20" fill="currentColor"><rect width="100" height="15" rx="8"></rect><rect y="30" width="100" height="15" rx="8"></rect><rect y="60" width="100" height="15" rx="8"></rect></svg>
         <svg class="hamburger-icon icon-close" viewBox="0 0 100 100" width="20" height="20" fill="currentColor" style="display:none;"><line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/><line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/></svg>
     </button>
-    <button type="button" id="contact-link-mobile" class="contact-btn-mobile nav-button-item">Contact</button>
+    <!-- REMOVED: Contact button from here -->
+    <!-- <button type="button" id="contact-link-mobile" class="contact-btn-mobile nav-button-item">Contact</button> -->
 </div>
 
 <!-- Mobile Navigation Panel -->
@@ -27,7 +28,7 @@
         <li><button type="button" data-viewtarget="all-feed" class="mobile-nav-link">Feed</button></li>
         <li><button type="button" data-viewtarget="overview" class="mobile-nav-link">Projects</button></li>
         <li><button type="button" data-viewtarget="about" class="mobile-nav-link">About</button></li>
-        <!-- Contact is not in the panel, it's a direct button in mobile-header-nav -->
+        <li><button type="button" data-viewtarget="contact" class="mobile-nav-link">Contact</button></li> <!-- ADDED Contact link -->
     </ul>
 </nav>
 
@@ -40,7 +41,7 @@
         transition: color 0.2s ease;
     }
     .nav-button-item:hover,
-    .nav-button-item.active { /* .active class will be managed by index.astro JS */
+    .nav-button-item.active {
         color: var(--color-accent-hover-custom);
     }
 
@@ -50,37 +51,35 @@
         width: 100%; height: 100%; gap: var(--spacing-lg);
     }
 
+    /* Mobile Header Styles */
     .mobile-header-nav {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: space-around;
-        width: auto;
+        /* MODIFIED: Align hamburger to the far right */
+        justify-content: flex-end; 
+        align-items: center; /* Vertically center hamburger */
+        width: 100%; /* Ensure it takes full width to push hamburger to the end */
         height: 100%;
-        padding: var(--spacing-xxs) 0;
+        padding: var(--spacing-xxs) 0; /* Keep vertical padding if needed */
         box-sizing: border-box;
     }
 
     .hamburger-btn {
         background: none; border: none; color: inherit;
-        padding: 2px;
+        padding: 4px; /* Keep some padding for easier clicking */
         cursor: pointer;
         display: flex; align-items: center; justify-content: center;
         line-height: 1;
+        /* No margin needed if parent .mobile-header-nav uses justify-content: flex-end */
     }
     .hamburger-btn .icon-close { display: none; }
     .hamburger-btn.is-active .icon-open { display: none; }
     .hamburger-btn.is-active .icon-close { display: block; }
     .hamburger-btn svg {
-        width: 22px;
-        height: 22px;
+        width: 28px;
+        height: 28px;
     }
 
-    .contact-btn-mobile {
-        font-size: 0.85em;
-        font-weight: var(--font-weight-bold);
-        line-height: 1.2;
-    }
+    /* REMOVED: .contact-btn-mobile styles as the button is removed */
 
     .mobile-nav-panel {
         position: fixed; top: var(--mobile-header-height); left: 0; right: 0;
@@ -104,7 +103,7 @@
     }
     .mobile-nav-panel li:last-child .mobile-nav-link { border-bottom: none; }
     .mobile-nav-link:hover,
-    .mobile-nav-link.active-menu-item {
+    .mobile-nav-link.active-menu-item { /* .active-menu-item for mobile panel items */
         color: var(--color-accent-hover-custom);
         background-color: var(--color-surface-light);
     }
@@ -118,11 +117,17 @@
     }
     @media (max-width: 768px) { /* MOBILE */
         .desktop-only { display: none !important; }
-        .mobile-only { display: flex !important; }
+        /* .mobile-only { display: flex !important; } */ /* This was on .mobile-header-nav and .mobile-nav-panel before */
+        /* Ensure mobile-header-nav itself is flex */
+        .mobile-header-nav.mobile-only { display: flex !important; }
+        /* mobile-nav-panel display is handled by its own .is-open class logic, but ensure it's 'flex' when open */
+        .mobile-nav-panel.mobile-only { display: flex !important; }
+
+
     }
 </style>
 
 <script>
-  // Mailto functionality removed from here.
-  // Event listeners for contact buttons will be handled in src/pages/index.astro
+  // Event listeners for contact buttons will be handled in src/pages/portfolio.astro
+  // The mailto functionality was already removed.
 </script>
