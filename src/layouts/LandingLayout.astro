@@ -58,42 +58,52 @@ const {
         @import '../styles/global.css'; 
 
         html {
-            height: 100%; /* Ensure html takes full height */
+            height: 100%; 
         }
-        body.landing-body-fullscreen { /* Applied to body */
-            background-image: var(--landing-bg-image-url-var); /* Renamed for clarity */
+        body.landing-body-fullscreen {
+            background-image: var(--landing-bg-image-url-var);
             background-size: cover;
             background-position: center center;
             background-attachment: fixed; 
             background-repeat: no-repeat;
-            min-height: 100%; /* Changed from 100vh to 100% to work with html height */
-            width: 100%;     /* Changed from 100vw to 100% */
-            margin: 0; /* Ensure no body margin */
+            
+            min-height: 100%; /* Use min-height to allow scrolling if content overflows */
+            width: 100%;
+            margin: 0;
             
             display: flex; 
-            flex-direction: column; /* Main axis for content alignment */
+            flex-direction: column;
             align-items: center;    /* Center slot content horizontally */
-            justify-content: flex-start;/* Center slot content vertically */
-            padding-top: 55vh;
+            justify-content: center;/* Center slot content vertically */
+            
+            padding: var(--spacing-xl) var(--spacing-lg); /* Add overall padding */
+            /* This padding ensures content isn't flush against edges, especially on small screens */
 
             color: var(--color-text-unified); 
-            padding-left: var(--spacing-lg);  /* Keep side padding */
-            padding-right: var(--spacing-lg); /* Keep side padding */
-            padding-bottom: var(--spacing-lg);/* Add bottom padding too */
             text-align: center;
-            overflow: hidden; 
+            /* overflow: hidden; */ /* REMOVED: Allow scrolling if content is too tall for viewport */
+            overflow-y: auto; /* Allow vertical scroll if needed */
             box-sizing: border-box;
             font-size: var(--font-size-desktop-unified); 
             line-height: var(--line-height-unified);
-            background-color: var(--color-background); 
+            background-color: var(--color-background); /* Fallback if image doesn't load */
         }
+
+        /* Ensure the slot itself (which wraps .landing-main-content-box) doesn't restrict flex behavior */
+        /* Usually not needed as slot passes content through, but good to be mindful */
+        /* body.landing-body-fullscreen > :first-child {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        } */
+
     </style>
-    {/* MODIFIED: Renamed variable to avoid potential conflicts and for clarity */}
     <style define:vars={{ 'landing-bg-image-url-var': `url('${backgroundImageUrl}')` }}>
     </style>
 </head>
 <body class="landing-body-fullscreen">
-    {/* The slot will contain the theme button and the main content wrapper */}
     <slot /> 
 </body>
 </html>
