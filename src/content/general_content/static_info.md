@@ -25,4 +25,8 @@ clientLogos:
     alt: BBC logo
     link: https://www.bbc.co.uk/news
     name: BBC News
+  - image: https://upload.wikimedia.org/wikipedia/commons/1/18/NPR_new_logo.svg
+    alt: NPR logo
+    name: NPR
+    link: https://www.npr.org/2023/09/25/1201454310/migrants-and-borders-are-major-issues-in-polands-upcoming-election
 ---
