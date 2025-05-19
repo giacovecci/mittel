@@ -2,33 +2,37 @@
 // src/components/StaticInfo.astro
 import { getEntry } from 'astro:content';
 import { render as parseMarkdown } from './MarkdownRenderer.astro';
-import { Image } from 'astro:assets';
+// Using standard <img> tag for SVGs as Astro's <Image> was not processing them
+// and direct URLs are preferred by the user for SVGs in this case.
 
-// Define the type for a single client logo based on the Zod schema in config.ts
 interface ClientLogo {
   image: string;
   alt: string;
   link?: string;
   name?: string;
+  alreadySuitsDarkMode?: boolean; // Added
 }
 
 const entry = await getEntry('general_content', 'static_info');
-let rawIntroText = ""; // Default to empty string
-let clientLogos: ClientLogo[] = []; // Initialize as empty array
+let rawIntroText = "";
+let clientLogos: ClientLogo[] = [];
 let introTextLoaded = false;
 
 if (entry && entry.data) {
     if (typeof entry.data.introText === 'string') {
         rawIntroText = entry.data.introText;
         introTextLoaded = true;
-    } else if (entry.data.introText !== undefined) { // If field exists but not string
-        console.warn("StaticInfo.astro: introText field is present but not a string. Content:", entry.data.introText);
+    } else if (entry.data.introText !== undefined) {
+        console.warn("StaticInfo.astro: introText field is present but not a string.", entry.data.introText);
     }
 
     if (Array.isArray(entry.data.clientLogos)) {
-        clientLogos = entry.data.clientLogos.filter(logo => typeof logo.image === 'string' && logo.image.trim() !== '' && typeof logo.alt === 'string' && logo.alt.trim() !== '');
-    } else if (entry.data.clientLogos !== undefined) { // If field exists but not an array
-        console.warn("StaticInfo.astro: clientLogos field is present but not an array. Logos will not be displayed. Content:", entry.data.clientLogos);
+        clientLogos = entry.data.clientLogos.filter(logo => 
+            typeof logo.image === 'string' && logo.image.trim() !== '' && 
+            typeof logo.alt === 'string' && logo.alt.trim() !== ''
+        );
+    } else if (entry.data.clientLogos !== undefined) {
+        console.warn("StaticInfo.astro: clientLogos field is present but not an array.", entry.data.clientLogos);
     }
 } else {
     console.error("StaticInfo.astro: Could not load entry 'general_content/static_info.md'.");
@@ -51,21 +55,17 @@ const hasContent = introTextLoaded || clientLogos.length > 0;
                     <div class="logo-item">
                         {logo.link ? (
                             <a href={logo.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${logo.alt || logo.name || 'client website'}`}>
-                                <Image 
+                                <img 
                                     src={logo.image} 
                                     alt={logo.alt || 'Client Logo'} 
-                                    width={150}  height={75} 
-                                    format="webp" q={75} fit="contain" 
-                                    loading="lazy" densities={[1, 1.5]} 
+                                    class:list={{ 'needs-dark-filter': !logo.alreadySuitsDarkMode }}
                                 />
                             </a>
                         ) : (
-                            <Image 
+                            <img 
                                 src={logo.image} 
                                 alt={logo.alt || 'Client Logo'} 
-                                width={150} height={75} 
-                                format="webp" q={75} fit="contain" 
-                                loading="lazy" densities={[1, 1.5]} 
+                                class:list={{ 'needs-dark-filter': !logo.alreadySuitsDarkMode }}
                             />
                         )}
                     </div>
@@ -91,78 +91,78 @@ const hasContent = introTextLoaded || clientLogos.length > 0;
         /* Markdown styles apply globally */
     }
     .client-logos-container {
-        margin-top: var(--spacing-md); /* Adjusted from lg for tighter layout if intro text is short */
+        margin-top: var(--spacing-md);
         padding-top: var(--spacing-md);
         border-top: 1px solid var(--color-border-subtle);
     }
     .client-logos-title {
-        font-size: 0.9em; /* Slightly smaller */
+        font-size: 0.9em;
         font-weight: var(--font-weight-medium);
         color: var(--color-text-secondary);
-        text-align: left; /* Changed from center for a more standard section feel */
+        text-align: left;
         margin-bottom: var(--spacing-md);
         text-transform: uppercase;
-        letter-spacing: 0.075em; /* Slightly more spacing */
+        letter-spacing: 0.075em;
     }
     .logos-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* auto-fill and slightly larger minmax */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: var(--spacing-md);
-        align-items: center; 
-        /* justify-content: center; /* Removed as auto-fill handles distribution */
+        align-items: center;
     }
     .logo-item {
         display: flex;
-        justify-content: center; /* Center logo within its grid cell */
+        justify-content: center;
         align-items: center;
-        /* padding: var(--spacing-xs); /* Padding can make items look too spaced if logos are small */
-        background-color: transparent;
-        border-radius: var(--border-radius-sm);
-        min-height: 50px; /* Ensure items have some height */
+        min-height: 50px;
     }
-    .logo-item a, .logo-item :global(img) {
+    .logo-item img { /* Applied to all images within .logo-item */
         display: block;
         max-width: 100%;
-        max-height: 45px; /* Control max height of logos */
-        width: auto; /* Allow image to scale down if its natural width is smaller than cell */
-        height: auto; /* Maintain aspect ratio */
-        object-fit: contain; /* Ensure logo aspect ratio is maintained */
+        max-height: 45px;
+        width: auto; 
+        height: auto; 
+        object-fit: contain;
+        transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out; /* Combined transitions */
     }
 
-    /* Theme-dependent logo styling */
-    html:not(.light-mode) .logo-item :global(img) {
-        filter: brightness(0) invert(1) opacity(0.7); /* White version for dark mode */
+    /* Default opacity for all logos in dark mode */
+    html:not(.light-mode) .logo-item img {
+        opacity: 0.7;
     }
-    html:not(.light-mode) .logo-item a:hover :global(img),
-    html:not(.light-mode) .logo-item a:focus :global(img) {
-        filter: brightness(0) invert(1) opacity(1);
+    /* Apply color-inverting filter ONLY to images with the 'needs-dark-filter' class in dark mode */
+    html:not(.light-mode) .logo-item img.needs-dark-filter {
+        filter: brightness(0) invert(1); /* Opacity is handled by the general rule above */
+    }
+    /* Hover/focus: increase opacity for all logos in dark mode */
+    html:not(.light-mode) .logo-item a:hover img,
+    html:not(.light-mode) .logo-item a:focus img {
+        opacity: 1;
+        /* The filter on 'needs-dark-filter' images remains, opacity brings it to full visibility */
     }
 
-    html.light-mode .logo-item :global(img) {
-        filter: grayscale(100%) opacity(0.65); /* Grayscale for light mode */
+
+    /* Light mode styling */
+    html.light-mode .logo-item img {
+        filter: grayscale(100%) opacity(0.65);
     }
-    html.light-mode .logo-item a:hover :global(img),
-    html.light-mode .logo-item a:focus :global(img) {
+    html.light-mode .logo-item a:hover img,
+    html.light-mode .logo-item a:focus img {
         filter: grayscale(0%) opacity(1);
     }
+
     .error-message {
         color: var(--color-text-secondary);
         font-style: italic;
     }
 
-    @media (max-width: 768px) { /* No (orientation: portrait) for broader application */
-        .static-info-wrapper {
-            gap: var(--spacing-md);
-        }
+    @media (max-width: 768px) {
+        .static-info-wrapper { gap: var(--spacing-md); }
         .logos-grid {
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller min size for mobile */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: var(--spacing-sm);
         }
-        .logo-item :global(img) {
-            max-height: 40px; /* Smaller logos on mobile */
-        }
-        .client-logos-title {
-            font-size: 0.85em;
-        }
+        .logo-item img { max-height: 40px; }
+        .client-logos-title { font-size: 0.85em; }
     }
 </style>

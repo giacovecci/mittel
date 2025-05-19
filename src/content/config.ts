@@ -51,17 +51,17 @@ const feed = defineCollection({
 
 // --- Define a schema for client logos ---
 const clientLogoSchema = z.object({
-    image: z.string(), // Path to the logo image
-    alt: z.string(),   // Alt text for accessibility
-    link: z.string().url().optional(), // Optional URL the logo links to
-    name: z.string().optional(), // Optional name for the client
+    image: z.string(),
+    alt: z.string(),
+    link: z.string().url().optional(),
+    name: z.string().optional(),
+    alreadySuitsDarkMode: z.boolean().optional(), // ADDED: Flag for dark mode suitability
 });
 
 // --- Collection Definition: general_content ---
 const general_content = defineCollection({
     type: 'content',
     schema: z.object({
-        // Existing fields
         introText: z.string().optional(),
         aboutPageContent: z.string().optional(),
         contactPageImage: z.string().optional(),
@@ -72,11 +72,8 @@ const general_content = defineCollection({
         landingPageSiteName: z.string().optional(),
         landingPageTagline: z.string().optional(),
         landingPageLocation: z.string().optional(),
-
-        // ADDED: Field for client logos, intended for static_info.md
         clientLogos: z.array(clientLogoSchema).optional(),
-
-    }).passthrough(), // passthrough allows other fields not explicitly defined in each file
+    }).passthrough(),
 });
 
 // --- Collection Definition: highlights ---

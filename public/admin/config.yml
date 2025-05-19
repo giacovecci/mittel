@@ -1,7 +1,7 @@
 backend:
   name: git-gateway
   repo: giacovecci/mittel
-  branch: final-mittel # Updated as per user's note
+  branch: final-mittel
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
@@ -13,7 +13,7 @@ backend:
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-site_url: https://mittel.tv # Your live site URL
+site_url: https://mittel.tv
 publish_mode: editorial_workflow
 
 media_folder: "public/uploads"
@@ -34,38 +34,11 @@ collections:
         widget: "list"
         typeKey: type
         types:
-          - label: "Two Column Block"
-            name: "twoColumn"
-            widget: "object"
-            fields:
-              - { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }
-              - { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false }
-          - label: "Full Width Image"
-            name: "fullWidthImage"
-            widget: "object"
-            fields:
-              - { label: "Image", name: "image", widget: "image" }
-              - { label: "Alt Text", name: "alt", widget: "string", required: false }
-          - label: "Full Width Embed"
-            name: "fullWidthEmbed"
-            widget: "object"
-            fields:
-              - { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" }
-          - label: "Full Width Text"
-            name: "fullWidthText"
-            widget: "object"
-            fields:
-              - { label: "Text Content", name: "text", widget: "markdown" }
-          - label: "Horizontal Gallery"
-            name: "horizontalGallery"
-            widget: "object"
-            fields:
-              - label: "Images"
-                name: "images"
-                widget: "list"
-                fields:
-                  - { label: "Image", name: "image", widget: "image" }
-                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+          - { label: "Two Column Block", name: "twoColumn", widget: "object", fields: [ { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }, { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false } ] }
+          - { label: "Full Width Image", name: "fullWidthImage", widget: "object", fields: [ { label: "Image", name: "image", widget: "image" }, { label: "Alt Text", name: "alt", widget: "string", required: false } ] }
+          - { label: "Full Width Embed", name: "fullWidthEmbed", widget: "object", fields: [ { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" } ] }
+          - { label: "Full Width Text", name: "fullWidthText", widget: "object", fields: [ { label: "Text Content", name: "text", widget: "markdown" } ] }
+          - { label: "Horizontal Gallery", name: "horizontalGallery", widget: "object", fields: [ { label: "Images", name: "images", widget: "list", fields: [ { label: "Image", name: "image", widget: "image" }, { label: "Alt Text", name: "alt", widget: "string", required: false } ] } ] }
 
   - name: "highlights"
     label: "Highlights & Separators"
@@ -93,7 +66,7 @@ collections:
         file: "src/content/general_content/static_info.md"
         fields:
           - { label: "Introductory Text", name: "introText", widget: "markdown" }
-          - label: "Client Logos" # ADDED Section for Client Logos
+          - label: "Client Logos"
             name: "clientLogos"
             widget: "list"
             required: false
@@ -103,6 +76,12 @@ collections:
               - { label: "Alt Text", name: "alt", widget: "string", hint: "Important for accessibility, e.g., 'The New York Times logo'" }
               - { label: "Link URL (Optional)", name: "link", widget: "string", required: false, hint: "Full URL if the logo should be clickable, e.g., https://www.nytimes.com" }
               - { label: "Client Name (Optional)", name: "name", widget: "string", required: false, hint: "For internal reference or future use." }
+              - label: "Already Suits Dark Mode?" # ADDED
+                name: "alreadySuitsDarkMode" # ADDED
+                widget: "boolean" # ADDED
+                default: false # ADDED
+                required: false # ADDED
+                hint: "Check this if the logo is already white/light and doesn't need color filtering in dark mode." # ADDED
       - label: "About Page"
         name: "about_page_content"
         file: "src/content/general_content/about_page.md"
