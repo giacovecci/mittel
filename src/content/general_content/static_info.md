@@ -25,4 +25,20 @@ clientLogos:
     alt: BBC logo
     link: https://www.bbc.co.uk/news
     name: BBC News
+  - image: https://upload.wikimedia.org/wikipedia/commons/1/18/NPR_new_logo.svg
+    alt: NPR logo
+    name: NPR
+    link: https://www.npr.org/2023/09/25/1201454310/migrants-and-borders-are-major-issues-in-polands-upcoming-election
+  - image: https://upload.wikimedia.org/wikipedia/en/7/7b/New_Channel_4_News_logo.svg
+    alt: Channel 4 News logo
+    link: https://www.channel4.com/news/
+    name: Channel 4 News
+  - image: https://upload.wikimedia.org/wikipedia/commons/b/b9/The_Washington_Post_logo.svg
+    alt: Washington Post logo
+    link: https://www.washingtonpost.com/world/2022/04/13/poland-refugees-wall-belarus/
+    name: The Washington Post
+  - link: https://www.zeit.de/2023-10/polen-wahl-parlament-karolina-wigura-nachrichtenpodcast
+    alt: Zeit Online logo
+    image: https://upload.wikimedia.org/wikipedia/commons/9/98/Logo_Zeit_Online_2017.svg
+    name: Zeit Online
 ---
