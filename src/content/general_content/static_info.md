@@ -16,4 +16,10 @@ introText: >-
 
 
   ![An image of Piotr Żakowiecki](/uploads/żako-8_websize.jpg)
+
+clientLogos:
+  - image: "/uploads/nyt-logo.svg"
+    alt: "The New York Times logo"
+    link: "https://www.nytimes.com"
+    name: "The New York Times" 
 ---

@@ -1,8 +1,7 @@
-# public/admin/config.yml
 backend:
   name: git-gateway
   repo: giacovecci/mittel
-  branch: hello-version-land # Ensure this is your active development branch
+  branch: final-mittel # Updated as per user's note
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
@@ -22,7 +21,6 @@ public_folder: "/uploads"
 
 collections:
   - name: "feed"
-    # ... (feed collection definition remains the same) ...
     label: "Feed Entries"
     folder: "src/content/feed"
     create: true
@@ -70,7 +68,6 @@ collections:
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
 
   - name: "highlights"
-    # ... (highlights collection definition remains the same) ...
     label: "Highlights & Separators"
     folder: "src/content/highlights"
     create: true
@@ -96,6 +93,16 @@ collections:
         file: "src/content/general_content/static_info.md"
         fields:
           - { label: "Introductory Text", name: "introText", widget: "markdown" }
+          - label: "Client Logos" # ADDED Section for Client Logos
+            name: "clientLogos"
+            widget: "list"
+            required: false
+            hint: "Add logos of previous clients. They will appear below the intro text."
+            fields:
+              - { label: "Logo Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", hint: "Important for accessibility, e.g., 'The New York Times logo'" }
+              - { label: "Link URL (Optional)", name: "link", widget: "string", required: false, hint: "Full URL if the logo should be clickable, e.g., https://www.nytimes.com" }
+              - { label: "Client Name (Optional)", name: "name", widget: "string", required: false, hint: "For internal reference or future use." }
       - label: "About Page"
         name: "about_page_content"
         file: "src/content/general_content/about_page.md"
@@ -110,7 +117,7 @@ collections:
           - { label: "Contact Page Text (Markdown)", name: "contactPageText", widget: "markdown", required: false }
       - label: "Landing Page"
         name: "landing_page_content"
-        file: "src/content/general_content/landing_page.md" # This file will need to be created
+        file: "src/content/general_content/landing_page.md"
         fields:
           - { label: "Background Image", name: "landingPageBackgroundImage", widget: "image", required: false }
           - { label: "Background Image Alt Text", name: "landingPageBackgroundImageAlt", widget: "string", required: false, hint: "Describe the image for accessibility." }
