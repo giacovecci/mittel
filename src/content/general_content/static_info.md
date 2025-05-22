@@ -39,9 +39,4 @@ clientLogos:
     alt: Zeit Online logo
     image: https://upload.wikimedia.org/wikipedia/commons/9/98/Logo_Zeit_Online_2017.svg
     name: Zeit Online
-  - alreadySuitsDarkMode: false
-    image: https://upload.wikimedia.org/wikipedia/commons/c/c4/The_Christian_Science_Monitor_masthead.svg
-    alt: The Monitor logo
-    link: https://www.csmonitor.com/World/Europe/2024/0209/Poland-appears-torn-by-abortion.-Research-hints-divide-isn-t-so-deep
-    name: The Monitor
 ---
