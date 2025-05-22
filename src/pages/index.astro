@@ -167,20 +167,19 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
     }
   </style>
 
-  <script> // MODIFIED: define:vars removed, script simplified
+      
+<script> 
     const themeToggleButtonFixed = document.getElementById('theme-toggle-btn-fixed');
-    // const themeIconFixedSpan = document.getElementById('theme-icon-fixed'); // No longer needed
 
-    function updateButtonText(theme) { // Renamed from updateButtonIcon
+    // Provide type for 'theme' parameter
+    function updateButtonText(theme: string) { 
       if (themeToggleButtonFixed) {
-        // If light theme is active, button text is "Dark Mode" (to switch to dark)
-        // If dark theme is active, button text is "Light Mode" (to switch to light)
         themeToggleButtonFixed.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode'; 
         themeToggleButtonFixed.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
       }
     }
 
-    // Initial button text based on theme from inline script in <head> of LandingLayout.astro
+    // Access window.currentTheme (TypeScript now knows about it via env.d.ts)
     if (typeof window.currentTheme !== 'undefined' && themeToggleButtonFixed) {
       updateButtonText(window.currentTheme);
     } else if (themeToggleButtonFixed) { 
@@ -189,14 +188,19 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
     }
     
     themeToggleButtonFixed?.addEventListener('click', () => {
+      // Access window.toggleTheme (TypeScript now knows about it)
       if (typeof window.toggleTheme === 'function') {
         window.toggleTheme(); 
       }
     });
 
+    // Type the event 'e' as ThemeChangeEvent or cast to CustomEvent
     document.addEventListener('themechanged', (e) => {
-      if (e.detail && typeof e.detail.theme !== 'undefined') {
-        updateButtonText(e.detail.theme);
+      // Cast e to your specific CustomEvent type or a generic CustomEvent
+      const event = e as CustomEvent<{ theme: string }>; // Or 'as ThemeChangeEvent' if you used that interface
+      
+      if (event.detail && typeof event.detail.theme !== 'undefined') {
+        updateButtonText(event.detail.theme);
       }
     });
   </script>

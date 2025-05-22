@@ -2,8 +2,7 @@
 // src/components/StaticInfo.astro
 import { getEntry } from 'astro:content';
 import { render as parseMarkdown } from './MarkdownRenderer.astro';
-// Using standard <img> tag for SVGs as Astro's <Image> was not processing them
-// and direct URLs are preferred by the user for SVGs in this case.
+import { Image } from 'astro:assets';
 
 interface ClientLogo {
   image: string;
@@ -14,14 +13,38 @@ interface ClientLogo {
 }
 
 const entry = await getEntry('general_content', 'static_info');
+
 let rawIntroText = "";
 let clientLogos: ClientLogo[] = [];
-let introTextLoaded = false;
+
+let portraitImageUrl: string | undefined = undefined;
+let portraitImageAlt: string | undefined = undefined;
+let introTextOnlyMd = "";
+
+// Use the natural dimensions of your portrait image for aspect ratio
+// For 'żako-8_websize.jpg' (1000x1500px), the aspect ratio is 2:3
+const PORTRAIT_ASPECT_RATIO_WIDTH = 2; 
+const PORTRAIT_ASPECT_RATIO_HEIGHT = 3;
+// You can use larger numbers for width/height for better quality hints,
+// but the ratio is key. e.g. 1000 and 1500.
+const PORTRAIT_RENDER_WIDTH = 1000; // A representative large width for quality hints
+const PORTRAIT_RENDER_HEIGHT = 1500; // (PORTRAIT_RENDER_WIDTH / PORTRAIT_ASPECT_RATIO_WIDTH) * PORTRAIT_ASPECT_RATIO_HEIGHT
+
 
 if (entry && entry.data) {
     if (typeof entry.data.introText === 'string') {
         rawIntroText = entry.data.introText;
-        introTextLoaded = true;
+        
+        const imageRegex = /!\[(?<alt>.*?)\]\((?<url>.*?)\)/;
+        const match = rawIntroText.match(imageRegex);
+
+        if (match && match.groups) {
+            portraitImageUrl = match.groups.url;
+            portraitImageAlt = match.groups.alt || 'Portrait image';
+            introTextOnlyMd = rawIntroText.replace(imageRegex, '').trim();
+        } else {
+            introTextOnlyMd = rawIntroText;
+        }
     } else if (entry.data.introText !== undefined) {
         console.warn("StaticInfo.astro: introText field is present but not a string.", entry.data.introText);
     }
@@ -38,16 +61,21 @@ if (entry && entry.data) {
     console.error("StaticInfo.astro: Could not load entry 'general_content/static_info.md'.");
 }
 
-const htmlIntroText = parseMarkdown(rawIntroText);
-const hasContent = introTextLoaded || clientLogos.length > 0;
+const htmlIntroTextPortion = parseMarkdown(introTextOnlyMd);
+const hasTextContent = introTextOnlyMd.trim() !== "";
+const hasLogos = clientLogos.length > 0;
+const hasPortrait = !!portraitImageUrl;
+
+const displayError = !hasTextContent && !hasLogos && !hasPortrait;
+
 ---
 
 <div class="static-info-wrapper">
-    {rawIntroText && (
-        <div class="static-text-container markdown-content" set:html={htmlIntroText}></div>
+    {hasTextContent && (
+        <div class="intro-text-content markdown-content" set:html={htmlIntroTextPortion}></div>
     )}
 
-    {clientLogos.length > 0 && (
+    {hasLogos && (
         <div class="client-logos-container">
             <h3 class="client-logos-title">Trusted By</h3>
             <div class="logos-grid">
@@ -74,8 +102,23 @@ const hasContent = introTextLoaded || clientLogos.length > 0;
         </div>
     )}
 
-    {!hasContent && (
-        <p class="error-message">Static information or client logos could not be loaded.</p>
+    {hasPortrait && portraitImageUrl && (
+        <div class="portrait-image-container">
+            <Image 
+                src={portraitImageUrl} 
+                alt={portraitImageAlt || 'Piotr Żakowiecki portrait'} 
+                width={PORTRAIT_RENDER_WIDTH}  
+                height={PORTRAIT_RENDER_HEIGHT}
+                format="webp" 
+                quality={80}
+                loading="lazy"
+                densities={[1, 1.5, 2]} 
+            />
+        </div>
+    )}
+
+    {displayError && (
+        <p class="error-message">Static information, portrait, or client logos could not be loaded.</p>
     )}
 </div>
 
@@ -87,70 +130,55 @@ const hasContent = introTextLoaded || clientLogos.length > 0;
         height: 100%;
         box-sizing: border-box;
     }
-    .static-text-container {
-        /* Markdown styles apply globally via .markdown-content */
-    }
+
+    /* --- Mobile (Default) Order and Styling --- */
+    .intro-text-content { order: 1; }
+    .portrait-image-container { order: 2; display: none; } 
     .client-logos-container {
-        margin-top: var(--spacing-md);
+        order: 3;
         padding-top: var(--spacing-md);
         border-top: 1px solid var(--color-border-subtle);
     }
+
+    .portrait-image-container :global(img) { /* Style for the Astro Image component's output */
+        display: block;
+        width: 100%; /* Make the image fill the container's width */
+        height: auto; /* Maintain aspect ratio based on width */
+        max-width: 100%; /* Ensure it doesn't overflow its container if something goes wrong */
+        border-radius: var(--border-radius-sm);
+        background-color: var(--color-border-light); /* Fallback color */
+        object-fit: cover; /* Cover the area. Use 'contain' if you want the whole image visible, possibly with letterboxing. */
+    }
+
     .client-logos-title {
-        font-size: 0.9em;
-        font-weight: var(--font-weight-medium);
-        color: var(--color-text-secondary);
-        text-align: left;
-        margin-bottom: var(--spacing-md);
-        text-transform: uppercase;
-        letter-spacing: 0.075em;
+        font-size: 0.9em; font-weight: var(--font-weight-medium); color: var(--color-text-secondary);
+        text-align: left; margin-bottom: var(--spacing-md); text-transform: uppercase; letter-spacing: 0.075em;
     }
     .logos-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: var(--spacing-md);
-        align-items: center;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: var(--spacing-md); align-items: center;
     }
     .logo-item {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 50px;
+        display: flex; justify-content: center; align-items: center; min-height: 50px;
     }
     .logo-item img { 
-        display: block;
-        max-width: 100%;
-        max-height: 45px;
-        width: auto; 
-        height: auto; 
-        object-fit: contain;
+        display: block; max-width: 100%; max-height: 45px;
+        width: auto; height: auto; object-fit: contain;
         transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
     }
-
-    html:not(.light-mode) .logo-item img {
-        opacity: 0.7;
-    }
-    html:not(.light-mode) .logo-item img.needs-dark-filter {
-        filter: brightness(0) invert(1); 
-    }
+    html:not(.light-mode) .logo-item img { opacity: 0.7; }
+    html:not(.light-mode) .logo-item img.needs-dark-filter { filter: brightness(0) invert(1); }
     html:not(.light-mode) .logo-item a:hover img,
-    html:not(.light-mode) .logo-item a:focus img {
-        opacity: 1;
-    }
-
-    html.light-mode .logo-item img {
-        filter: grayscale(100%) opacity(0.65);
-    }
+    html:not(.light-mode) .logo-item a:focus img { opacity: 1; }
+    html.light-mode .logo-item img { filter: grayscale(100%) opacity(0.65); }
     html.light-mode .logo-item a:hover img,
-    html.light-mode .logo-item a:focus img {
-        filter: grayscale(0%) opacity(1);
-    }
+    html.light-mode .logo-item a:focus img { filter: grayscale(0%) opacity(1); }
 
     .error-message {
-        color: var(--color-text-secondary);
-        font-style: italic;
+        color: var(--color-text-secondary); font-style: italic;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 768px) { /* Mobile refinements */
         .static-info-wrapper { gap: var(--spacing-md); }
         .logos-grid {
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -158,10 +186,27 @@ const hasContent = introTextLoaded || clientLogos.length > 0;
         }
         .logo-item img { max-height: 40px; }
         .client-logos-title { font-size: 0.85em; }
+    }
 
-        /* ADDED: Rule to hide images within introText on mobile */
-        .static-text-container.markdown-content :global(img) {
-            display: none;
+    /* --- Desktop Order and Styling --- */
+    @media (min-width: 769px) {
+        .intro-text-content { order: 1; }
+        .client-logos-container {
+            order: 2;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border-subtle);
         }
+        .portrait-image-container {
+            order: 3;
+            display: block; /* Make it visible on desktop */
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border-subtle);
+            width: 100%; /* Make the container take the full column width */
+            /* Optional: You can add a max-width to the container if you don't want the image to be TOO large on wide screens */
+            /* max-width: 350px; */ /* Example: Limit max width of the image container */
+            /* margin-left: auto; */ /* If using max-width, this can help center the container */
+            /* margin-right: auto; */ /* If using max-width, this can help center the container */
+        }
+        /* The :global(img) style for width: 100%; height: auto; already handles responsiveness within the container. */
     }
 </style>

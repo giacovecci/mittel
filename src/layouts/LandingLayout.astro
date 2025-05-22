@@ -22,16 +22,19 @@ const {
     <title>{title}</title>
     
     <script is:inline>
-      // ... (your theme script remains the same) ...
       const THEME_KEY = 'theme-preference';
       const THEME_CLASS_LIGHT = 'light-mode';
-      const THEME_CLASS_DARK = 'dark-mode';
+      const THEME_CLASS_DARK = 'dark-mode'; // This variable isn't actively used to apply dark theme with current CSS
 
       const getThemePreference = () => {
         if (typeof localStorage !== 'undefined') {
-          return localStorage.getItem(THEME_KEY);
+          const storedTheme = localStorage.getItem(THEME_KEY);
+          if (storedTheme) {
+            return storedTheme;
+          }
         }
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        // Default to 'light' if no theme is stored in localStorage
+        return 'light'; 
       };
 
       const applyTheme = (theme) => {
@@ -39,18 +42,20 @@ const {
         if (theme === 'light') {
           document.documentElement.classList.add(THEME_CLASS_LIGHT);
         } else {
-          // document.documentElement.classList.add(THEME_CLASS_DARK); 
+          // Dark theme is applied by removing THEME_CLASS_LIGHT, 
+          // as CSS defaults to dark theme styles.
         }
       };
 
-      let currentTheme = getThemePreference();
-      applyTheme(currentTheme);
+      // Make currentTheme available globally on window for other scripts if needed
+      window.currentTheme = getThemePreference();
+      applyTheme(window.currentTheme);
 
       window.toggleTheme = () => {
-        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem(THEME_KEY, currentTheme);
-        applyTheme(currentTheme);
-        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: currentTheme } }));
+        window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, window.currentTheme);
+        applyTheme(window.currentTheme);
+        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } }));
       };
     </script>
 
@@ -67,38 +72,25 @@ const {
             background-attachment: fixed; 
             background-repeat: no-repeat;
             
-            min-height: 100%; /* Use min-height to allow scrolling if content overflows */
+            min-height: 100%; 
             width: 100%;
             margin: 0;
             
             display: flex; 
             flex-direction: column;
-            align-items: center;    /* Center slot content horizontally */
-            justify-content: center;/* Center slot content vertically */
+            align-items: center;    
+            justify-content: center;
             
-            padding: var(--spacing-xl) var(--spacing-lg); /* Add overall padding */
-            /* This padding ensures content isn't flush against edges, especially on small screens */
+            padding: var(--spacing-xl) var(--spacing-lg); 
 
             color: var(--color-text-unified); 
             text-align: center;
-            /* overflow: hidden; */ /* REMOVED: Allow scrolling if content is too tall for viewport */
-            overflow-y: auto; /* Allow vertical scroll if needed */
+            overflow-y: auto; 
             box-sizing: border-box;
             font-size: var(--font-size-desktop-unified); 
             line-height: var(--line-height-unified);
-            background-color: var(--color-background); /* Fallback if image doesn't load */
+            background-color: var(--color-background); 
         }
-
-        /* Ensure the slot itself (which wraps .landing-main-content-box) doesn't restrict flex behavior */
-        /* Usually not needed as slot passes content through, but good to be mindful */
-        /* body.landing-body-fullscreen > :first-child {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        } */
-
     </style>
     <style define:vars={{ 'landing-bg-image-url-var': `url('${backgroundImageUrl}')` }}>
     </style>

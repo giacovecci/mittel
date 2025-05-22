@@ -18,13 +18,17 @@ const { title = 'Portfolio' } = Astro.props;
     <script is:inline>
       const THEME_KEY = 'theme-preference';
       const THEME_CLASS_LIGHT = 'light-mode';
-      const THEME_CLASS_DARK = 'dark-mode'; // Optional
+      const THEME_CLASS_DARK = 'dark-mode'; // This variable isn't actively used to apply dark theme with current CSS
 
       const getThemePreference = () => {
         if (typeof localStorage !== 'undefined') {
-          return localStorage.getItem(THEME_KEY);
+          const storedTheme = localStorage.getItem(THEME_KEY);
+          if (storedTheme) {
+            return storedTheme;
+          }
         }
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        // Default to 'light' if no theme is stored in localStorage
+        return 'light';
       };
 
       const applyTheme = (theme) => {
@@ -32,18 +36,20 @@ const { title = 'Portfolio' } = Astro.props;
         if (theme === 'light') {
           document.documentElement.classList.add(THEME_CLASS_LIGHT);
         } else {
-          // document.documentElement.classList.add(THEME_CLASS_DARK);
+          // Dark theme is applied by removing THEME_CLASS_LIGHT, 
+          // as CSS defaults to dark theme styles.
         }
       };
-
-      let currentTheme = getThemePreference();
-      applyTheme(currentTheme);
+      
+      // Make currentTheme available globally on window for other scripts if needed
+      window.currentTheme = getThemePreference();
+      applyTheme(window.currentTheme);
 
       window.toggleTheme = () => {
-        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem(THEME_KEY, currentTheme);
-        applyTheme(currentTheme);
-        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: currentTheme } }));
+        window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, window.currentTheme);
+        applyTheme(window.currentTheme);
+        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } }));
       };
     </script>
       
@@ -58,7 +64,7 @@ const { title = 'Portfolio' } = Astro.props;
           --desktop-content-padding-bottom: var(--spacing-lg);
           --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
           --mobile-header-height: 80px;
-          --header-area-height: 90px; /* This variable is crucial for the gradient */
+          --header-area-height: 90px; 
        }
 
         html { height: 100%; box-sizing: border-box; }
@@ -98,7 +104,7 @@ const { title = 'Portfolio' } = Astro.props;
                 background-color: var(--color-background);
                 border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
                 position: relative; 
-                z-index: 20; /* Header container z-index */
+                z-index: 20; 
             }
 
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
@@ -118,11 +124,11 @@ const { title = 'Portfolio' } = Astro.props;
                  pointer-events: none;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper) {
-                 pointer-events: auto; /* Re-enable for content if needed, but for text, none is fine */
+                 pointer-events: auto; 
                  cursor: default;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper > .identity-header-content-wrapper) {
-                 pointer-events: auto; /* Ensure text itself is selectable if needed */
+                 pointer-events: auto; 
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
                  grid-column: 3 / 4; 
@@ -130,22 +136,19 @@ const { title = 'Portfolio' } = Astro.props;
                  padding-left: var(--spacing-md);
             }
 
-            /* MODIFIED: #divider-area styles */
             #app-container.is-desktop > #divider-area {
                 grid-column: 2 / 3; 
                 grid-row: 1 / 3;    
-                /* Use a gradient for background: transparent for header height, then solid */
                 background: linear-gradient(to bottom, 
                     transparent 0, 
                     transparent var(--header-area-height), 
                     var(--color-background) var(--header-area-height), 
                     var(--color-background) 100%
                 );
-                z-index: 30; /* Higher than header, so its ::before can be on top */
+                z-index: 30; 
                 position: relative; 
                 display: block;
             }
-            /* MODIFIED: #divider-area::before styles */
             #app-container.is-desktop > #divider-area::before {
                  content: ''; 
                  position: absolute; 
@@ -154,14 +157,10 @@ const { title = 'Portfolio' } = Astro.props;
                  left: 50%;
                  transform: translateX(-50%);
                  width: var(--line-thickness-subtle);
-                 background-color: var(--color-border-subtle); /* This is the vertical line color */
+                 background-color: var(--color-border-subtle); 
                  opacity: 1;
-                 /* z-index for ::before is not strictly needed here as its parent (#divider-area) 
-                    already has a high z-index (30) ensuring it's above the header (20). 
-                    The ::before will render on top of its parent's transparent/solid background. */
             }
 
-            /* ... rest of the scrollbar and content area styles ... */
             #app-container.is-desktop > #info-content-area,
             #app-container.is-desktop > #dynamic-content-area,
             #app-container.is-desktop > #all-feed-content-area,
@@ -210,7 +209,6 @@ const { title = 'Portfolio' } = Astro.props;
                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
 
-             /* Desktop View Switching Logic ... */
              #app-container.is-desktop.view-home > #info-content-area { display: block; }
              #app-container.is-desktop.view-home > #dynamic-content-area { display: block; }
              #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
@@ -247,7 +245,6 @@ const { title = 'Portfolio' } = Astro.props;
              #app-container.is-desktop.view-contact > #divider-area { display: none; }
         }
 
-        /* ... rest of the mobile styles ... */
         @media (max-width: 768px) { /* MOBILE */
             body {
                 height: auto; overflow-y: auto; overflow-x: hidden;
@@ -300,7 +297,6 @@ const { title = 'Portfolio' } = Astro.props;
                  padding: var(--spacing-lg) var(--mobile-content-padding-x);
                  display: none; box-sizing: border-box;
             }
-            /* Mobile View Logic ... */
             #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
             #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
             #app-container.is-mobile.view-info > #info-content-area { display: block; }
@@ -318,11 +314,11 @@ const { title = 'Portfolio' } = Astro.props;
         </div>
         <div id="divider-area"></div>
         <div id="info-content-area"><slot name="info-content" /></div>
-        <div id="feed-content-area"><slot name="feed-content" /></div> {/* Not actively used for single entry but slot exists */}
+        <div id="feed-content-area"><slot name="feed-content" /></div>
         <div id="overview-content-area"><slot name="overview-content" /></div>
-        <div id="dynamic-content-area"><slot name="dynamic-content" /></div> {/* For Highlights/About */}
+        <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
         <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
-        <div id="contact-content-area"><slot name="contact-content" /></div> {/* ADDED SLOT WRAPPER */}
+        <div id="contact-content-area"><slot name="contact-content" /></div>
     </div>
 </body>
 </html>
