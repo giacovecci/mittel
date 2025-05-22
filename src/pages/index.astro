@@ -1,5 +1,5 @@
 ---
-// src/pages/index.astro (New Landing Page)
+// src/pages/index.astro
 import { getEntry } from 'astro:content';
 import LandingLayout from '../layouts/LandingLayout.astro';
 
@@ -16,12 +16,9 @@ const tagline = landingPageEntry?.data.landingPageTagline || defaultTagline;
 const location = landingPageEntry?.data.landingPageLocation || defaultLocation;
 const landingBgImage = landingPageEntry?.data.landingPageBackgroundImage || defaultBgImage;
 const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt || defaultBgImageAlt;
-
-// SVG Icon variables removed
 ---
 <LandingLayout title={`${siteName} | Welcome`} backgroundImageUrl={landingBgImage} backgroundAltText={landingBgImageAlt}>
   
-  {/* MODIFIED: Theme Toggle Button - now text-based */}
   <button type="button" class="theme-toggle-button-fixed" id="theme-toggle-btn-fixed" aria-label="Toggle theme">
     {/* Text will be injected here by JS */}
   </button>
@@ -35,7 +32,7 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
 
     <nav class="landing-navigation-buttons">
       <a href="/portfolio" class="landing-button portfolio-button">
-        Portfolio
+        View Portfolio
       </a>
       <a href="/portfolio#show-contact" class="landing-button work-button">
         Work With Me
@@ -44,22 +41,22 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
   </main>
 
   <style>
-    /* MODIFIED: Styles for the fixed theme toggle button (text-based) */
+    /* ... (existing .theme-toggle-button-fixed styles) ... */
     .theme-toggle-button-fixed {
       position: fixed;
       top: var(--spacing-md);
       right: var(--spacing-md);
-      z-index: 100; 
-      background-color: rgba(var(--color-text-unified-rgb), 0.1); /* Subtle background */
+      z-index: 1000; 
+      background-color: rgba(var(--color-text-unified-rgb), 0.1); 
       border: 1px solid var(--color-border-subtle);
       color: var(--color-text-unified); 
-      padding: var(--spacing-xs) var(--spacing-sm); /* Padding for text */
+      padding: var(--spacing-xs) var(--spacing-sm); 
       cursor: pointer;
-      border-radius: var(--border-radius-sm); /* Standard border radius */
-      font-size: 0.8rem; /* Smaller font for a corner button */
+      border-radius: var(--border-radius-sm); 
+      font-size: 0.8rem; 
       font-weight: var(--font-weight-medium);
       line-height: 1.2;
-      min-width: 80px; /* Ensure it's not too small */
+      min-width: 80px; 
       text-align: center;
       transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
     }
@@ -67,111 +64,148 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
       background-color: var(--color-surface-light-hover);
       border-color: var(--color-accent-hover-custom);
     }
-    /* Removed .theme-icon-svg-container styles */
 
-    /* Styles for .landing-main-content-box and its children remain the same */
     .landing-main-content-box { 
+      /* Default (Desktop) styles */
       background-color: rgba(0, 0, 0, 0.65); 
       padding: var(--spacing-xl) var(--spacing-lg);
       border-radius: var(--border-radius-sm);
       max-width: 650px; 
-      width: 90%;
+      width: 90%; 
       box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, height 0.3s ease, padding 0.3s ease; 
       position: relative; 
       z-index: 10;
       display: flex; 
       flex-direction: column; 
       align-items: center;
+      justify-content: center; 
       min-width: 280px; 
     }
     html.light-mode .landing-main-content-box { 
         background-color: rgba(255, 255, 255, 0.75); 
         box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
+
+    /* ... (existing .landing-identity-content and children styles) ... */
     .landing-identity-content { 
       margin-bottom: var(--spacing-lg); 
       width: 100%; 
     }
     .landing-identity-content .site-name {
-      font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
-      color: var(--color-text-unified); 
-      margin-bottom: var(--spacing-xs);
-      font-weight: var(--font-weight-bold);
-      line-height: 1.2;
-      text-align: center;
+      font-size: clamp(2rem, 1.5rem + 2vw, 3rem); color: var(--color-text-unified); 
+      margin-bottom: var(--spacing-xs); font-weight: var(--font-weight-bold);
+      line-height: 1.2; text-align: center;
     }
     .landing-identity-content .tagline {
-      font-size: clamp(1rem, 0.8rem + 0.8vw, 1.3rem);
-      color: var(--color-accent); 
-      margin-bottom: var(--spacing-xxs);
-      text-align: center; 
-      hyphens: none;
-      line-height: 1.3;
+      font-size: clamp(1rem, 0.8rem + 0.8vw, 1.3rem); color: var(--color-accent); 
+      margin-bottom: var(--spacing-xxs); text-align: center; 
+      hyphens: none; line-height: 1.3;
     }
     .landing-identity-content .location {
-      font-size: clamp(0.9rem, 0.7rem + 0.6vw, 1.1rem);
-      color: var(--color-text-secondary); 
-      margin-bottom: 0;
-      text-align: center; 
-      hyphens: none;
-      line-height: 1.3;
+      font-size: clamp(0.9rem, 0.7rem + 0.6vw, 1.1rem); color: var(--color-text-secondary); 
+      margin-bottom: 0; text-align: center; 
+      hyphens: none; line-height: 1.3;
     }
+
+    /* ... (existing .landing-navigation-buttons and .landing-button styles) ... */
     .landing-navigation-buttons {
-      display: flex;
-      flex-direction: column; 
-      align-items: center; 
-      gap: var(--spacing-md);
+      display: flex; flex-direction: column; 
+      align-items: center; gap: var(--spacing-md);
       width: 100%; 
     }
     .landing-button {
-      display: inline-block;
-      padding: var(--spacing-sm) var(--spacing-lg);
-      border: 1px solid var(--color-border-subtle); 
-      border-radius: var(--border-radius-sm);
-      color: var(--color-text-unified);
-      background-color: rgba(var(--color-text-unified-rgb), 0.1); 
-      text-decoration: none;
-      font-weight: var(--font-weight-medium);
+      display: inline-block; padding: var(--spacing-sm) var(--spacing-lg);
+      border: 1px solid var(--color-border-subtle); border-radius: var(--border-radius-sm);
+      color: var(--color-text-unified); background-color: rgba(var(--color-text-unified-rgb), 0.1); 
+      text-decoration: none; font-weight: var(--font-weight-medium);
       transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-      width: 100%; 
-      max-width: 320px; 
-      text-align: center;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1.5;
-      box-sizing: border-box;
+      width: 100%; max-width: 320px; 
+      text-align: center; cursor: pointer;
+      font-size: 1rem; line-height: 1.5; box-sizing: border-box;
     }
     .landing-button:hover {
       background-color: var(--color-surface-light-hover);
       border-color: var(--color-accent-hover-custom);
       color: var(--color-accent-hover-custom);
     }
-    @media (min-width: 768px) { 
+
+    @media (min-width: 769px) { 
       .landing-navigation-buttons {
-        flex-direction: row; 
-        justify-content: center; 
+        flex-direction: row; justify-content: center; 
         gap: var(--spacing-lg);
       }
       .landing-button { 
-        width: auto; 
-        min-width: 200px; 
+        width: auto; min-width: 200px; 
       }
     }
-    @media (max-width: 480px) {
-        .landing-button {
-            min-width: 160px; 
-            font-size: 0.9rem; 
-            padding: var(--spacing-xs) var(--spacing-sm);
+
+    @media (max-width: 768px) {
+        .landing-main-content-box {
+            width: 100%; 
+            max-width: none; 
+            min-width: 0; 
+            
+            height: auto; /* Height determined by content */
+            /* No fixed position, no margin-top: auto */
+            /* flex-shrink: 0; /* Not strictly needed if parent is not constraining height */
+
+            /* Restore semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.65); 
+            /* Light mode semi-transparent background */
+            /* html.light-mode will handle its specific semi-transparent color */
+            
+            /* Internal content centering is inherited */
+            
+            padding: var(--spacing-lg) var(--spacing-md); /* Restore original mobile padding */
+            
+            border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0; 
+            margin-bottom: 0; /* Ensure it's flush if it reaches bottom of viewport */
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.2); 
+            /* overflow-y: auto; /* Only if content *within this box* might exceed its own natural height and needs scroll */
         }
+        html.light-mode .landing-main-content-box {
+            /* This rule is already defined above for desktop, ensure it applies correctly for mobile too */
+            background-color: rgba(255, 255, 255, 0.75); 
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.07);
+        }
+
+        .landing-identity-content {
+            margin-bottom: var(--spacing-xs); 
+        }
+        .landing-identity-content .site-name { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem); }
+        .landing-identity-content .tagline { font-size: clamp(0.9rem, 0.7rem + 0.7vw, 1.1rem); }
+        .landing-identity-content .location { font-size: clamp(0.8rem, 0.6rem + 0.5vw, 1rem); }
+
+
+        .landing-navigation-buttons {
+            flex-direction: row; 
+            justify-content: space-between; 
+            gap: var(--spacing-sm); 
+        }
+        .landing-button {
+            width: calc(50% - (var(--spacing-sm) / 2)); 
+            max-width: none; 
+            padding: var(--spacing-xs) var(--spacing-xs); 
+            font-size: 0.8rem; 
+        }
+    }
+
+    @media (max-width: 480px) { 
+        .landing-main-content-box {
+            padding: var(--spacing-md) var(--spacing-sm); /* Adjust padding for very small screens */
+        }
+        .landing-button {
+            font-size: 0.9rem; 
+            line-height: 1.2;
+        }
+        .landing-identity-content .site-name { font-size: clamp(1.3rem, 1rem + 1.2vw, 2rem); }
     }
   </style>
 
-      
-<script> 
+  <script> 
     const themeToggleButtonFixed = document.getElementById('theme-toggle-btn-fixed');
 
-    // Provide type for 'theme' parameter
     function updateButtonText(theme: string) { 
       if (themeToggleButtonFixed) {
         themeToggleButtonFixed.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode'; 
@@ -179,7 +213,6 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
       }
     }
 
-    // Access window.currentTheme (TypeScript now knows about it via env.d.ts)
     if (typeof window.currentTheme !== 'undefined' && themeToggleButtonFixed) {
       updateButtonText(window.currentTheme);
     } else if (themeToggleButtonFixed) { 
@@ -188,16 +221,13 @@ const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt |
     }
     
     themeToggleButtonFixed?.addEventListener('click', () => {
-      // Access window.toggleTheme (TypeScript now knows about it)
       if (typeof window.toggleTheme === 'function') {
         window.toggleTheme(); 
       }
     });
 
-    // Type the event 'e' as ThemeChangeEvent or cast to CustomEvent
     document.addEventListener('themechanged', (e) => {
-      // Cast e to your specific CustomEvent type or a generic CustomEvent
-      const event = e as CustomEvent<{ theme: string }>; // Or 'as ThemeChangeEvent' if you used that interface
+      const event = e as CustomEvent<{ theme: string }>; 
       
       if (event.detail && typeof event.detail.theme !== 'undefined') {
         updateButtonText(event.detail.theme);
