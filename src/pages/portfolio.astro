@@ -1,5 +1,4 @@
 ---
-// src/pages/portfolio.astro
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import IdentityHeader from '../components/IdentityHeader.astro';
@@ -97,28 +96,26 @@ const overviewItems = feedEntries.map(entry => ({
 
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
         const mobileNavPanel = document.getElementById('mobile-nav-panel');
-        // mobileNavLinks can be null if mobileNavPanel is null, so we handle it carefully
         const mobileNavLinks = mobileNavPanel ? mobileNavPanel.querySelectorAll('.mobile-nav-link') : null;
 
         const overviewGridContainer = document.getElementById('overview-grid-container');
         const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
         const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
+        
+        const seeMoreProjectsBtnMobile = document.getElementById('see-more-projects-btn-mobile');
 
         if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper || !contactContentArea ||
             !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn || !desktopContactBtn ||
-            !hamburgerMenuBtn || !mobileNavPanel || /* mobileNavLinks itself can be null */
-            !overviewGridContainer || !allFeedListWrapper || !mobileHighlightsSeparator 
+            !hamburgerMenuBtn || !mobileNavPanel || 
+            !overviewGridContainer || !allFeedListWrapper || !mobileHighlightsSeparator ||
+            !seeMoreProjectsBtnMobile 
             ) {
             console.error("Essential elements missing in portfolio.astro. Check IDs. Script will not run.");
             return; 
         }
-        // If mobileNavPanel was found, mobileNavLinks should be a NodeListOf (even if empty), not null.
-        // But to be absolutely safe with TypeScript, especially if mobileNavPanel could be null earlier:
         if (!mobileNavLinks) {
              console.warn("Mobile navigation links (mobileNavLinks) are null or undefined, possibly because mobileNavPanel was not found or has no matching children. Some mobile navigation functionality might be affected.");
-             // Depending on strictness, you could return here if mobileNavLinks is essential for all flows.
         }
-
 
         const allDesktopButtonsTyped = [
             desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn, desktopContactBtn
@@ -134,7 +131,6 @@ const overviewItems = feedEntries.map(entry => ({
             allDesktopButtonsTyped.forEach(btn => btn.classList.remove('active'));
             
             if (!isMobile()) {
-                // At this point, these buttons are guaranteed non-null due to the initial check.
                 if (currentView === 'home') desktopHighlightsBtn!.classList.add('active');
                 else if (currentView === 'all-feed') desktopAllFeedBtn!.classList.add('active');
                 else if (currentView === 'overview') desktopOverviewBtn!.classList.add('active');
@@ -163,8 +159,8 @@ const overviewItems = feedEntries.map(entry => ({
         
         function setMainView(view: string) {
             currentView = view;
-            // Elements below are guaranteed non-null by the initial check.
-            appContainer!.className = ''; 
+            
+            appContainer!.classList.remove('is-desktop', 'is-mobile', 'view-home', 'view-info', 'view-all-feed', 'view-overview', 'view-about', 'view-contact');
 
             highlightsContentWrapper!.style.display = 'none';
             aboutContentWrapper!.style.display = 'none';
@@ -172,48 +168,53 @@ const overviewItems = feedEntries.map(entry => ({
 
             if (isMobile()) {
                 appContainer!.classList.add('is-mobile');
-                if (view === 'home' || view === 'info') {
+                if (view === 'home' || view === 'info') { 
+                    appContainer!.classList.add('view-info');
                     mobileHighlightsSeparator!.style.display = 'block';
+                    highlightsContentWrapper!.style.display = 'block'; 
+                } else if (view === 'about') {
+                    appContainer!.classList.add('view-about');
+                    aboutContentWrapper!.style.display = 'block'; 
+                } else if (view === 'overview') {
+                    appContainer!.classList.add('view-overview');
+                } else if (view === 'all-feed') {
+                    appContainer!.classList.add('view-all-feed');
+                } else if (view === 'contact') {
+                    appContainer!.classList.add('view-contact');
                 }
-            } else {
+            } else { 
                 appContainer!.classList.add('is-desktop');
-            }
-
-            switch (view) {
-                case 'home': 
+                if (view === 'home') {
                     appContainer!.classList.add('view-home');
                     highlightsContentWrapper!.style.display = 'block';
-                    break;
-                case 'info': 
-                    appContainer!.classList.add('view-info');
-                    highlightsContentWrapper!.style.display = 'block'; 
-                    break;
-                case 'all-feed':
-                    appContainer!.classList.add('view-all-feed');
-                    break;
-                case 'overview':
-                    appContainer!.classList.add('view-overview');
-                    break;
-                case 'about':
+                } else if (view === 'about') {
                     appContainer!.classList.add('view-about');
                     aboutContentWrapper!.style.display = 'block';
-                    break;
-                case 'contact':
+                } else if (view === 'overview') {
+                    appContainer!.classList.add('view-overview');
+                } else if (view === 'all-feed') {
+                    appContainer!.classList.add('view-all-feed');
+                } else if (view === 'contact') {
                     appContainer!.classList.add('view-contact');
-                    break;
-            }
-            updateActiveStates();
-            if (window.location.hash) { 
-                if (view !== 'all-feed' && view !== 'contact') {
-                     window.scrollTo(0, 0);
                 }
-            } else {
-                window.scrollTo(0, 0);
             }
+            
+            updateActiveStates();
+
+            // MODIFICATION: Scroll logic wrapped in requestAnimationFrame
+            const performScrollIfNeeded = () => {
+                if (window.location.hash) { 
+                    if (view !== 'all-feed' && view !== 'contact') {
+                        window.scrollTo(0, 0);
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            };
+            requestAnimationFrame(performScrollIfNeeded);
         }
 
         function toggleMobileMenu(forceClose = false) {
-            // Elements below are guaranteed non-null by the initial check.
             const isOpen = mobileNavPanel!.classList.contains('is-open');
             if (forceClose || isOpen) {
                 mobileNavPanel!.classList.remove('is-open');
@@ -228,7 +229,7 @@ const overviewItems = feedEntries.map(entry => ({
             }
         }
 
-        hamburgerMenuBtn!.addEventListener('click', () => toggleMobileMenu()); // Guaranteed non-null
+        hamburgerMenuBtn!.addEventListener('click', () => toggleMobileMenu());
 
         mobileNavLinks?.forEach(link => { 
             link.addEventListener('click', () => {
@@ -240,7 +241,6 @@ const overviewItems = feedEntries.map(entry => ({
             });
         });
 
-        // Desktop buttons are guaranteed non-null
         desktopHighlightsBtn!.addEventListener('click', () => setMainView('home'));
         desktopAllFeedBtn!.addEventListener('click', () => setMainView('all-feed'));
         desktopOverviewBtn!.addEventListener('click', () => setMainView('overview'));
@@ -252,18 +252,19 @@ const overviewItems = feedEntries.map(entry => ({
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
             setMainView('all-feed'); 
-            requestAnimationFrame(() => {
-                setTimeout(() => {
+            
+            requestAnimationFrame(() => { 
+                setTimeout(() => { 
                     const targetElement = document.getElementById(targetId);
-                    // allFeedContentArea is guaranteed non-null
                     if (targetElement && allFeedContentArea!.contains(targetElement)) { 
                         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    } else { console.error(`Target feed element '${targetId}' not found or not in scroll container.`); }
+                    } else { 
+                        console.error(`Target feed element '${targetId}' not found or not in scroll container.`); 
+                    }
                 }, 100); 
             });
         };
 
-        // overviewGridContainer is guaranteed non-null
         overviewGridContainer!.addEventListener('click', (event) => {
             if (!(event.target instanceof Element)) return; 
             const link = event.target.closest('a.grid-item');
@@ -273,7 +274,6 @@ const overviewItems = feedEntries.map(entry => ({
             }
         });
 
-        // highlightsListWrapper is guaranteed non-null
         highlightsListWrapper!.addEventListener('click', (event) => {
             if (!(event.target instanceof Element)) return; 
             const link = event.target.closest('a.highlight-link-wrapper.is-clickable');
@@ -283,6 +283,15 @@ const overviewItems = feedEntries.map(entry => ({
             }
         });
         
+        if (seeMoreProjectsBtnMobile) {
+            seeMoreProjectsBtnMobile.addEventListener('click', () => {
+                setMainView('overview'); 
+                if (mobileNavPanel && mobileNavPanel.classList.contains('is-open')) {
+                    toggleMobileMenu(true); 
+                }
+            });
+        }
+
         function handleInitialLoad() {
             const hash = window.location.hash;
             let initialTargetView = isMobile() ? 'info' : 'home'; 
@@ -298,7 +307,7 @@ const overviewItems = feedEntries.map(entry => ({
 
         const resizeObserver = new ResizeObserver(() => {
             const isNowMobile = isMobile();
-            if (isNowMobile !== wasMobile) {
+            if (isNowMobile !== wasMobile) { 
                 let targetView = currentView;
                 if (isNowMobile) { 
                     if (currentView === 'home') targetView = 'info';
@@ -308,8 +317,6 @@ const overviewItems = feedEntries.map(entry => ({
                 }
                 setMainView(targetView); 
                 wasMobile = isNowMobile;
-            } else { 
-                setMainView(currentView);
             }
         });
         resizeObserver.observe(document.body);

@@ -2,9 +2,7 @@
 // src/components/HighlightsColumn.astro
 import { getCollection } from 'astro:content';
 import HighlightItem from './HighlightItem.astro';
-// Removed: type CollectionEntry - not strictly needed here with the mapping
 
-// Define a more specific type for the items after mapping, including isSeparator
 interface ProcessedHighlight {
   id: string;
   title: string;
@@ -19,8 +17,8 @@ const allHighlightsRaw = await getCollection('highlights');
 
 const allProcessedHighlights: ProcessedHighlight[] = allHighlightsRaw
   .map(item => ({
-    id: item.id, // Keep the original slug/id for keys
-    ...item.data, // Spread the frontmatter data
+    id: item.id,
+    ...item.data,
   }))
   .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
 ---
@@ -34,15 +32,19 @@ const allProcessedHighlights: ProcessedHighlight[] = allHighlightsRaw
             <h3 class="separator-title">{item.title}</h3>
           </div>
         ) : (
-          // Pass the whole item, HighlightItem.astro expects a 'highlight' prop
-          // which is an object matching its Props.highlight structure.
-          // Since item already matches this structure (with optional fields), this is fine.
           <HighlightItem highlight={item} />
         )
       ))}
     </div>
   ) : (
     <p>No highlights or separators available at the moment.</p>
+  )}
+
+  {/* MODIFICATION: Added "See more projects" button */}
+  {allProcessedHighlights.length > 0 && (
+    <button type="button" id="see-more-projects-btn-mobile" class="see-more-projects-button mobile-only-flex">
+      See more projects
+    </button>
   )}
 </div>
 
@@ -54,17 +56,51 @@ const allProcessedHighlights: ProcessedHighlight[] = allHighlightsRaw
     /* Container for highlight items and separators */
   }
   .highlight-separator {
-    padding: var(--spacing-sm) var(--spacing-xs); /* Match HighlightItem padding for alignment */
-    margin-bottom: var(--spacing-md); /* Same as HighlightItem */
-    /* border-bottom: 1px solid var(--color-border-light); */ /* Optional: if separators need a line */
+    padding: var(--spacing-sm) var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
   }
   .separator-title {
-    font-size: 1.2em; /* Make separator titles a bit larger or distinct */
+    font-size: 1.2em;
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-unified); /* Or var(--color-accent) for emphasis */
-    margin: 0; /* Reset margin from global h3 styles */
+    color: var(--color-text-unified);
+    margin: 0;
     line-height: 1.3;
-    text-align: left; /* Override global text-align: justify if needed */
-    hyphens: none; /* Separators usually shouldn't hyphenate */
+    text-align: left;
+    hyphens: none;
   }
+
+  /* MODIFICATION: Added styles for the new button */
+  .see-more-projects-button {
+    display: none; /* Hidden by default, shown via mobile-only-flex */
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: var(--spacing-md); /* Space above the button */
+    font-size: 1em;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-unified);
+    background-color: var(--color-surface-light);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .see-more-projects-button:hover {
+    background-color: var(--color-surface-light-hover);
+    border-color: var(--color-accent-hover-custom);
+    color: var(--color-accent-hover-custom);
+  }
+
+  /* Utility class to show on mobile (assuming mobile is flex display for this button) */
+  /* This needs to be coordinated with global.css or BaseLayout.astro if .mobile-only-flex is defined there */
+  /* For now, defining it locally for clarity, but ideally it's a global utility */
+  @media (max-width: 768px) {
+    .mobile-only-flex {
+      display: block; /* Or 'flex' if it needs to be a flex container itself */
+    }
+  }
+  /* If .mobile-only (from Header.astro) is display: flex !important, we might need to adjust */
+  /* Let's assume .mobile-only-flex is specific for this button for now */
+
 </style>
