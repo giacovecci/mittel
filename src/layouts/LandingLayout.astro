@@ -55,6 +55,7 @@ const {
       };
     </script>
 
+      
     <style is:global>
         @import '../styles/global.css'; 
 
@@ -75,16 +76,16 @@ const {
             display: flex; 
             flex-direction: column;
             
-            /* Default (Desktop) alignment: Center content */
-            align-items: center;    
-            justify-content: center;
+            /* MODIFIED: Desktop alignment and padding */
+            align-items: center;    /* Horizontally centers the content box if it's narrower than viewport */
+            /* justify-content: center; /* REMOVED - We no longer vertically center the body's direct flex children this way */
             
-            /* Default (Desktop) padding */
-            padding: var(--spacing-xl) var(--spacing-lg); 
+            /* MODIFIED: Desktop padding - top is 50vh, right/left is var(--spacing-lg), bottom is var(--spacing-xl) */
+            padding: 50vh var(--spacing-lg) var(--spacing-xl); 
 
             color: var(--color-text-unified); 
-            text-align: center;
-            overflow-y: auto; /* Allow scroll on desktop if centered box is tall */
+            /* text-align: center; /* Removed, content box handles its own text alignment if needed */
+            overflow-y: auto; /* Allow scroll on desktop if content box + padding exceeds viewport height */
             box-sizing: border-box;
             font-size: var(--font-size-desktop-unified); 
             line-height: var(--line-height-unified);
@@ -103,17 +104,19 @@ const {
                 overflow-y: auto; /* Allow scrolling if content box makes body taller than 100vh */
                 
                 /* This padding creates the 50vh image area at the top */
-                padding: 50vh 0 0 0; /* 50vh top padding, 0 for others */
+                padding: 50vh 0 0 0; /* 50vh top padding, 0 for others for mobile */
                 
                 /* Flex properties to handle the content box within the remaining space */
-                display: flex; /* Re-enable flex */
-                flex-direction: column; /* Content box will be a column item */
-                align-items: stretch; /* Content box can take full width */   
+                display: flex; 
+                flex-direction: column; 
+                align-items: stretch; /* Content box can take full width on mobile */   
                 justify-content: flex-start; /* Content box starts immediately after top padding */
                 background-position: center top; 
             }
         }
     </style>
+
+    
     <style define:vars={{ 'landing-bg-image-url-var': `url('${backgroundImageUrl}')` }}>
     </style>
 </head>
