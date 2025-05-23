@@ -28,7 +28,7 @@ contentBlocks:
       post-Trumpian era?
 
 
-      Since Aleksandra was in Warsaw and David was not, I played a small, but important part in helping them sound like they were in the same room. My role was location sound recording with a foolproof setup.
+      Since Aleksandra was in Warsaw and David was not, I played a small but important part in helping them sound like they were in the same room. My role was location sound recording with a foolproof setup.
 
 
       The full transcript of the conversation is [available here](https://www.nytimes.com/2025/04/02/opinion/poland-democracy-us.html).
