@@ -1,10 +1,11 @@
 ---
-title: On the Polish-Belarusian border with the NYT
+title: Borderland, interzone
 date: 2024-11-06T01:01:00.000Z
 thumbnail: /uploads/nyt-2411-thumb.jpg
-contentType: "Audio"
-clientName: "NYT"
-myRole: ["Location Sound"]
+contentType: Audio
+clientName: NYT
+myRole:
+  - Location Sound
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
 contentBlocks:
