@@ -1,0 +1,3494 @@
+/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+/* These variables apply globally within the preview context */
+:root {
+  /* --- FONT STYLE --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: 1.1rem; 
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular);
+
+  --line-height-unified: 1.6;
+  --color-text-unified: #ccc;
+
+  /* Background & Border Colors */
+  --color-background: #000000;
+  --color-header-bg: #111111;
+  --color-border: #555555;
+  --line-thickness: 2px;
+
+  /* Other Colors */
+  --color-text-secondary: #aaa;
+  --color-border-light: #444;
+  --border-radius-sm: 4px;
+  --color-background-muted: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-surface-light-hover: #383838;
+  --color-text-unified-rgb: 204, 204, 204;
+
+  /* Accent for Hover/Active */
+  --color-accent: #e70221;
+  --color-text-hover: var(--color-accent);
+
+  /* Spacing Unit & Scale */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+
+  /* Layout Specific Variables (Might not be needed unless specific widths are required) */
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%;
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width));
+
+  /* Feed Entry Specific Vars */
+  --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+}
+
+/* 3. Core Body & Universal Text Styling */
+.feed-entry-preview-wrapper { 
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  padding: 1rem; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.feed-entry-preview-wrapper h1,
+.feed-entry-preview-wrapper h2,
+.feed-entry-preview-wrapper h3,
+.feed-entry-preview-wrapper h4,
+.feed-entry-preview-wrapper h5,
+.feed-entry-preview-wrapper h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+.feed-entry-preview-wrapper h3 { font-size: 1.1em; } 
+
+.feed-entry-preview-wrapper p,
+.feed-entry-preview-wrapper li,
+.feed-entry-preview-wrapper dt,
+.feed-entry-preview-wrapper dd,
+.feed-entry-preview-wrapper span, 
+.feed-entry-preview-wrapper label {
+  font-weight: inherit; 
+  font-size: inherit; 
+  line-height: inherit; 
+  margin-bottom: var(--spacing-sm);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.feed-entry-preview-wrapper a { color: inherit; text-decoration: none; } 
+.feed-entry-preview-wrapper a:hover { color: var(--color-text-hover); } 
+
+.feed-entry-preview-wrapper .accent-text { 
+  color: var(--color-accent);
+}
+
+/* ========================================================= */
+/* === Styles Adapted from FeedEntry.astro === */
+/* ========================================================= */
+
+/* MODIFICATION: Removed incorrect comment */
+
+.feed-entry { 
+   margin-bottom: var(--spacing-xl);
+}
+.feed-entry h3 { 
+    margin-top: 0;
+    margin-bottom: var(--spacing-xxs);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.1em;
+    line-height: 1.3;
+}
+.feed-entry-date {
+    display: block;
+    font-size: 0.9em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+}
+.feed-entry-blocks {
+    margin-top: var(--spacing-lg);
+}
+.content-block {
+    margin-bottom: var(--spacing-lg);
+}
+.content-block:last-child { margin-bottom: 0; }
+
+.block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+.block-two-column .column { flex: 1; min-width: 0; }
+.block-two-column .column > *:first-child { margin-top: 0; }
+.block-two-column .column > *:last-child { margin-bottom: 0; }
+
+.block-two-column .column p,
+.block-two-column .column li,
+.block-two-column .column dt,
+.block-two-column .column dd {
+     line-height: var(--line-height-unified);
+     margin-bottom: var(--spacing-sm);
+     font-size: 1em;
+     text-align: justify; 
+     hyphens: auto;
+}
+.block-two-column .column h1,
+.block-two-column .column h2,
+.block-two-column .column h3,
+.block-two-column .column h4 { margin-bottom: var(--spacing-xs); margin-top: var(--spacing-md); line-height: 1.2; }
+.block-two-column .column ul,
+.block-two-column .column ol { margin-bottom: var(--spacing-sm); padding-left: var(--spacing-lg); list-style: revert; } 
+.block-two-column .column li > p { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column li { margin-bottom: var(--spacing-xxs); } 
+.block-two-column .column blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--spacing-sm); }
+
+.block-full-width-image img,
+.block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+.block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+
+.block-full-width-embed {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 56.25%; 
+    height: 0;
+    background-color: var(--color-border-light);
+}
+.block-full-width-embed iframe, 
+.block-full-width-embed video {  
+    position: absolute;
+    top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+    border: none;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Styles for .markdown-content within the preview */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+    text-align: justify; 
+    hyphens: auto;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-xs); line-height: 1.2; }
+.markdown-content ul, .markdown-content ol { padding-left: var(--spacing-lg); list-style: revert; } 
+.markdown-content li { margin-bottom: var(--spacing-xxs); } 
+.markdown-content li > p { margin-bottom: var(--spacing-xxs); } 
+.markdown-content blockquote { margin-left: var(--spacing-sm); padding-left: var(--spacing-md); border-left: 3px solid var(--color-border-light); color: var(--color-text-secondary); font-style: italic; }
+.markdown-content img { max-width: 100%; height: auto; display: block; margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); border-radius: var(--border-radius-sm); }
+.markdown-content a { color: var(--color-text-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.markdown-content a:hover { color: var(--color-text-unified); text-decoration: none; }
+
+.block-horizontal-gallery-preview {
+     background-color: var(--color-background-muted);
+     padding: var(--spacing-sm);
+     border: 1px dashed var(--color-border);
+     white-space: nowrap; 
+     overflow-x: auto; 
+}
+.block-horizontal-gallery-preview img { 
+     display: inline-block; 
+     height: 100px; 
+     width: auto;
+     margin-right: var(--spacing-sm);
+     vertical-align: middle;
+     border: 1px solid var(--color-border-light);
+}
+
+.block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+
+.entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }backend:
+  name: git-gateway
+  repo: giacovecci/mittel
+  branch: final-mittel-v2
+  identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
+  gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+site_url: https://mittel.tv
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "feed"
+    label: "Feed Entries"
+    folder: "src/content/feed"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: false }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Type"
+        name: "contentType"
+        widget: "select"
+        options:
+          - { label: "TV News", value: "TV News" }
+          - { label: "Documentary", value: "Documentary" }
+          - { label: "Audio", value: "Audio" }
+          - { label: "Press", value: "Press" }
+        required: false
+        hint: "Select the primary type of content for this entry."
+      # MODIFICATION: Added clientName and myRole widgets
+      - { label: "Client Name", name: "clientName", widget: "string", required: false, hint: "Name of the client or organization." }
+      - label: "My Role(s)"
+        name: "myRole"
+        widget: "list"
+        summary: "{{fields.role}}" # Shows the role text in the list item summary in CMS
+        field: { label: "Role", name: "role", widget: "string" } # Each item in the list is a string
+        required: false
+        hint: "Your role(s) in this project (e.g., Producer, Researcher)."
+      - label: "Content Blocks"
+        name: "contentBlocks"
+        widget: "list"
+        typeKey: type
+        types:
+          - { label: "Two Column Block", name: "twoColumn", widget: "object", fields: [ { label: "Left Column (Markdown)", name: "left", widget: "markdown", required: false }, { label: "Right Column (Markdown)", name: "right", widget: "markdown", required: false } ] }
+          - { label: "Full Width Image", name: "fullWidthImage", widget: "object", fields: [ { label: "Image", name: "image", widget: "image" }, { label: "Alt Text", name: "alt", widget: "string", required: false } ] }
+          - { label: "Full Width Embed", name: "fullWidthEmbed", widget: "object", fields: [ { label: "Embed Code (Raw HTML)", name: "embedCode", widget: "text" } ] }
+          - { label: "Full Width Text", name: "fullWidthText", widget: "object", fields: [ { label: "Text Content", name: "text", widget: "markdown" } ] }
+          - { label: "Horizontal Gallery", name: "horizontalGallery", widget: "object", fields: [ { label: "Images", name: "images", widget: "list", fields: [ { label: "Image", name: "image", widget: "image" }, { label: "Alt Text", name: "alt", widget: "string", required: false } ] } ] }
+
+  - name: "highlights"
+    # ... rest of highlights collection ...
+    label: "Highlights & Separators"
+    folder: "src/content/highlights"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: >
+      {{title}}
+      {{#if isSeparator}} (SEPARATOR) {{else}} (Order: {{order | default('N/A')}}) {{/if}}
+      {{#if linkedFeedSlug}} -> {{linkedFeedSlug}} {{/if}}
+    fields:
+      - { label: "Title (or Separator Text)", name: "title", widget: "string" }
+      - { label: "Is this a Separator?", name: "isSeparator", widget: "boolean", default: false, required: false }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", required: false, hint: "Used for both highlights and separators. Lower numbers appear first." }
+      - { label: "Thumbnail Image (for Highlights)", name: "thumbnail", widget: "image", required: false }
+      - { label: "Summary Text (for Highlights)", name: "summary", widget: "markdown", required: false }
+      - { label: "Slug of Linked Feed Entry (for Highlights)", name: "linkedFeedSlug", widget: "string", required: false, hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
+      
+  - name: "general_content"
+    # ... rest of general_content collection ...
+    label: "General Content"
+    files:
+      - label: "Static Info (Left Column)"
+        name: "static_info_content"
+        file: "src/content/general_content/static_info.md"
+        fields:
+          - { label: "Introductory Text", name: "introText", widget: "markdown" }
+          - label: "Client Logos"
+            name: "clientLogos"
+            widget: "list"
+            required: false
+            hint: "Add logos of previous clients. They will appear below the intro text."
+            fields:
+              - { label: "Logo Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string", hint: "Important for accessibility, e.g., 'The New York Times logo'" }
+              - { label: "Link URL (Optional)", name: "link", widget: "string", required: false, hint: "Full URL if the logo should be clickable, e.g., https://www.nytimes.com" }
+              - { label: "Client Name (Optional)", name: "name", widget: "string", required: false, hint: "For internal reference or future use." }
+              - label: "Already Suits Dark Mode?"
+                name: "alreadySuitsDarkMode"
+                widget: "boolean"
+                default: false
+                required: false
+                hint: "Check this if the logo is already white/light and doesn't need color filtering in dark mode."
+      - label: "About Page"
+        name: "about_page_content"
+        file: "src/content/general_content/about_page.md"
+        fields:
+          - { label: "About Page Main Content", name: "aboutPageContent", widget: "markdown" }
+      - label: "Contact Page"
+        name: "contact_page_content"
+        file: "src/content/general_content/contact_page.md"
+        fields:
+          - { label: "Contact Page Image", name: "contactPageImage", widget: "image", required: false }
+          - { label: "Contact Page Image Alt Text", name: "contactPageImageAlt", widget: "string", required: false }
+          - { label: "Contact Page Text (Markdown)", name: "contactPageText", widget: "markdown", required: false }
+      - label: "Landing Page"
+        name: "landing_page_content"
+        file: "src/content/general_content/landing_page.md"
+        fields:
+          - { label: "Background Image", name: "landingPageBackgroundImage", widget: "image", required: false }
+          - { label: "Background Image Alt Text", name: "landingPageBackgroundImageAlt", widget: "string", required: false, hint: "Describe the image for accessibility." }
+          - { label: "Site Name (for Landing Page)", name: "landingPageSiteName", widget: "string", required: false }
+          - { label: "Tagline (for Landing Page)", name: "landingPageTagline", widget: "string", required: false }
+          - { label: "Location (for Landing Page)", name: "landingPageLocation", widget: "string", required: false }// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+// --- Block Schemas (Used by 'feed' collection) ---
+// ... (Block schemas remain the same) ...
+const twoColumnBlockSchema = z.object({
+    type: z.literal('twoColumn'),
+    left: z.string().optional(),
+    right: z.string().optional(),
+});
+const fullWidthImageBlockSchema = z.object({
+    type: z.literal('fullWidthImage'),
+    image: z.string(),
+    alt: z.string().optional(),
+});
+const fullWidthEmbedBlockSchema = z.object({
+    type: z.literal('fullWidthEmbed'),
+    embedCode: z.string(),
+});
+const fullWidthTextBlockSchema = z.object({
+    type: z.literal('fullWidthText'),
+    text: z.string(),
+});
+const horizontalGalleryBlockSchema = z.object({
+    type: z.literal('horizontalGallery'),
+    images: z.array(
+        z.object({
+            image: z.string(),
+            alt: z.string().optional(),
+        })
+    ).optional(),
+});
+
+
+// --- Collection Definition: feed ---
+const feed = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        date: z.date().optional(),
+        thumbnail: z.string().optional(),
+        contentType: z.enum(['TV News', 'Documentary', 'Audio', 'Press']).optional(),
+        // MODIFICATION: Added clientName and myRole
+        clientName: z.string().optional(),
+        myRole: z.array(z.string()).optional(), // Array of strings for roles
+        contentBlocks: z.array(
+            z.discriminatedUnion('type', [
+                twoColumnBlockSchema,
+                fullWidthImageBlockSchema,
+                fullWidthEmbedBlockSchema,
+                fullWidthTextBlockSchema,
+                horizontalGalleryBlockSchema,
+            ])
+        ).optional(),
+    }),
+});
+
+// --- Define a schema for client logos ---
+// ... (clientLogoSchema remains the same) ...
+const clientLogoSchema = z.object({
+    image: z.string(),
+    alt: z.string(),
+    link: z.string().url().optional(),
+    name: z.string().optional(),
+    alreadySuitsDarkMode: z.boolean().optional(),
+});
+
+// --- Collection Definition: general_content ---
+// ... (general_content schema remains the same) ...
+const general_content = defineCollection({
+    type: 'content',
+    schema: z.object({
+        introText: z.string().optional(),
+        aboutPageContent: z.string().optional(),
+        contactPageImage: z.string().optional(),
+        contactPageImageAlt: z.string().optional(),
+        contactPageText: z.string().optional(),
+        landingPageBackgroundImage: z.string().optional(),
+        landingPageBackgroundImageAlt: z.string().optional(),
+        landingPageSiteName: z.string().optional(),
+        landingPageTagline: z.string().optional(),
+        landingPageLocation: z.string().optional(),
+        clientLogos: z.array(clientLogoSchema).optional(),
+    }).passthrough(),
+});
+
+// --- Collection Definition: highlights ---
+// ... (highlights schema remains the same) ...
+const highlights = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        order: z.number().optional(),
+        summary: z.string().optional(),
+        thumbnail: z.string().optional(),
+        linkedFeedSlug: z.string().optional(),
+        isSeparator: z.boolean().optional(),
+    }),
+});
+
+// --- Export Collections ---
+export const collections = {
+  feed,
+  general_content,
+  highlights,
+};---
+landingPageBackgroundImage: /uploads/placeholder-landing-bg.jpg
+landingPageSiteName: ""
+landingPageTagline: ""
+landingPageLocation: ""
+---
+---
+aboutPageContent: >-
+  ## My approach
+
+
+  I am driven by personal stories and global developments, making sense of both and sharing that which matters.
+
+
+  I reach that which remains, and will remain, outside of search engine indexing and AI training data.
+
+
+  I keep my cheer and open mind, while staying in control and thinking several steps ahead.
+
+
+  ## What I offer
+
+
+  * In-depth, well-structured, multi-lingual desk research and fixing
+
+  * Broad network of experts and notable individuals, as well as interesting characters from all walks of life in Poland and Germany
+
+  * Field research, interviewing and multi-lingual translating (Polish-German-English)
+
+  * Creative idea consultation and fact-checking
+
+  * Field audio and video recording, with own equipment
+
+  * Video editing and post-production
+
+  * On-the-ground transport and logistics coordination
+
+
+  I work in English, Polish and German, I use Ukrainian and Russian too.
+
+
+  ## Background and Experience
+
+
+  With nearly 15 years of professional experience in research, journalism and project management, I am level-headed and responsible, while staying curious and creative.
+
+
+  Over the years I have worked on a broad range of projects: from [analysing pharma industry policy](https://www.politykainsight.pl/bibliotekaraportow/2101797,1,zdrowy-przemysl-reindustrializacja-krajowej-branzy-farmaceutycznej.read) to coordinating [strategy development at a major bank](https://www.aliorbank.pl/aktualnosci/2020-02-28-nowa-strategia.html), from aiding [government-level public consultations](https://www.press.pl/tresc/27406,debata-o-acta---dluga-i-nierozstrzygajaca) to running an impactful [podcast](https://soundcloud.com/politykainsight/sets/stan-epidemii)/[newsletter](https://www.press.pl/tresc/69328,polityka-insight-po-raz-ostatni-rozeslala-newsletter-_stan-epidemii_) combo during the COVID-19 pandemic.
+
+
+  Since 2022 I focus on production for media organisations as well as developing and producing my own content. 
+
+
+  Originally from Gdańsk, Poland I graduated from the London School of Economics and Political Science as well as the National University of Singapore, with a concentration in social studies and public policy.
+---
+---
+contactPageImage: /uploads/8afa12ds.jpg
+contactPageImageAlt: Photo of Piotr Żakowiecki
+contactPageText: >-
+  ### Let's connect!
+
+
+  I’m open to collaboration on multimedia projects in <span class="accent-text">Poland</span> and <span class="accent-text">Germany</span> as a:
+
+
+  * researcher / fact-checker 
+
+  * field producer / assistant director
+
+  * videographer and editor
+
+  * sound recordist
+
+  * script consultant
+
+
+  **Email:** [hey@mittel.tv](mailto:hey@mittel.tv)
+---
+---
+introText: >-
+  **Good that you're here.** 
+
+
+  My name is Piotr and I'm a <span class="accent-text">multi-skilled media professional</span> with experience in video, audio and print journalism, and documentary production.
+
+
+  I'll gladly help you out with on-the-ground reporting and media production in Poland, Germany and beyond.
+
+
+  Check out my recent work highlights and let me know if I can support your assignment!
+
+
+  ![An image of Piotr Żakowiecki](/uploads/żako-8_websize.jpg)
+clientLogos:
+  - image: https://upload.wikimedia.org/wikipedia/commons/5/58/NewYorkTimes.svg
+    alt: The New York Times logo
+    link: https://www.nytimes.com
+    name: The New York Times Opinion Audio
+  - image: https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_Logo_2021.svg
+    alt: BBC logo
+    link: https://www.bbc.co.uk/news
+    name: BBC News
+  - image: https://static.wikia.nocookie.net/logopedia/images/9/9f/NPR-2025.svg
+    alt: NPR logo
+    name: NPR
+    link: https://www.npr.org/2023/09/25/1201454310/migrants-and-borders-are-major-issues-in-polands-upcoming-election
+    alreadySuitsDarkMode: true
+  - image: https://static.wikia.nocookie.net/logopedia/images/b/b9/Channel_4_News_2015_Print_II.svg
+    alt: Channel 4 News logo
+    link: https://www.channel4.com/news/
+    name: Channel 4 News
+  - image: https://upload.wikimedia.org/wikipedia/commons/b/b9/The_Washington_Post_logo.svg
+    alt: Washington Post logo
+    link: https://www.washingtonpost.com/world/2022/04/13/poland-refugees-wall-belarus/
+    name: The Washington Post
+  - link: https://www.zeit.de/2023-10/polen-wahl-parlament-karolina-wigura-nachrichtenpodcast
+    alt: Zeit Online logo
+    image: https://upload.wikimedia.org/wikipedia/commons/9/98/Logo_Zeit_Online_2017.svg
+    name: Zeit Online
+---
+---
+// src/components/IdentityHeader.astro
+// Values are hardcoded as per current structure.
+// If these need to be dynamic from CMS for the portfolio page header,
+// this component would need to fetch them or receive them as props.
+const siteName = "Piotr Żakowiecki";
+const tagline = "field producer · researcher · videojournalist";
+const location = "Berlin/Warsaw";
+---
+<a href="/" class="identity-header-link-mobile-wrapper" aria-label="Go to homepage">
+    <div class="identity-header-content-wrapper">
+        <span class="identity-site-name-text">{siteName}</span>
+        <span class="identity-tagline">{tagline}</span>
+        <span class="identity-location">{location}</span>
+    </div>
+</a>
+
+<style>
+    /* This link wrapper will be styled by BaseLayout.astro for mobile behavior */
+    .identity-header-link-mobile-wrapper {
+        text-decoration: none;
+        color: inherit;
+        display: block; /* Make the anchor fill the parent space given by #identity-header-area */
+        width: 100%;
+        height: 100%;
+    }
+
+    .identity-header-content-wrapper { /* Renamed from identity-header-wrapper */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center; /* Vertically center content within the link area */
+        line-height: 1.2;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: inherit;
+        /* Padding is handled by #identity-header-area in BaseLayout.astro */
+        text-align: left;
+    }
+
+    .identity-site-name-text {
+        display: inline-block;
+        margin: 0; padding: 0;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0; /* Adjusted from 0 for closer spacing if needed */
+        font-size: 1.1em; /* Base size, will be affected by parent's font-size in BaseLayout */
+        text-align: left;
+    }
+    .identity-tagline {
+        display: block;
+        color: var(--color-accent);
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+    .identity-location {
+        display: block;
+        color: #666; 
+        font-size: 0.7em;
+        font-weight: var(--font-weight-regular);
+        line-height: inherit;
+        margin: 0;
+        text-align: left;
+    }
+
+    /* 
+       No specific mobile media queries here for the link itself.
+       The #identity-header-area in BaseLayout.astro controls the context (size, padding).
+       The link wrapper is made to fill whatever space its parent #identity-header-area provides.
+    */
+    @media (max-width: 768px) {
+         .identity-header-content-wrapper {
+             /* font-size: inherit; /* Already inheriting */
+             /* height: auto; /* Parent link controls height */
+             /* padding: 0; /* Padding handled by parent #identity-header-area */
+             justify-content: center; /* Keep it centered for mobile */
+             /* align-items: flex-start; /* Already default */
+         }
+         .identity-site-name-text {
+             font-size: 1em; /* Relative to parent's font-size in mobile header */
+             /* margin-bottom: 0; */
+         }
+         .identity-tagline {
+             font-size: 0.6em;
+             /* margin-bottom: 0; */
+         }
+         .identity-location {
+             font-size: 0.6em;
+         }
+     }
+</style>---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+type BaseBlock = { type: string };
+type ContentBlock = NonNullable<CollectionEntry<'feed'>['data']['contentBlocks']>[number];
+
+interface Props {
+    entry: CollectionEntry<'feed'>;
+}
+
+const { entry } = Astro.props;
+const { slug, data } = entry;
+
+const formattedDate = data.date
+    ? new Date(data.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+    : null;
+---
+<article class="feed-entry" id={slug}>
+    <h3>{data.title || 'Untitled Entry'}</h3>
+    {formattedDate && (
+        <time class="feed-entry-date" datetime={data.date?.toISOString()}>{formattedDate}</time>
+    )}
+
+    <div class="feed-entry-blocks">
+        {data.contentBlocks && data.contentBlocks.length > 0 ? (
+            data.contentBlocks.map((block: ContentBlock, index: number) => {
+                const galleryId = `gallery-${slug}-${index}`;
+                const prevBtnId = `gallery-prev-${slug}-${index}`;
+                const nextBtnId = `gallery-next-${slug}-${index}`;
+
+                switch (block.type) {
+                    case 'twoColumn':
+                        return (
+                            <div class="content-block block-two-column">
+                                {block.left && (
+                                    <div class="column left-column markdown-content" set:html={parseMarkdown(block.left)}></div>
+                                )}
+                                {block.right && (
+                                    <div class="column right-column markdown-content" set:html={parseMarkdown(block.right)}></div>
+                                )}
+                            </div>
+                        );
+
+                    case 'fullWidthImage':
+                        return block.image ? (
+                            <div class="content-block block-full-width-image">
+                                <Image
+                                    src={block.image}
+                                    alt={block.alt || ''}
+                                    width={1200}
+                                    height={900}
+                                    format="webp"
+                                    quality={80}
+                                    loading="lazy"
+                                    densities={[1, 1.5, 2]}
+                                />
+                            </div>
+                        ) : <div class="content-block block-missing-image"><p><em>Image missing or path incorrect.</em></p></div>;
+
+                    case 'fullWidthEmbed':
+                        return block.embedCode ? (
+                            <div class="content-block block-full-width-embed" set:html={block.embedCode}></div>
+                        ) : null;
+
+                    case 'fullWidthText':
+                        return block.text ? (
+                            <div class="content-block block-full-width-text markdown-content" set:html={parseMarkdown(block.text)}></div>
+                        ) : null;
+
+                    case 'horizontalGallery':
+                         return (
+                            <div class="content-block block-horizontal-gallery">
+                                <div class="gallery-scroll-container" id={galleryId}>
+                                    {block.images && block.images.length > 0 ? (
+                                        block.images.map(img => (
+                                            img.image ? (
+                                                <div class="gallery-item">
+                                                    <Image
+                                                        src={img.image}
+                                                        alt={img.alt || ''}
+                                                        width={800}
+                                                        height={600}
+                                                        format="webp"
+                                                        quality={75}
+                                                        loading="lazy"
+                                                        densities={[1, 1.5]}
+                                                    />
+                                                </div>
+                                            ) : null
+                                        ))
+                                    ) : (
+                                        <div class="gallery-item placeholder"><p><em>No images in gallery.</em></p></div>
+                                    )}
+                                </div>
+                                <button type="button" class="gallery-nav-button prev" id={prevBtnId} data-target={`#${galleryId}`} aria-label="Previous image">‹</button>
+                                <button type="button" class="gallery-nav-button next" id={nextBtnId} data-target={`#${galleryId}`} aria-label="Next image">›</button>
+                            </div>
+                        );
+
+
+                    default:
+                        const unknownBlock = block as BaseBlock;
+                        // console.warn(`Unsupported content block type found in entry '${slug}':`, unknownBlock?.type || block);
+                         return (
+                             <div class="content-block block-unknown">
+                                 <p><em>Unsupported block type: {unknownBlock?.type || 'Unknown'}. Check config and component.</em></p>
+                             </div>
+                         );
+                }
+            })
+        ) : (
+             entry.body ? ( 
+                 <div class="content-block markdown-content" set:html={parseMarkdown(entry.body)}></div>
+             ) : (
+                 <p><em>No content found for this entry.</em></p>
+             )
+        )}
+    </div>
+
+    <hr class="entry-separator" />
+</article>
+
+<script>
+    // Gallery script remains the same
+    function setupGallery(galleryElement: any) {
+        const scrollContainer = galleryElement.querySelector('.gallery-scroll-container');
+        const prevButton = galleryElement.querySelector('.gallery-nav-button.prev');
+        const nextButton = galleryElement.querySelector('.gallery-nav-button.next');
+        const items = galleryElement.querySelectorAll('.gallery-item');
+
+        if (!scrollContainer || !prevButton || !nextButton || items.length === 0) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            return;
+        }
+
+        const itemWidth = items[0].offsetWidth; 
+        const gap = parseFloat(getComputedStyle(scrollContainer).gap) || 0; 
+
+        function updateButtonVisibility() {
+            const tolerance = 5;
+            if (prevButton) {
+                prevButton.classList.toggle('hidden', scrollContainer.scrollLeft <= tolerance);
+            }
+            if (nextButton) {
+                nextButton.classList.toggle('hidden', scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - tolerance));
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll - itemWidth - gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        nextButton.addEventListener('click', () => {
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = currentScroll + itemWidth + gap;
+            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
+
+        scrollContainer.addEventListener('scroll', updateButtonVisibility, { passive: true });
+        updateButtonVisibility();
+
+        const resizeObserver = new ResizeObserver(_ => {
+            updateButtonVisibility();
+        });
+        resizeObserver.observe(scrollContainer);
+    }
+
+    const galleriesInThisEntry = document.querySelectorAll('.block-horizontal-gallery');
+    galleriesInThisEntry.forEach(galleryInstance => {
+        setupGallery(galleryInstance);
+    });
+</script>
+
+<style>
+    :root {
+        --feed-entry-column-gap: var(--column-gap-desktop, var(--spacing-lg));
+        --gallery-nav-button-size: 2.5rem;
+        --gallery-item-gap: var(--spacing-md); 
+        --scrollbar-width: 8px; 
+        --scrollbar-thumb-color: var(--color-text-secondary, #aaa); 
+        --scrollbar-track-color: var(--color-background-muted, #1a1a1a); 
+    }
+
+    .feed-entry { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-md); scroll-margin-top: 2rem; }
+    .feed-entry h3 { margin-top: 0; margin-bottom: var(--spacing-xxs); font-weight: var(--font-weight-bold); font-size: 1.1em; line-height: 1.3; }
+    .feed-entry-date { display: block; font-size: 0.9em; color: var(--color-accent); margin-bottom: var(--spacing-md); }
+    .feed-entry-blocks { margin-top: var(--spacing-lg); }
+    .content-block { margin-bottom: var(--spacing-lg); }
+    .content-block:last-child { margin-bottom: 0; }
+
+    .block-two-column { display: flex; gap: var(--feed-entry-column-gap); }
+    .block-two-column .column { 
+        flex: 1; 
+        min-width: 0; /* Crucial for flex items to shrink properly */
+        overflow-wrap: break-word; /* Allow long words/strings to break */
+        word-break: break-word; /* More aggressive breaking if needed */
+    }
+    .block-two-column .column.markdown-content > *:first-child { margin-top: 0; }
+    .block-two-column .column.markdown-content > *:last-child { margin-bottom: 0; }
+    
+    /* Target iframes specifically within two-column blocks or any markdown content */
+    .block-two-column .column :global(iframe),
+    .markdown-content :global(iframe) {
+        max-width: 100% !important; /* Ensure iframe itself scales down */
+        width: 100% !important;     /* Force it to take container width */
+        height: auto !important;    /* Adjust height proportionally if original embed doesn't have aspect ratio */
+        aspect-ratio: 16 / 9; /* Common aspect ratio, adjust if needed or make it configurable */
+        display: block; /* Remove extra space below */
+        border: none; /* Remove default iframe border */
+    }
+    /* If the iframe is wrapped in a div by the embed code, target that too */
+    .block-two-column .column :global(div[style*="width"]) > :global(iframe),
+    .markdown-content :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .block-two-column .column :global(div[style*="width"]), /* Target wrapper divs with inline width */
+    .markdown-content :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
+    }
+
+
+    .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
+    .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
+    
+    .block-full-width-embed :global(iframe) { 
+        display: block; /* Ensures it behaves like a block element */
+        width: 100% !important; /* Takes full width of its container */
+        max-width: 100% !important; /* Prevents exceeding container width */
+        /* REMOVED: height: auto !important; */
+        /* REMOVED: aspect-ratio: 16 / 9; */
+        /* The height will now be determined by the 'height' attribute in the embed code,
+           or by the iframe's content, or a browser default (e.g., 150px). */
+        border: none; 
+        margin: 0; /* Reset any default margins */
+    }
+    /* More specific iframe styling for full-width embeds */
+    .block-full-width-embed :global(iframe) { 
+        display: block; 
+        width: 100% !important; 
+        height: auto !important; /* Let aspect-ratio or embed itself define height */
+        max-width: 100% !important; 
+        aspect-ratio: 16 / 9; /* Default aspect ratio, can be overridden by embed */
+        border: none; 
+        margin: 0;
+        /* position: absolute; top: 0; left: 0; /* Only if using padding-bottom trick on parent */
+    }
+    /* If the iframe is wrapped by a div with fixed width from the embed code */
+    .block-full-width-embed :global(div[style*="width"]) {
+        width: auto !important; /* Override inline width */
+        max-width: 100% !important;
+    }
+     .block-full-width-embed :global(div[style*="width"]) > :global(iframe) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .block-full-width-text {} 
+
+    .block-horizontal-gallery { position: relative; width: 100%; box-sizing: border-box; }
+    .gallery-scroll-container {
+        display: flex; overflow-x: auto; overflow-y: hidden; gap: var(--gallery-item-gap);
+        padding-bottom: calc(var(--spacing-md) + var(--scrollbar-width));
+        padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scroll-padding-right: calc(var(--gallery-nav-button-size) / 2 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        max-height: 70vh; width: 100%; box-sizing: border-box; margin-left: auto; margin-right: auto;
+    }
+    .gallery-scroll-container::-webkit-scrollbar { height: var(--scrollbar-width); }
+    .gallery-scroll-container::-webkit-scrollbar-track { background: var(--scrollbar-track-color); border-radius: calc(var(--scrollbar-width) / 2); }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color); border-radius: calc(var(--scrollbar-width) / 2); border: 2px solid var(--scrollbar-track-color); }
+    .gallery-item {
+        flex: 0 0 100%; min-width: 100%; scroll-snap-align: center; height: auto; max-height: 100%;
+        border-radius: var(--border-radius-sm); overflow: hidden; background-color: var(--color-border-light);
+        position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item img, .gallery-item picture {
+        display: block; width: auto; max-width: 100%; height: auto; max-height: 100%;
+        aspect-ratio: 4 / 3; object-fit: contain; margin: 0 auto;
+    }
+     .gallery-item.placeholder p { font-style: italic; color: var(--color-text-secondary); padding: var(--spacing-md); }
+    .gallery-nav-button {
+        position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%;
+        width: var(--gallery-nav-button-size); height: var(--gallery-nav-button-size);
+        font-size: calc(var(--gallery-nav-button-size) * 0.6);
+        line-height: var(--gallery-nav-button-size); text-align: center;
+        cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease, background-color 0.2s ease;
+        padding: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+    .gallery-nav-button.prev { left: var(--spacing-sm); }
+    .gallery-nav-button.next { right: var(--spacing-sm); }
+    .gallery-nav-button.hidden { display: none; }
+    
+    .block-unknown p { font-style: italic; color: var(--color-text-secondary); border: 1px dashed var(--color-border); padding: var(--spacing-sm); }
+    .entry-separator { border: none; border-top: var(--line-thickness) solid var(--color-border); margin-top: var(--spacing-xl); }
+    
+    @media (max-width: 768px) {
+        .feed-entry {
+             --gallery-item-gap: var(--spacing-sm); 
+        }
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--mobile-header-height, 125px) + 1rem); } /* Adjusted scroll margin */
+        .feed-entry-blocks { margin-top: var(--spacing-md); }
+        .content-block { margin-bottom: var(--spacing-md); }
+        .block-two-column { flex-direction: column; gap: var(--spacing-md); }
+        /* Ensure columns in two-column layout don't cause overflow on mobile */
+        .block-two-column .column {
+            width: 100%; /* Take full width of the parent flex container */
+            flex-basis: auto; /* Reset flex-basis */
+        }
+
+        .entry-separator { margin-top: var(--spacing-lg); }
+        .feed-entry-date { font-size: 0.85em; }
+        .gallery-scroll-container {
+             gap: var(--gallery-item-gap); 
+             max-height: 50vh;
+             padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-left: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+             scroll-padding-right: calc(var(--gallery-nav-button-size) / 3 + var(--spacing-xs) + var(--gallery-item-gap) / 2);
+        }
+        .gallery-item img, .gallery-item picture { aspect-ratio: 4 / 3; }
+        .gallery-nav-button { --gallery-nav-button-size: 2rem; }
+         .gallery-nav-button.prev { left: var(--spacing-xs); }
+         .gallery-nav-button.next { right: var(--spacing-xs); }
+    }
+</style>---
+// src/components/Header.astro
+// const contactEmail = "hey@mittel.tv"; // This can be removed if not used elsewhere
+---
+<!-- Desktop Header Structure -->
+<div class="desktop-header-nav desktop-only">
+    <button type="button" id="highlights-view-btn-desktop" class="nav-button-item">Highlights</button>
+    <button type="button" id="all-feed-view-btn-desktop" class="nav-button-item">Feed</button>
+    <button type="button" id="overview-view-btn-desktop" class="nav-button-item">Projects</button>
+    <button type="button" id="about-view-btn-desktop" class="nav-button-item">About</button>
+    <button type="button" id="contact-link-desktop" class="nav-button-item">Contact</button>
+</div>
+
+<!-- Mobile Header Structure -->
+<div class="mobile-header-nav mobile-only">
+    <button type="button" id="hamburger-menu-btn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-panel">
+        <svg class="hamburger-icon icon-open" viewBox="0 0 100 80" width="20" height="20" fill="currentColor"><rect width="100" height="15" rx="8"></rect><rect y="30" width="100" height="15" rx="8"></rect><rect y="60" width="100" height="15" rx="8"></rect></svg>
+        <svg class="hamburger-icon icon-close" viewBox="0 0 100 100" width="20" height="20" fill="currentColor" style="display:none;"><line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/><line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" stroke-width="15" stroke-linecap="round"/></svg>
+    </button>
+    <!-- REMOVED: Contact button from here -->
+    <!-- <button type="button" id="contact-link-mobile" class="contact-btn-mobile nav-button-item">Contact</button> -->
+</div>
+
+<!-- Mobile Navigation Panel -->
+<nav id="mobile-nav-panel" class="mobile-nav-panel mobile-only" aria-hidden="true">
+    <ul>
+        <li><button type="button" data-viewtarget="info" class="mobile-nav-link">Highlights</button></li>
+        <li><button type="button" data-viewtarget="all-feed" class="mobile-nav-link">Feed</button></li>
+        <li><button type="button" data-viewtarget="overview" class="mobile-nav-link">Projects</button></li>
+        <li><button type="button" data-viewtarget="about" class="mobile-nav-link">About</button></li>
+        <li><button type="button" data-viewtarget="contact" class="mobile-nav-link">Contact</button></li> <!-- ADDED Contact link -->
+    </ul>
+</nav>
+
+<style>
+    /* Common Nav Button Item Style */
+    .nav-button-item {
+        padding: 2px 0; margin: 0; font-size: inherit; font-family: inherit;
+        font-weight: var(--font-weight-bold); line-height: 1.3; color: inherit;
+        background: none; border: none; cursor: pointer; white-space: nowrap;
+        transition: color 0.2s ease;
+    }
+    .nav-button-item:hover,
+    .nav-button-item.active {
+        color: var(--color-accent-hover-custom);
+    }
+
+    /* Desktop Header Styles */
+    .desktop-header-nav {
+        display: flex; justify-content: flex-start; align-items: center;
+        width: 100%; height: 100%; gap: var(--spacing-lg);
+    }
+
+    /* Mobile Header Styles */
+    .mobile-header-nav {
+        display: flex;
+        /* MODIFIED: Align hamburger to the far right */
+        justify-content: flex-end; 
+        align-items: center; /* Vertically center hamburger */
+        width: 100%; /* Ensure it takes full width to push hamburger to the end */
+        height: 100%;
+        padding: var(--spacing-xxs) 0; /* Keep vertical padding if needed */
+        box-sizing: border-box;
+    }
+
+    .hamburger-btn {
+        background: none; border: none; color: inherit;
+        padding: 4px; /* Keep some padding for easier clicking */
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1;
+        /* No margin needed if parent .mobile-header-nav uses justify-content: flex-end */
+    }
+    .hamburger-btn .icon-close { display: none; }
+    .hamburger-btn.is-active .icon-open { display: none; }
+    .hamburger-btn.is-active .icon-close { display: block; }
+    .hamburger-btn svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* REMOVED: .contact-btn-mobile styles as the button is removed */
+
+    .mobile-nav-panel {
+        position: fixed; top: var(--mobile-header-height); left: 0; right: 0;
+        background-color: var(--color-background); z-index: 999;
+        border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+        padding: var(--spacing-sm) 0; max-height: calc(100vh - var(--mobile-header-height));
+        overflow-y: auto; transform: translateY(-100%); visibility: hidden;
+        transition: transform 0.3s ease-out, visibility 0.3s ease-out;
+        display: flex;
+    }
+    .mobile-nav-panel.is-open { transform: translateY(0); visibility: visible; }
+    .mobile-nav-panel ul { list-style: none; padding: 0; margin: 0; width: 100%; }
+    .mobile-nav-panel li { margin: 0; }
+    .mobile-nav-link {
+        display: block; width: 100%;
+        padding: var(--spacing-sm) var(--mobile-content-padding-x);
+        text-align: right; font-size: 1.1em; font-weight: var(--font-weight-medium);
+        color: var(--color-text-unified); background: none; border: none;
+        border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+        cursor: pointer;
+    }
+    .mobile-nav-panel li:last-child .mobile-nav-link { border-bottom: none; }
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active-menu-item { /* .active-menu-item for mobile panel items */
+        color: var(--color-accent-hover-custom);
+        background-color: var(--color-surface-light);
+    }
+
+    .desktop-only { display: none !important; }
+    .mobile-only { display: none !important; }
+
+    @media (min-width: 769px) { /* DESKTOP */
+        .desktop-only { display: flex !important; }
+        .mobile-only { display: none !important; }
+    }
+    @media (max-width: 768px) { /* MOBILE */
+        .desktop-only { display: none !important; }
+        /* .mobile-only { display: flex !important; } */ /* This was on .mobile-header-nav and .mobile-nav-panel before */
+        /* Ensure mobile-header-nav itself is flex */
+        .mobile-header-nav.mobile-only { display: flex !important; }
+        /* mobile-nav-panel display is handled by its own .is-open class logic, but ensure it's 'flex' when open */
+        .mobile-nav-panel.mobile-only { display: flex !important; }
+
+
+    }
+</style>
+
+<script>
+  // Event listeners for contact buttons will be handled in src/pages/portfolio.astro
+  // The mailto functionality was already removed.
+</script>---
+// src/components/AllFeedColumn.astro
+import { getCollection } from 'astro:content';
+import FeedEntry from './FeedEntry.astro'; // Re-use the existing FeedEntry component
+import type { CollectionEntry } from 'astro:content';
+
+const allFeedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const sortedFeedEntries = allFeedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA; // Sort descending, newest first
+});
+---
+
+<div class="all-feed-column-wrapper">
+  {sortedFeedEntries.length > 0 ? (
+    <div class="all-feed-list">
+      {sortedFeedEntries.map(entry => (
+        <FeedEntry entry={entry} />
+      ))}
+    </div>
+  ) : (
+    <p>No feed entries available yet.</p>
+  )}
+</div>
+
+<style>
+  .all-feed-column-wrapper {
+    /* Styles for the wrapper if needed */
+  }
+  .all-feed-column-wrapper h3 {
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-md);
+  }
+  .all-feed-list {
+    /* Container for all feed entries */
+  }
+  /* FeedEntry component will have its own margins, so list might not need much */
+</style>---
+// src/components/AboutSection.astro
+import { getEntry } from 'astro:content';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+// Fetch the 'about_page.md' entry from the 'general_content' collection
+const aboutEntry = await getEntry('general_content', 'about_page');
+
+let htmlAboutContent = "<p>Error: About content not loaded or empty.</p>";
+
+if (aboutEntry && aboutEntry.data && typeof aboutEntry.data.aboutPageContent === 'string') {
+  htmlAboutContent = parseMarkdown(aboutEntry.data.aboutPageContent);
+} else {
+  console.error("AboutSection.astro: Could not load aboutPageContent from 'general_content/about_page.md'. Entry:", aboutEntry);
+}
+---
+
+<div class="about-section-wrapper markdown-content" set:html={htmlAboutContent}>
+  {/* Content injected by set:html */}
+</div>
+
+<style>
+  .about-section-wrapper {
+    /* Specific styles for the about section wrapper if needed */
+    /* General markdown styles will apply from global.css */
+  }
+  .about-section-wrapper :global(h1:first-child),
+  .about-section-wrapper :global(h2:first-child),
+  .about-section-wrapper :global(h3:first-child) {
+    margin-top: 0; /* Common override for the first heading in a content block */
+  }
+</style>---
+export interface Props {
+    item: { 
+        id: string; 
+        title: string; 
+        imageUrl?: string; 
+        altText?: string;
+        contentType?: 'TV News' | 'Documentary' | 'Audio' | 'Press' | string; // Allow string for flexibility
+        clientName?: string;
+        myRole?: string[]; // Array of strings
+    };
+}
+const { item } = Astro.props;
+const itemLink = `#${item.id}`;
+
+const typeLabel = item.contentType || ''; // Use contentType directly as label
+const rolesString = item.myRole && item.myRole.length > 0 ? item.myRole.join(' / ') : '';
+
+// For the text overlay, we'll use a gradient background for readability
+// The image itself will be a CSS background on .grid-item-thumbnail
+const thumbnailStyle = item.imageUrl ? `background-image: url('${item.imageUrl}');` : '';
+---
+<a href={itemLink} class="grid-item" data-target-id={item.id}>
+    <div class="grid-item-thumbnail" style={thumbnailStyle}>
+        {!item.imageUrl && <span class="placeholder-text">THUMB</span>}
+        <div class="text-overlay-container">
+            <div class="text-content">
+                {typeLabel && <span class="type-label">{typeLabel}</span>}
+                <h3 class="grid-item-title">{item.title ?? 'Untitled'}</h3>
+                {item.clientName && <span class="detail-label client-name">Client: {item.clientName}</span>}
+                {rolesString && <span class="detail-label roles">Role: {rolesString}</span>}
+            </div>
+        </div>
+    </div>
+</a>
+
+<style>
+    .grid-item {
+        display: block; /* Revert to block, as the thumbnail will be the main element */
+        text-decoration: none;
+        color: var(--color-text-unified); /* Default text color for overlay */
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        position: relative; /* Needed for absolute positioning of overlay elements */
+    }
+
+    .grid-item:hover {
+        transform: translateY(-5px) scale(1.02); /* Slightly more pronounced hover */
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .grid-item:hover .grid-item-title {
+        /* color: var(--color-accent); */ /* Keep title color consistent on hover for overlay */
+    }
+
+    .grid-item-thumbnail {
+        aspect-ratio: 1 / 1; /* Or your preferred aspect ratio, e.g., 16/9 or 4/3 */
+        background-size: cover;
+        background-position: center;
+        background-color: var(--color-background-muted); /* Fallback if no image */
+        position: relative; /* For positioning placeholder and overlay container */
+        display: flex; /* To help center placeholder if needed */
+        align-items: center;
+        justify-content: center;
+    }
+
+     .grid-item-thumbnail .placeholder-text {
+        font-size: 1em; /* Larger placeholder text */
+        font-weight: var(--font-weight-bold);
+        color: rgba(var(--color-text-unified-rgb), 0.5);
+        text-transform: uppercase;
+     }
+
+    .text-overlay-container {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align text to the bottom */
+    padding: var(--spacing-md); /* Increased padding for text content */
+    /* MODIFIED GRADIENT FOR DARKER OVERLAY */
+    background: linear-gradient(
+        to top, 
+        rgba(0,0,0,0.95) 0%,  /* Was 0.85 - Now 95% opacity at bottom */
+        rgba(0,0,0,0.8) 40%, /* Was 0.6 - Now 80% opacity at 40% */
+        rgba(0,0,0,0.3) 80%, /* Was 0.1 - Now 30% opacity at 80% */
+        rgba(0,0,0,0.1) 100% /* Was transparent - Now 10% opacity at top */
+    );
+    transition: background-color 0.3s ease; 
+    box-sizing: border-box;
+}
+    
+    .text-content {
+        /* Container for all text elements within the overlay */
+    }
+
+    .type-label {
+        display: block;
+        font-size: 0.85em; /* Larger font */
+        font-weight: var(--font-weight-heavy);
+        color: rgba(255,255,255,0.85); /* Light text for dark overlay */
+        margin-bottom: var(--spacing-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .grid-item-title {
+        font-size: 1.15em; /* Larger font */
+        font-weight: var(--font-weight-bold); /* Bolder */
+        line-height: 1.3;
+        color: #ffffff; /* White text for dark overlay */
+        margin: 0 0 var(--spacing-xs) 0; /* Adjusted margin */
+    }
+    
+    .detail-label {
+        display: block;
+        font-size: 0.8em; /* Larger font */
+        font-weight: var(--font-weight-regular);
+        color: rgba(255,255,255,0.75); /* Light text */
+        line-height: 1.4;
+        margin-top: var(--spacing-xxs);
+    }
+    .detail-label.client-name {
+        /* Specific styles if needed */
+    }
+    .detail-label.roles {
+        /* Specific styles if needed */
+    }
+
+    /* No specific mobile overrides needed for this structure if it's designed mobile-first */
+    /* The grid layout itself in OverviewGrid.astro handles column changes */
+</style>---
+// src/components/MarkdownRenderer.astro
+import { marked } from 'marked'; // Or your preferred Markdown parser library
+
+interface Props {
+  markdown: string;
+}
+
+const { markdown } = Astro.props;
+const html = marked.parse(markdown || ''); // Parse the markdown string
+
+// Export a function for use with set:html and Astro.glob
+export function render(markdownString: string) {
+    return marked.parse(markdownString || '');
+}
+---
+{/* Render the parsed HTML directly */}
+<Fragment set:html={html} />---
+// src/components/OverviewGrid.astro
+import GridItem from './GridItem.astro';
+
+export interface Props {
+    items: Array<{ id: string; title: string; imageUrl?: string; altText?: string; }>;
+}
+const { items = [] } = Astro.props;
+---
+<div id="overview-grid-wrapper" class="overview-grid-wrapper">
+    {items.length > 0 ? (
+        <div class="overview-grid">
+            {items.map(item => (
+                <GridItem item={item} />
+            ))}
+        </div>
+    ) : (
+        <p>No overview items found.</p>
+    )}
+</div>
+
+<style>
+    .overview-grid-wrapper {
+      padding: 0;
+    }
+
+    /* --- DESKTOP / DEFAULT / LANDSCAPE --- */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Default: 4 columns */
+        gap: 1.5rem; /* Default gap */
+        /* Removed debug border */
+    }
+
+    /* ================================== */
+    /* --- MOBILE - PORTRAIT ONLY --- */
+    /* ================================== */
+    @media (max-width: 768px) and (orientation: portrait) {
+        .overview-grid {
+            grid-template-columns: repeat(2, 1fr); /* Mobile Portrait: 2 columns */
+            gap: 1rem; /* Mobile gap */
+        }
+    }
+     /* Removed landscape specific rule - landscape uses default */
+     /* Removed max-width: 480px rule */
+</style>---
+// src/components/ContactSection.astro
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+const contactEntry = await getEntry('general_content', 'contact_page');
+
+let imageUrl: string | undefined = undefined;
+let imageAlt: string = "";
+let htmlContactText: string = "<p>Error: Contact content not loaded or empty.</p>";
+
+if (contactEntry && contactEntry.data) {
+  imageUrl = contactEntry.data.contactPageImage;
+  imageAlt = contactEntry.data.contactPageImageAlt || "Contact image";
+  if (typeof contactEntry.data.contactPageText === 'string') {
+    htmlContactText = parseMarkdown(contactEntry.data.contactPageText);
+  }
+} else {
+  console.error("ContactSection.astro: Could not load content from 'general_content/contact_page.md'. Entry:", contactEntry);
+}
+---
+
+<div class="contact-section-wrapper">
+  {imageUrl && (
+    <div class="contact-image-container">
+      <Image src={imageUrl} alt={imageAlt} width={1000} height={750} format="webp" quality={80} loading="lazy" />
+    </div>
+  )}
+  <div class="contact-text-container markdown-content" set:html={htmlContactText}>
+    {/* Content injected by set:html */}
+  </div>
+</div>
+
+<style>
+  .contact-section-wrapper {
+    display: grid; /* CHANGED to grid for desktop */
+    /* Define 3 columns using the global variables for desktop column widths */
+    /* These percentages will apply to the width of .contact-section-wrapper itself */
+    grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+    align-items: flex-start;
+    /* No 'gap' property here; the middle column acts as the conceptual gap,
+       or padding on the text container will create visual separation. */
+  }
+
+  .contact-image-container {
+    /* Image container will span the first two columns (identity + divider width) */
+    grid-column: 1 / span 2; /* Start at column 1, span 2 columns */
+    
+    min-width: 0; /* Prevent overflow */
+    max-height: 70vh; 
+    overflow: hidden;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* Fallback if image doesn't load or has transparency */
+    /* No padding-right needed here as it spans the divider column area */
+  }
+
+  .contact-image-container :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    object-position: top center;
+    /* border-radius can be on the image if it always fills, or on container with overflow:hidden */
+  }
+
+  .contact-text-container {
+    /* Text container will occupy the third column (main header width) */
+    grid-column: 3 / 4; 
+    
+    /* This padding-left aligns the text content within this container
+       to match the content start of #main-header-area (e.g., "Highlights" button) */
+    padding-left: var(--spacing-md); 
+    min-width: 0; /* Prevent overflow */
+  }
+
+  .contact-text-container :global(h3:first-child) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    /* Mobile: Revert to flex column layout */
+    .contact-section-wrapper {
+      display: flex; /* Revert to flex for mobile */
+      flex-direction: column;
+      gap: var(--column-gap-mobile, var(--spacing-md));
+      /* Reset grid properties if any were inherited that might conflict */
+      grid-template-columns: none; 
+    }
+    .contact-image-container {
+      grid-column: auto; /* Reset grid placement */
+      width: 100%;
+      max-width: 100%;
+      max-height: 50vh;
+    }
+    .contact-text-container {
+      grid-column: auto; /* Reset grid placement */
+      width: 100%;
+      padding-left: 0; /* Reset desktop-specific padding */
+    }
+  }
+</style>---
+// src/components/HighlightsColumn.astro
+import { getCollection } from 'astro:content';
+import HighlightItem from './HighlightItem.astro';
+
+interface ProcessedHighlight {
+  id: string;
+  title: string;
+  order?: number;
+  summary?: string;
+  thumbnail?: string;
+  linkedFeedSlug?: string;
+  isSeparator?: boolean;
+}
+
+const allHighlightsRaw = await getCollection('highlights');
+
+const allProcessedHighlights: ProcessedHighlight[] = allHighlightsRaw
+  .map(item => ({
+    id: item.id,
+    ...item.data,
+  }))
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+---
+
+<div class="highlights-column-wrapper">
+  {allProcessedHighlights.length > 0 ? (
+    <div class="highlights-list">
+      {allProcessedHighlights.map(item => (
+        item.isSeparator ? (
+          <div class="highlight-separator" id={`separator-${item.id}`}>
+            <h3 class="separator-title">{item.title}</h3>
+          </div>
+        ) : (
+          <HighlightItem highlight={item} />
+        )
+      ))}
+    </div>
+  ) : (
+    <p>No highlights or separators available at the moment.</p>
+  )}
+
+  {/* MODIFICATION: Added "See more projects" button */}
+  {allProcessedHighlights.length > 0 && (
+    <button type="button" id="see-more-projects-btn-mobile" class="see-more-projects-button mobile-only-flex">
+      See more projects
+    </button>
+  )}
+</div>
+
+<style>
+  .highlights-column-wrapper {
+    /* Styles for the column itself */
+  }
+  .highlights-list {
+    /* Container for highlight items and separators */
+  }
+  .highlight-separator {
+    padding: var(--spacing-sm) var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+  }
+  .separator-title {
+    font-size: 1.2em;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-unified);
+    margin: 0;
+    line-height: 1.3;
+    text-align: left;
+    hyphens: none;
+  }
+
+  /* MODIFICATION: Added styles for the new button */
+  .see-more-projects-button {
+    display: none; /* Hidden by default, shown via mobile-only-flex */
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: var(--spacing-md); /* Space above the button */
+    font-size: 1em;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-unified);
+    background-color: var(--color-surface-light);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .see-more-projects-button:hover {
+    background-color: var(--color-surface-light-hover);
+    border-color: var(--color-accent-hover-custom);
+    color: var(--color-accent-hover-custom);
+  }
+
+  /* Utility class to show on mobile (assuming mobile is flex display for this button) */
+  /* This needs to be coordinated with global.css or BaseLayout.astro if .mobile-only-flex is defined there */
+  /* For now, defining it locally for clarity, but ideally it's a global utility */
+  @media (max-width: 768px) {
+    .mobile-only-flex {
+      display: block; /* Or 'flex' if it needs to be a flex container itself */
+    }
+  }
+  /* If .mobile-only (from Header.astro) is display: flex !important, we might need to adjust */
+  /* Let's assume .mobile-only-flex is specific for this button for now */
+
+</style>---
+import { getEntry } from 'astro:content';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+import { Image } from 'astro:assets';
+
+interface ClientLogo {
+  image: string;
+  alt: string;
+  link?: string;
+  name?: string;
+  alreadySuitsDarkMode?: boolean;
+}
+
+const entry = await getEntry('general_content', 'static_info');
+
+let rawIntroText = "";
+let clientLogos: ClientLogo[] = [];
+
+let portraitImageUrl: string | undefined = undefined;
+let portraitImageAlt: string | undefined = undefined;
+let introTextOnlyMd = "";
+
+const PORTRAIT_RENDER_WIDTH = 1000; 
+const PORTRAIT_RENDER_HEIGHT = 1500;
+
+
+if (entry && entry.data) {
+    if (typeof entry.data.introText === 'string') {
+        rawIntroText = entry.data.introText;
+        
+        const imageRegex = /!\[(?<alt>.*?)\]\((?<url>.*?)\)/;
+        const match = rawIntroText.match(imageRegex);
+
+        if (match && match.groups) {
+            portraitImageUrl = match.groups.url;
+            portraitImageAlt = match.groups.alt || 'Portrait image';
+            introTextOnlyMd = rawIntroText.replace(imageRegex, '').trim();
+        } else {
+            introTextOnlyMd = rawIntroText;
+        }
+    } else if (entry.data.introText !== undefined) {
+        console.warn("StaticInfo.astro: introText field is present but not a string.", entry.data.introText);
+    }
+
+    if (Array.isArray(entry.data.clientLogos)) {
+        clientLogos = entry.data.clientLogos.filter(logo => 
+            typeof logo.image === 'string' && logo.image.trim() !== '' && 
+            typeof logo.alt === 'string' && logo.alt.trim() !== ''
+        );
+    } else if (entry.data.clientLogos !== undefined) {
+        console.warn("StaticInfo.astro: clientLogos field is present but not an array.", entry.data.clientLogos);
+    }
+} else {
+    console.error("StaticInfo.astro: Could not load entry 'general_content/static_info.md'.");
+}
+
+const htmlIntroTextPortion = await parseMarkdown(introTextOnlyMd);
+const hasTextContent = introTextOnlyMd.trim() !== "";
+const hasLogos = clientLogos.length > 0;
+const hasPortrait = !!portraitImageUrl;
+
+const displayError = !hasTextContent && !hasLogos && !hasPortrait;
+
+---
+
+<div class="static-info-wrapper">
+    {hasTextContent && (
+        <div class="intro-text-content markdown-content" set:html={htmlIntroTextPortion}></div>
+    )}
+
+    {hasLogos && (
+        <div class="client-logos-container">
+            <h3 class="client-logos-title">Trusted By</h3>
+            <div class="logos-grid">
+                {clientLogos.map(logo => (
+                    <div class="logo-item">
+                        {logo.link ? (
+                            <a href={logo.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${logo.alt || logo.name || 'client website'}`}>
+                                <img 
+                                    src={logo.image} 
+                                    alt={logo.alt || 'Client Logo'} 
+                                    class:list={{ 'needs-dark-filter': !logo.alreadySuitsDarkMode }}
+                                />
+                            </a>
+                        ) : (
+                            <img 
+                                src={logo.image} 
+                                alt={logo.alt || 'Client Logo'} 
+                                class:list={{ 'needs-dark-filter': !logo.alreadySuitsDarkMode }}
+                            />
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )}
+
+    {hasPortrait && portraitImageUrl && (
+        <div class="portrait-image-container">
+            <Image 
+                src={portraitImageUrl} 
+                alt={portraitImageAlt || 'Piotr Żakowiecki portrait'} 
+                width={PORTRAIT_RENDER_WIDTH}  
+                height={PORTRAIT_RENDER_HEIGHT}
+                format="webp" 
+                quality={80}
+                loading="lazy"
+                densities={[1, 1.5, 2]} 
+            />
+        </div>
+    )}
+
+    {displayError && (
+        <p class="error-message">Static information, portrait, or client logos could not be loaded.</p>
+    )}
+</div>
+
+<style>
+    /* MODIFICATION: Define a CSS variable for minimum logo item width */
+    :root {
+        --logo-item-min-width: 100px; /* Adjust this value as needed */
+    }
+
+    .static-info-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .intro-text-content { order: 1; }
+    .portrait-image-container { order: 2; display: none; } 
+    .client-logos-container {
+        order: 3;
+        padding-top: var(--spacing-md);
+        border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .portrait-image-container :global(img) { 
+        display: block;
+        width: 100%; 
+        height: auto; 
+        max-width: 100%; 
+        border-radius: var(--border-radius-sm);
+        background-color: var(--color-border-light); 
+        object-fit: cover; 
+    }
+
+    .client-logos-title {
+        font-size: 0.9em; font-weight: var(--font-weight-medium); color: var(--color-text-secondary);
+        text-align: left; margin-bottom: var(--spacing-md); text-transform: uppercase; letter-spacing: 0.075em;
+    }
+
+    /* MODIFICATION: Updated .logos-grid to be responsive based on item width */
+    .logos-grid {
+        display: grid;
+        /* This will create as many columns as fit, each at least --logo-item-min-width wide */
+        /* and at most 1fr (distributing extra space) */
+        grid-template-columns: repeat(auto-fill, minmax(var(--logo-item-min-width), 1fr));
+        gap: var(--spacing-md); 
+        align-items: center; 
+    }
+
+    .logo-item {
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 50px; 
+    }
+    .logo-item img { 
+        display: block; 
+        max-width: 100%; 
+        max-height: 45px; 
+        width: auto; 
+        height: auto; 
+        object-fit: contain; 
+        transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
+    }
+    html:not(.light-mode) .logo-item img { opacity: 0.7; }
+    html:not(.light-mode) .logo-item img.needs-dark-filter { filter: brightness(0) invert(1); }
+    html:not(.light-mode) .logo-item a:hover img,
+    html:not(.light-mode) .logo-item a:focus img { opacity: 1; }
+    html.light-mode .logo-item img { filter: grayscale(100%) opacity(0.65); }
+    html.light-mode .logo-item a:hover img,
+    html.light-mode .logo-item a:focus img { filter: grayscale(0%) opacity(1); }
+
+    .error-message {
+        color: var(--color-text-secondary); font-style: italic;
+    }
+
+    @media (max-width: 768px) { /* Mobile refinements */
+        .static-info-wrapper { gap: var(--spacing-md); }
+        
+        /* MODIFICATION: Adjust gap and potentially min-width for smaller screens if needed */
+        .logos-grid {
+            gap: var(--spacing-sm);
+            /* You could also adjust --logo-item-min-width here if 100px is too large for very narrow mobile */
+            /* Example: grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); */
+        }
+        .logo-item img { max-height: 40px; } 
+        .client-logos-title { font-size: 0.85em; }
+    }
+
+    /* --- Desktop Order and Styling --- */
+    @media (min-width: 769px) {
+        .intro-text-content { order: 1; }
+        .client-logos-container {
+            order: 2;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border-subtle);
+        }
+        .portrait-image-container {
+            order: 3;
+            display: block; 
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border-subtle);
+            width: 100%; 
+        }
+        /* No specific changes needed for .logos-grid here, auto-fill handles it */
+    }
+</style>---
+import { Image } from 'astro:assets';
+import { render as parseMarkdown } from './MarkdownRenderer.astro';
+
+export interface Props {
+  highlight: {
+    title: string;
+    summary?: string;
+    thumbnail?: string;
+    linkedFeedSlug?: string;
+  };
+}
+
+const { highlight } = Astro.props;
+
+const itemLink = highlight.linkedFeedSlug ? `#${highlight.linkedFeedSlug}` : '#';
+const ariaLabel = highlight.linkedFeedSlug ? `Read more about ${highlight.title}` : highlight.title;
+
+const contentFlexStyle = highlight.thumbnail 
+  ? `--highlight-bg-image: url('${highlight.thumbnail}');` 
+  : '';
+---
+<div class="highlight-item">
+  <a 
+    href={itemLink} 
+    class:list={["highlight-link-wrapper", { 'is-clickable': highlight.linkedFeedSlug }]}
+    data-target-id={highlight.linkedFeedSlug} 
+    aria-label={ariaLabel}
+  >
+    <div class="highlight-content-flex" style={contentFlexStyle}>
+      {/* Desktop-only thumbnail image - hidden on mobile by CSS */}
+      {highlight.thumbnail && (
+        <div class="highlight-thumbnail-container desktop-only-thumbnail">
+          <Image 
+            src={highlight.thumbnail} 
+            alt={`Thumbnail for ${highlight.title}`} 
+            width={200} 
+            height={150} 
+            format="webp"
+            quality={70}
+            loading="lazy" 
+          />
+        </div>
+      )}
+      {/* Desktop-only placeholder - hidden on mobile by CSS */}
+      {!highlight.thumbnail && (
+         <div class="highlight-thumbnail-placeholder desktop-only-thumbnail"></div>
+      )}
+
+      <div class="highlight-text-container">
+        <h4 class="highlight-title">
+          {highlight.title}
+          {/* MODIFICATION: Added clickable indicator (arrow) */}
+          {highlight.linkedFeedSlug && <span class="clickable-indicator"> →</span>}
+        </h4>
+        {highlight.summary && (
+          <div 
+            class="highlight-summary markdown-content" 
+            set:html={await parseMarkdown(highlight.summary)}>
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  .highlight-item {
+    margin-bottom: var(--spacing-md);
+    background-color: transparent;
+    overflow: hidden; 
+    transition: background-color 0.2s ease;
+  }
+  /* Only apply hover if it's a clickable link */
+  .highlight-item:has(.highlight-link-wrapper.is-clickable):hover {
+    background-color: var(--color-surface-light);
+  }
+  .highlight-link-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+  }
+  .highlight-link-wrapper:not(.is-clickable) {
+    cursor: default; /* No pointer if not a link */
+  }
+
+  /* Default (Desktop) styles for highlight-content-flex */
+  .highlight-content-flex {
+    display: flex;
+    align-items: flex-start; 
+    gap: var(--spacing-sm);
+  }
+
+  /* Default (Desktop) thumbnail styles */
+  .highlight-thumbnail-container, 
+  .highlight-thumbnail-placeholder {
+    flex-shrink: 0; 
+    flex-grow: 0;   
+    flex-basis: 25%; 
+    max-width: 25%;  
+    background-color: var(--color-background-muted);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    height: 180px; /* Desktop height for thumbnail */
+  }
+  .highlight-thumbnail-placeholder {
+    background-color: transparent;
+  }
+  .highlight-thumbnail-container :global(img) {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+  }
+
+  /* Default (Desktop) text container styles */
+  .highlight-text-container {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 0;  
+  }
+  .highlight-title {
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+    margin-top: 0; 
+    margin-bottom: var(--spacing-xxs);
+    color: var(--color-text-unified); 
+    line-height: 1.3;
+    transition: color 0.2s ease;
+    /* display: flex; /* Optional: if more complex alignment with arrow is needed */
+    /* align-items: center; */
+  }
+  .highlight-item:has(.highlight-link-wrapper.is-clickable):hover .highlight-title {
+    color: var(--color-accent);
+  }
+  
+  /* MODIFICATION: Styles for the clickable indicator */
+  .clickable-indicator {
+    display: inline-block; /* Keeps it on the same line */
+    margin-left: var(--spacing-xxs);
+    color: var(--color-accent); /* Make it stand out a bit by default */
+    opacity: 0.7; /* Slightly subdued until hover */
+    transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .highlight-item:has(.highlight-link-wrapper.is-clickable):hover .clickable-indicator {
+    opacity: 1;
+    /* transform: translateX(2px); Optional: slight move on hover */
+    /* Color will already be var(--color-accent) due to title hover, or can be set explicitly */
+  }
+
+
+  .highlight-summary {
+    font-size: 1em;
+    line-height: var(--line-height-unified);
+    color: var(--color-text-secondary); 
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    hyphens: auto;
+    transition: color 0.2s ease;
+  }
+  .highlight-summary :global(p) {
+    margin-bottom: var(--spacing-xxs);
+    font-size: inherit;
+    line-height: inherit; 
+  }
+  .highlight-summary > :global(p):last-child {
+    margin-bottom: 0;
+  }
+
+  /* --- MOBILE OVERRIDES (from previous step, ensure indicator is styled here too) --- */
+  @media (max-width: 768px) {
+    .highlight-link-wrapper {
+      padding: 0; 
+    }
+
+    .desktop-only-thumbnail {
+      display: none !important; 
+    }
+
+    .highlight-content-flex {
+      display: flex; 
+      flex-direction: column;
+      justify-content: flex-end; 
+      min-height: 200px; 
+      aspect-ratio: 16 / 9; 
+      background-image: var(--highlight-bg-image); 
+      background-size: cover;
+      background-position: center;
+      border-radius: var(--border-radius-sm); 
+      overflow: hidden; 
+      position: relative; 
+      gap: 0; 
+      padding: var(--spacing-sm); 
+    }
+    .highlight-content-flex:not([style*="--highlight-bg-image"]) {
+        background-color: var(--color-background-muted); 
+        aspect-ratio: auto; 
+        min-height: auto;
+    }
+
+    .highlight-text-container {
+      background-color: rgba(0, 0, 0, 0.70); 
+      padding: var(--spacing-sm);
+      border-radius: var(--border-radius-sm); 
+      width: 100%; 
+      box-sizing: border-box;
+      flex-grow: 0; 
+      flex-basis: auto;
+    }
+    .highlight-content-flex:not([style*="--highlight-bg-image"]) .highlight-text-container {
+        background-color: transparent; 
+        padding: 0;
+    }
+
+    .highlight-title {
+      color: #f5f5f5; 
+      font-size: 1em; 
+      line-height: 1.25;
+    }
+     /* Ensure title hover color for mobile overlay is distinct if needed */
+    .highlight-item:has(.highlight-link-wrapper.is-clickable):hover .highlight-title {
+      color: var(--color-accent-original); /* Or another light, bright color */
+    }
+
+    /* Indicator color on mobile overlay */
+    .clickable-indicator {
+      color: var(--color-accent-original); /* Ensure it's visible on the dark overlay */
+      opacity: 0.8;
+    }
+    .highlight-item:has(.highlight-link-wrapper.is-clickable):hover .clickable-indicator {
+       opacity: 1;
+       /* color: #fff; /* Or another bright color for hover on overlay */
+    }
+
+    .highlight-summary {
+      color: #dddddd; 
+      font-size: 0.9em; 
+      line-height: 1.5;
+    }
+    .highlight-summary :global(p) {
+        margin-bottom: var(--spacing-xxs);
+    }
+  }
+</style>---
+// src/layouts/LandingLayout.astro
+interface Props {
+    title?: string;
+    backgroundImageUrl?: string;
+    backgroundAltText?: string; 
+}
+const { 
+    title = 'Mittel.TV', 
+    backgroundImageUrl = '/uploads/placeholder-landing-bg.jpg',
+    backgroundAltText = 'Abstract background image' 
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    
+    <script is:inline>
+      // ... (theme script remains the same) ...
+      const THEME_KEY = 'theme-preference';
+      const THEME_CLASS_LIGHT = 'light-mode';
+      const THEME_CLASS_DARK = 'dark-mode';
+
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined') {
+          const storedTheme = localStorage.getItem(THEME_KEY);
+          if (storedTheme) {
+            return storedTheme;
+          }
+        }
+        return 'light'; 
+      };
+
+      const applyTheme = (theme) => {
+        document.documentElement.classList.remove(THEME_CLASS_LIGHT, THEME_CLASS_DARK);
+        if (theme === 'light') {
+          document.documentElement.classList.add(THEME_CLASS_LIGHT);
+        }
+      };
+
+      window.currentTheme = getThemePreference();
+      applyTheme(window.currentTheme);
+
+      window.toggleTheme = () => {
+        window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, window.currentTheme);
+        applyTheme(window.currentTheme);
+        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } }));
+      };
+    </script>
+
+    <style is:global>
+        @import '../styles/global.css'; 
+
+        html {
+            height: 100%; 
+        }
+        body.landing-body-fullscreen {
+            background-image: var(--landing-bg-image-url-var);
+            background-size: cover;
+            background-position: center center; /* Default for desktop */
+            background-attachment: fixed; 
+            background-repeat: no-repeat;
+            
+            min-height: 100vh; 
+            width: 100%;
+            margin: 0;
+            
+            display: flex; 
+            flex-direction: column;
+            
+            /* Default (Desktop) alignment: Center content */
+            align-items: center;    
+            justify-content: center;
+            
+            /* Default (Desktop) padding */
+            padding: var(--spacing-xl) var(--spacing-lg); 
+
+            color: var(--color-text-unified); 
+            text-align: center;
+            overflow-y: auto; /* Allow scroll on desktop if centered box is tall */
+            box-sizing: border-box;
+            font-size: var(--font-size-desktop-unified); 
+            line-height: var(--line-height-unified);
+            background-color: var(--color-background); 
+        }
+
+        /* --- Mobile Specific Layout for body.landing-body-fullscreen --- */
+        @media (max-width: 768px) {
+            html {
+                /* overflow: hidden; /* Consider if scrolling is ever needed for the content box */
+            }
+            body.landing-body-fullscreen {
+                /* Body is still 100vh, but its content starts after 50vh padding */
+                height: auto; /* Allow body to grow if content box is very tall */
+                min-height: 100vh; /* Ensure it's at least viewport height */
+                overflow-y: auto; /* Allow scrolling if content box makes body taller than 100vh */
+                
+                /* This padding creates the 50vh image area at the top */
+                padding: 50vh 0 0 0; /* 50vh top padding, 0 for others */
+                
+                /* Flex properties to handle the content box within the remaining space */
+                display: flex; /* Re-enable flex */
+                flex-direction: column; /* Content box will be a column item */
+                align-items: stretch; /* Content box can take full width */   
+                justify-content: flex-start; /* Content box starts immediately after top padding */
+                background-position: center top; 
+            }
+        }
+    </style>
+    <style define:vars={{ 'landing-bg-image-url-var': `url('${backgroundImageUrl}')` }}>
+    </style>
+</head>
+<body class="landing-body-fullscreen">
+    <slot /> 
+</body>
+</html>---
+interface Props {
+    title?: string;
+}
+const { title = 'Portfolio' } = Astro.props;
+
+const linkedInIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="img" aria-labelledby="linkedinTitle">
+    <title id="linkedinTitle">LinkedIn Profile</title>
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+</svg>
+`;
+---
+<!doctype html>
+<html lang="en" class="desktop-layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+
+    <script is:inline>
+      // Theme script (no changes)
+      const THEME_KEY = 'theme-preference';
+      const THEME_CLASS_LIGHT = 'light-mode';
+      const THEME_CLASS_DARK = 'dark-mode'; 
+      const getThemePreference = () => { if (typeof localStorage !== 'undefined') { const storedTheme = localStorage.getItem(THEME_KEY); if (storedTheme) { return storedTheme; } } return 'light'; };
+      const applyTheme = (theme) => { document.documentElement.classList.remove(THEME_CLASS_LIGHT, THEME_CLASS_DARK); if (theme === 'light') { document.documentElement.classList.add(THEME_CLASS_LIGHT); } };
+      window.currentTheme = getThemePreference(); applyTheme(window.currentTheme);
+      window.toggleTheme = () => { window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light'; localStorage.setItem(THEME_KEY, window.currentTheme); applyTheme(window.currentTheme); document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } })); };
+    </script>
+      
+    <style is:global>
+        @import '../styles/global.css';
+
+       :root {
+          --desktop-identity-width: 31.8%;
+          --desktop-divider-width: 2%;
+          --desktop-main-header-width: 66.2%;
+          --desktop-content-padding-top: var(--spacing-xl);
+          --desktop-content-padding-bottom: var(--spacing-lg);
+          --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
+          --mobile-header-height: 80px;
+          --header-area-height: 90px; 
+          --footer-height-desktop: 50px; 
+          --footer-height-mobile: auto; 
+       }
+
+        html { height: 100%; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            overscroll-behavior: none; 
+            min-height: 100%;
+            display: flex; 
+            flex-direction: column; 
+        }
+        body.mobile-menu-open {
+            overflow: hidden;
+        }
+
+        #app-container {
+            box-sizing: border-box;
+            position: relative; /* Keep for potential absolute children if any, but not for footer */
+            display: flex; 
+            flex-direction: column;
+            flex-grow: 1; 
+        }
+        
+        /* This div will wrap all scrollable/main content sections */
+        /* to make flex-grow work correctly for pushing footer down */
+        #main-content-slots-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        #app-container > div:not(#mobile-header-sticky-container):not(#app-footer):not(#main-content-slots-wrapper) { 
+            box-sizing: border-box; 
+        }
+        #mobile-header-sticky-container { box-sizing: border-box; }
+
+
+        @media (min-width: 769px) { /* DESKTOP */
+            body { 
+                overflow: hidden; 
+                height: 100%; 
+            }
+            #app-container { 
+                height: 100vh; 
+                flex-grow: 0; 
+            }
+            #app-container.is-desktop {
+                display: grid;
+                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-template-rows: var(--header-area-height) 1fr var(--footer-height-desktop);
+                /* height: 100vh; /* Already on #app-container */
+                overflow: hidden;
+            }
+            #main-content-slots-wrapper { /* On desktop, this wrapper becomes part of the grid */
+                grid-column: 1 / 4; /* Span all columns for content like overview/contact */
+                grid-row: 2 / 3;    /* Content row */
+                display: contents;  /* Allow children to be direct grid items */
+            }
+            /* ... (rest of desktop styles for header, divider, content areas as before) ... */
+            #app-container.is-desktop > #mobile-header-sticky-container {
+                display: grid; grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-column: 1 / 4; grid-row: 1 / 2; height: var(--header-area-height);
+                background-color: var(--color-background); border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                position: relative; z-index: 20; 
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                position: relative; overflow: hidden; font-size: 1.5em; height: 100%; 
+                display: flex; flex-direction: column; justify-content: center;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
+                 grid-column: 1 / 2; padding-left: var(--spacing-content-side-padding);
+                 padding-right: var(--spacing-md); pointer-events: none;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper) {
+                 pointer-events: auto; cursor: default;
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper > .identity-header-content-wrapper) {
+                 pointer-events: auto; 
+            }
+            #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
+                 grid-column: 3 / 4; padding-right: var(--spacing-content-side-padding);
+                 padding-left: var(--spacing-md);
+            }
+            #app-container.is-desktop > #divider-area {
+                grid-column: 2 / 3; grid-row: 1 / 3; 
+                background: linear-gradient(to bottom, transparent 0, transparent var(--header-area-height), var(--color-background) var(--header-area-height), var(--color-background) 100%);
+                z-index: 30; position: relative; display: block;
+            }
+             #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: var(--line-thickness-subtle);
+                 background-color: var(--color-border-subtle); opacity: 1;
+            }
+            /* Content areas are children of #main-content-slots-wrapper, which uses display: contents */
+            /* So these rules apply as if they are direct children of the grid */
+            #app-container.is-desktop #info-content-area, /* Note: removed > combinator */
+            #app-container.is-desktop #dynamic-content-area,
+            #app-container.is-desktop #all-feed-content-area,
+            #app-container.is-desktop #overview-content-area,
+            #app-container.is-desktop #contact-content-area,
+            #app-container.is-desktop #feed-content-area {
+                overflow-y: auto; scrollbar-width: thin;
+                scrollbar-color: var(--scrollbar-thumb-color, #555) var(--scrollbar-track-color, #222);
+                grid-row: 2 / 3; /* This is important, inherited from #main-content-slots-wrapper's context */
+            }
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
+            
+            #app-container.is-desktop #info-content-area {
+                grid-column: 1 / 2; display: block;
+                padding: var(--desktop-content-padding-top) var(--spacing-md) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
+            }
+            #app-container.is-desktop #dynamic-content-area,
+            #app-container.is-desktop #all-feed-content-area,
+            #app-container.is-desktop #feed-content-area {
+                grid-column: 3 / 4; display: none;
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
+            }
+            #app-container.is-desktop #overview-content-area,
+            #app-container.is-desktop #contact-content-area {
+                /* These span all columns if the divider is hidden */
+                grid-column: 1 / 4; display: none;
+                padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
+            }
+             #app-container.is-desktop.view-home #info-content-area { display: block; }
+             #app-container.is-desktop.view-home #dynamic-content-area { display: block; }
+             #app-container.is-desktop.view-home #divider-area { display: block; }
+             #app-container.is-desktop.view-all-feed #info-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed #all-feed-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed #divider-area { display: block; }
+             #app-container.is-desktop.view-about #info-content-area { display: block; }
+             #app-container.is-desktop.view-about #dynamic-content-area { display: block; }
+             #app-container.is-desktop.view-about #divider-area { display: block; }
+             #app-container.is-desktop.view-overview #overview-content-area { grid-column: 1 / 4; display: block; }
+             #app-container.is-desktop.view-overview #divider-area { display: none; }
+             #app-container.is-desktop.view-contact #contact-content-area { grid-column: 1 / 4; display: block; }
+             #app-container.is-desktop.view-contact #divider-area { display: none; }
+        }
+
+        @media (max-width: 768px) { /* MOBILE */
+            #app-container.is-mobile {
+                padding-top: var(--mobile-header-height); 
+            }
+            #main-content-slots-wrapper { /* This wrapper takes the padding for mobile */
+                 padding-top: 0; /* Reset if #app-container had it */
+                 /* flex-grow: 1; /* Already set globally */
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container {
+                display: flex; flex-direction: row; width: 100%; position: fixed; top: 0; left: 0; right: 0;
+                background-color: var(--color-background); z-index: 1000;
+                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                box-sizing: border-box; height: var(--mobile-header-height);
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
+                 flex-grow: 1; flex-shrink: 1; min-width: 50px; display: flex; 
+                 flex-direction: column; justify-content: center; height: 100%;
+                 padding: 0 var(--spacing-xs) 0 var(--mobile-content-padding-x);
+                 font-size: var(--font-size-mobile-header-responsive);
+                 overflow: hidden; box-sizing: border-box; align-items: flex-start; cursor: pointer;
+            }
+            #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
+                 flex-grow: 0; flex-shrink: 0; display: flex; justify-content: center; align-items: center; height: 100%;
+                 padding: 0 var(--spacing-sm); font-size: var(--font-size-mobile-header-responsive); box-sizing: border-box;
+            }
+            #app-container.is-mobile > #divider-area { display: none; }
+
+            /* Content areas are children of #main-content-slots-wrapper */
+            #app-container.is-mobile #info-content-area, /* Note: removed > combinator */
+            #app-container.is-mobile #feed-content-area,
+            #app-container.is-mobile #overview-content-area,
+            #app-container.is-mobile #dynamic-content-area,
+            #app-container.is-mobile #contact-content-area,
+            #app-container.is-mobile #all-feed-content-area {
+                 /* order: 3; /* Removed order property */
+                 width: 100%; 
+                 padding: var(--spacing-lg) var(--mobile-content-padding-x);
+                 display: none; box-sizing: border-box;
+                 flex-grow: 1; /* Ensure the *active* content area grows */
+            }
+            #app-container.is-mobile.view-home #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-all-feed #all-feed-content-area { display: block; }
+            #app-container.is-mobile.view-info #info-content-area { display: block; } 
+            #app-container.is-mobile.view-info #dynamic-content-area { display: block; } 
+            #app-container.is-mobile.view-about #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-overview #overview-content-area { display: block; }
+            #app-container.is-mobile.view-contact #contact-content-area { display: block; }
+        }
+
+            #app-footer {
+                width: 100%;
+                background-color: var(--color-background); 
+                border-top: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                /* This padding on #app-footer will now define the outer edges for its content */
+                padding: var(--spacing-sm) var(--spacing-content-side-padding); 
+                box-sizing: border-box;
+                font-size: 0.8em;
+                color: var(--color-text-secondary);
+                /* Desktop Grid positioning */
+                grid-column: 1 / 4; 
+                grid-row: 3 / 4;    
+                flex-shrink: 0; 
+            }
+            .footer-content {
+                display: flex;
+                justify-content: space-between; /* Key for left/right alignment */
+                align-items: center;          /* Key for vertical centering of items */
+                gap: var(--spacing-md); 
+                /* MODIFICATION: Removed max-width and margin: 0 auto; */
+                /* Now .footer-content will expand to the padded width of #app-footer */
+            }
+            .footer-copyright {
+                margin: 0; 
+                padding: 0; 
+                /* text-align: left; /* Default, not strictly needed */
+            }
+            .footer-linkedin-link {
+                display: inline-flex; 
+                align-items: center;  
+                color: var(--color-text-secondary);
+                transition: color 0.2s ease;
+                flex-shrink: 0; /* Prevent icon from shrinking if copyright text is very long */
+                margin: 0; 
+                padding: 0; 
+            }
+            .footer-linkedin-link:hover {
+                color: var(--color-accent);
+            }
+            .footer-linkedin-link svg {
+                width: 2em;  
+                height: 2em; 
+                fill: currentColor;
+            }
+
+            @media (max-width: 768px) {
+                #app-footer {
+                    /* On mobile, use mobile-specific padding */
+                    padding: var(--spacing-sm) var(--mobile-content-padding-x);
+                    min-height: var(--footer-height-mobile); 
+                    font-size: 0.75em;
+                }
+                .footer-content {
+                    /* If space is very tight on mobile, items might wrap. */
+                    /* If you want to ensure they stay on one line and potentially cause overflow, use flex-wrap: nowrap; */
+                    /* By default, flex-wrap is nowrap. If they are wrapping, it's due to content width. */
+                    flex-wrap: wrap; /* Allow wrapping for very small screens */
+                    /* If they wrap, you might prefer them centered: */
+                    /* justify-content: center; */
+                }
+                /* Optional: if wrapping occurs, style copyright to take full width */
+                /* .footer-copyright {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: var(--spacing-xs);
+                } */
+            }        
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div id="mobile-header-sticky-container">
+             <div id="identity-header-area"><slot name="identity-header" /></div>
+             <div id="main-header-area"><slot name="main-header" /></div>
+        </div>
+        
+        <div id="main-content-slots-wrapper"> {/* MODIFICATION: Wrapper for main content slots */}
+            <div id="divider-area"></div> {/* Divider is now inside this wrapper for desktop grid context */}
+            <div id="info-content-area"><slot name="info-content" /></div>
+            <div id="feed-content-area"><slot name="feed-content" /></div>
+            <div id="overview-content-area"><slot name="overview-content" /></div>
+            <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
+            <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
+            <div id="contact-content-area"><slot name="contact-content" /></div>
+        </div>
+
+        <footer id="app-footer">
+            <div class="footer-content">
+                <span class="footer-copyright">© 2025 Piotr Żakowiecki</span> {/* Year updated */}
+                <a href="https://www.linkedin.com/in/zakowiecki" target="_blank" rel="noopener noreferrer" class="footer-linkedin-link" set:html={linkedInIconSvg}>
+                </a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IdentityHeader from '../components/IdentityHeader.astro';
+import Header from '../components/Header.astro';
+import StaticInfo from '../components/StaticInfo.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import HighlightsColumn from '../components/HighlightsColumn.astro';
+import AboutSection from '../components/AboutSection.astro';
+import AllFeedColumn from '../components/AllFeedColumn.astro';
+import ContactSection from '../components/ContactSection.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
+const feedEntries = feedEntriesFetched.sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+});
+
+// MODIFICATION: Added contentType, clientName, and myRole to the overviewItems map
+const overviewItems = feedEntries.map(entry => ({
+    id: entry.slug,
+    title: entry.data.title || 'Untitled',
+    imageUrl: entry.data.thumbnail || '/placeholder.jpg', 
+    altText: entry.data.title || 'Feed item thumbnail',
+    contentType: entry.data.contentType,
+    clientName: entry.data.clientName, // Pass clientName
+    myRole: entry.data.myRole // Pass myRole
+}));
+---
+<BaseLayout title="Żakowiecki | Portfolio">
+    <div slot="identity-header"><IdentityHeader /></div>
+    <div slot="main-header"><Header /></div>
+    <div slot="info-content" id="info-content-wrapper"><StaticInfo /></div>
+    <section slot="feed-content" id="feed-content-wrapper"></section>
+    <div slot="overview-content" id="overview-content-wrapper">
+        <div id="overview-grid-container"><OverviewGrid items={overviewItems} /></div>
+    </div>
+    <div slot="dynamic-content" id="dynamic-content-wrapper">
+        <div class="mobile-section-separator" id="mobile-highlights-separator">
+            <h3 class="mobile-section-separator-title">Recent Highlights</h3>
+        </div>
+        <div id="highlights-content-wrapper-actual"> <HighlightsColumn /> </div>
+        <div id="about-content-wrapper-actual"> <AboutSection /> </div>
+    </div>
+    <div slot="all-feed-content" id="all-feed-content-wrapper">
+        <AllFeedColumn />
+    </div>
+    <div slot="contact-content" id="contact-content-slot-wrapper">
+        <ContactSection />
+    </div>
+</BaseLayout>
+
+<style>
+    /* Styles remain the same */
+    #highlights-content-wrapper-actual,
+    #about-content-wrapper-actual {
+        display: none; 
+    }
+    #overview-grid-container :global(.grid-item) {
+        cursor: pointer;
+    }
+
+    .mobile-section-separator {
+        display: none; 
+        margin-top: calc(var(--spacing-md) - var(--spacing-lg));
+        border-top: 1px solid var(--color-border-subtle); 
+        padding-top: var(--spacing-md); 
+        margin-bottom: var(--spacing-md); 
+    }
+
+    .mobile-section-separator-title {
+        font-size: 0.85em; 
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
+        text-align: left;
+        margin-bottom: 0; 
+        text-transform: uppercase;
+        letter-spacing: 0.075em;
+        line-height: 1.3; 
+    }
+</style>
+
+<script>
+    // Script remains the same as the last working version
+    document.addEventListener('DOMContentLoaded', () => {
+        const appContainer = document.getElementById('app-container');
+        const infoContentArea = document.getElementById('info-content-area'); 
+        const dynamicContentArea = document.getElementById('dynamic-content-area'); 
+        const highlightsContentWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const aboutContentWrapper = document.getElementById('about-content-wrapper-actual');
+        const allFeedContentArea = document.getElementById('all-feed-content-area');
+        const overviewContentArea = document.getElementById('overview-content-area');
+        const contactContentArea = document.getElementById('contact-content-area'); 
+        const mobileHighlightsSeparator = document.getElementById('mobile-highlights-separator');
+
+        const desktopHighlightsBtn = document.getElementById('highlights-view-btn-desktop');
+        const desktopAllFeedBtn = document.getElementById('all-feed-view-btn-desktop');
+        const desktopOverviewBtn = document.getElementById('overview-view-btn-desktop');
+        const desktopAboutBtn = document.getElementById('about-view-btn-desktop');
+        const desktopContactBtn = document.getElementById('contact-link-desktop');
+
+        const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
+        const mobileNavPanel = document.getElementById('mobile-nav-panel');
+        const mobileNavLinks = mobileNavPanel ? mobileNavPanel.querySelectorAll('.mobile-nav-link') : null;
+
+        const overviewGridContainer = document.getElementById('overview-grid-container');
+        const highlightsListWrapper = document.getElementById('highlights-content-wrapper-actual');
+        const allFeedListWrapper = document.getElementById('all-feed-content-wrapper');
+        
+        const seeMoreProjectsBtnMobile = document.getElementById('see-more-projects-btn-mobile');
+
+        if (!appContainer || !highlightsContentWrapper || !aboutContentWrapper || !contactContentArea ||
+            !desktopHighlightsBtn || !desktopAllFeedBtn || !desktopOverviewBtn || !desktopAboutBtn || !desktopContactBtn ||
+            !hamburgerMenuBtn || !mobileNavPanel || 
+            !overviewGridContainer || !allFeedListWrapper || !mobileHighlightsSeparator ||
+            !seeMoreProjectsBtnMobile 
+            ) {
+            console.error("Essential elements missing in portfolio.astro. Check IDs. Script will not run.");
+            return; 
+        }
+        if (!mobileNavLinks) {
+             console.warn("Mobile navigation links (mobileNavLinks) are null or undefined, possibly because mobileNavPanel was not found or has no matching children. Some mobile navigation functionality might be affected.");
+        }
+
+        const allDesktopButtonsTyped = [
+            desktopHighlightsBtn, desktopAllFeedBtn, desktopOverviewBtn, desktopAboutBtn, desktopContactBtn
+        ].filter(Boolean) as HTMLElement[]; 
+
+        const MOBILE_BREAKPOINT = 768;
+        let currentView = 'home'; 
+        let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+        function isMobile() { return window.innerWidth <= MOBILE_BREAKPOINT; }
+
+        function updateActiveStates() {
+            allDesktopButtonsTyped.forEach(btn => btn.classList.remove('active'));
+            
+            if (!isMobile()) {
+                if (currentView === 'home') desktopHighlightsBtn!.classList.add('active');
+                else if (currentView === 'all-feed') desktopAllFeedBtn!.classList.add('active');
+                else if (currentView === 'overview') desktopOverviewBtn!.classList.add('active');
+                else if (currentView === 'about') desktopAboutBtn!.classList.add('active');
+                else if (currentView === 'contact') desktopContactBtn!.classList.add('active');
+            } 
+
+            mobileNavLinks?.forEach(link => { 
+                const htmlLink = link as HTMLButtonElement; 
+                htmlLink.classList.remove('active-menu-item');
+                const linkTarget = htmlLink.dataset.viewtarget;
+                let isActive = linkTarget === currentView;
+                
+                if ((currentView === 'home' || currentView === 'info') && linkTarget === 'info') {
+                    isActive = true;
+                }
+                if (currentView === 'contact' && linkTarget === 'contact') {
+                    isActive = true;
+                }
+
+                if (isActive) {
+                    htmlLink.classList.add('active-menu-item');
+                }
+            });
+        }
+        
+        function setMainView(view: string) {
+            currentView = view;
+            
+            appContainer!.classList.remove('is-desktop', 'is-mobile', 'view-home', 'view-info', 'view-all-feed', 'view-overview', 'view-about', 'view-contact');
+
+            highlightsContentWrapper!.style.display = 'none';
+            aboutContentWrapper!.style.display = 'none';
+            mobileHighlightsSeparator!.style.display = 'none';
+
+            if (isMobile()) {
+                appContainer!.classList.add('is-mobile');
+                if (view === 'home' || view === 'info') { 
+                    appContainer!.classList.add('view-info');
+                    mobileHighlightsSeparator!.style.display = 'block';
+                    highlightsContentWrapper!.style.display = 'block'; 
+                } else if (view === 'about') {
+                    appContainer!.classList.add('view-about');
+                    aboutContentWrapper!.style.display = 'block'; 
+                } else if (view === 'overview') {
+                    appContainer!.classList.add('view-overview');
+                } else if (view === 'all-feed') {
+                    appContainer!.classList.add('view-all-feed');
+                } else if (view === 'contact') {
+                    appContainer!.classList.add('view-contact');
+                }
+            } else { 
+                appContainer!.classList.add('is-desktop');
+                if (view === 'home') {
+                    appContainer!.classList.add('view-home');
+                    highlightsContentWrapper!.style.display = 'block';
+                } else if (view === 'about') {
+                    appContainer!.classList.add('view-about');
+                    aboutContentWrapper!.style.display = 'block';
+                } else if (view === 'overview') {
+                    appContainer!.classList.add('view-overview');
+                } else if (view === 'all-feed') {
+                    appContainer!.classList.add('view-all-feed');
+                } else if (view === 'contact') {
+                    appContainer!.classList.add('view-contact');
+                }
+            }
+            
+            updateActiveStates();
+
+            const performScrollIfNeeded = () => {
+                if (window.location.hash) { 
+                    if (view !== 'all-feed' && view !== 'contact') {
+                        window.scrollTo(0, 0);
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            };
+            
+            requestAnimationFrame(() => {
+                setTimeout(performScrollIfNeeded, 0);
+            });
+        }
+
+        function toggleMobileMenu(forceClose = false) {
+            const isOpen = mobileNavPanel!.classList.contains('is-open');
+            if (forceClose || isOpen) {
+                mobileNavPanel!.classList.remove('is-open');
+                hamburgerMenuBtn!.setAttribute('aria-expanded', 'false');
+                hamburgerMenuBtn!.classList.remove('is-active');
+                document.body.classList.remove('mobile-menu-open');
+            } else {
+                mobileNavPanel!.classList.add('is-open');
+                hamburgerMenuBtn!.setAttribute('aria-expanded', 'true');
+                hamburgerMenuBtn!.classList.add('is-active');
+                document.body.classList.add('mobile-menu-open');
+            }
+        }
+
+        hamburgerMenuBtn!.addEventListener('click', () => toggleMobileMenu());
+
+        mobileNavLinks?.forEach(link => { 
+            link.addEventListener('click', () => {
+                const targetView = (link as HTMLButtonElement).dataset.viewtarget;
+                if (targetView) {
+                    setMainView(targetView);
+                    toggleMobileMenu(true); 
+                }
+            });
+        });
+
+        desktopHighlightsBtn!.addEventListener('click', () => setMainView('home'));
+        desktopAllFeedBtn!.addEventListener('click', () => setMainView('all-feed'));
+        desktopOverviewBtn!.addEventListener('click', () => setMainView('overview'));
+        desktopAboutBtn!.addEventListener('click', () => setMainView('about'));
+        desktopContactBtn!.addEventListener('click', () => setMainView('contact'));
+        
+        let navigateToFeedItem = (targetId: string) => {
+            if (window.location.hash === '#show-contact') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+            setMainView('all-feed'); 
+            
+            requestAnimationFrame(() => { 
+                setTimeout(() => { 
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement && allFeedContentArea!.contains(targetElement)) { 
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else { 
+                        console.error(`Target feed element '${targetId}' not found or not in scroll container.`); 
+                    }
+                }, 100); 
+            });
+        };
+
+        overviewGridContainer!.addEventListener('click', (event) => {
+            if (!(event.target instanceof Element)) return; 
+            const link = event.target.closest('a.grid-item');
+            if (link && (link instanceof HTMLAnchorElement) && link.dataset.targetId) { 
+                event.preventDefault();
+                navigateToFeedItem(link.dataset.targetId);
+            }
+        });
+
+        highlightsListWrapper!.addEventListener('click', (event) => {
+            if (!(event.target instanceof Element)) return; 
+            const link = event.target.closest('a.highlight-link-wrapper.is-clickable');
+            if (link && (link instanceof HTMLAnchorElement) && link.dataset.targetId) { 
+                event.preventDefault();
+                navigateToFeedItem(link.dataset.targetId);
+            }
+        });
+        
+        if (seeMoreProjectsBtnMobile) {
+            seeMoreProjectsBtnMobile.addEventListener('click', () => {
+                setMainView('overview'); 
+                if (mobileNavPanel && mobileNavPanel.classList.contains('is-open')) {
+                    toggleMobileMenu(true); 
+                }
+            });
+        }
+
+        function handleInitialLoad() {
+            const hash = window.location.hash;
+            let initialTargetView = isMobile() ? 'info' : 'home'; 
+
+            if (hash === '#show-contact') {
+                initialTargetView = 'contact';
+            }
+            setMainView(initialTargetView);
+        }
+        
+        handleInitialLoad(); 
+        wasMobile = isMobile();
+
+        const resizeObserver = new ResizeObserver(() => {
+            const isNowMobile = isMobile();
+            if (isNowMobile !== wasMobile) { 
+                let targetView = currentView;
+                if (isNowMobile) { 
+                    if (currentView === 'home') targetView = 'info';
+                } else { 
+                    if (currentView === 'info') targetView = 'home';
+                    toggleMobileMenu(true); 
+                }
+                setMainView(targetView); 
+                wasMobile = isNowMobile;
+            }
+        });
+        resizeObserver.observe(document.body);
+
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#show-contact') {
+                setMainView('contact');
+            }
+        });
+    });
+</script>---
+// src/pages/index.astro
+import { getEntry } from 'astro:content';
+import LandingLayout from '../layouts/LandingLayout.astro';
+
+const landingPageEntry = await getEntry('general_content', 'landing_page');
+
+const defaultSiteName = "Piotr Żakowiecki";
+const defaultTagline = "field producer · researcher · videojournalist";
+const defaultLocation = "Berlin/Warsaw";
+const defaultBgImage = "/uploads/placeholder-landing-bg.jpg";
+const defaultBgImageAlt = "Abstract background image";
+
+const siteName = landingPageEntry?.data.landingPageSiteName || defaultSiteName;
+const tagline = landingPageEntry?.data.landingPageTagline || defaultTagline;
+const location = landingPageEntry?.data.landingPageLocation || defaultLocation;
+const landingBgImage = landingPageEntry?.data.landingPageBackgroundImage || defaultBgImage;
+const landingBgImageAlt = landingPageEntry?.data.landingPageBackgroundImageAlt || defaultBgImageAlt;
+---
+<LandingLayout title={`${siteName} | Welcome`} backgroundImageUrl={landingBgImage} backgroundAltText={landingBgImageAlt}>
+  
+  <button type="button" class="theme-toggle-button-fixed" id="theme-toggle-btn-fixed" aria-label="Toggle theme">
+    {/* Text will be injected here by JS */}
+  </button>
+
+  <main class="landing-main-content-box">
+    <header class="landing-identity-content">
+      <h1 class="site-name">{siteName}</h1>
+      <p class="tagline">{tagline}</p>
+      <p class="location">{location}</p>
+    </header>
+
+    <nav class="landing-navigation-buttons">
+      <a href="/portfolio" class="landing-button portfolio-button">
+        View Portfolio
+      </a>
+      <a href="/portfolio#show-contact" class="landing-button work-button">
+        Work With Me
+      </a>
+    </nav>
+  </main>
+
+  <style>
+    /* ... (existing .theme-toggle-button-fixed styles) ... */
+    .theme-toggle-button-fixed {
+      position: fixed;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      z-index: 1000; 
+      background-color: rgba(var(--color-text-unified-rgb), 0.1); 
+      border: 1px solid var(--color-border-subtle);
+      color: var(--color-text-unified); 
+      padding: var(--spacing-xs) var(--spacing-sm); 
+      cursor: pointer;
+      border-radius: var(--border-radius-sm); 
+      font-size: 0.8rem; 
+      font-weight: var(--font-weight-medium);
+      line-height: 1.2;
+      min-width: 80px; 
+      text-align: center;
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .theme-toggle-button-fixed:hover {
+      background-color: var(--color-surface-light-hover);
+      border-color: var(--color-accent-hover-custom);
+    }
+
+    .landing-main-content-box { 
+      /* Default (Desktop) styles */
+      background-color: rgba(0, 0, 0, 0.65); 
+      padding: var(--spacing-xl) var(--spacing-lg);
+      border-radius: var(--border-radius-sm);
+      max-width: 650px; 
+      width: 90%; 
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      transition: background-color 0.3s ease, height 0.3s ease, padding 0.3s ease; 
+      position: relative; 
+      z-index: 10;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      justify-content: center; 
+      min-width: 280px; 
+    }
+    html.light-mode .landing-main-content-box { 
+        background-color: rgba(255, 255, 255, 0.75); 
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    /* ... (existing .landing-identity-content and children styles) ... */
+    .landing-identity-content { 
+      margin-bottom: var(--spacing-lg); 
+      width: 100%; 
+    }
+    .landing-identity-content .site-name {
+      font-size: clamp(2rem, 1.5rem + 2vw, 3rem); color: var(--color-text-unified); 
+      margin-bottom: var(--spacing-xs); font-weight: var(--font-weight-bold);
+      line-height: 1.2; text-align: center;
+    }
+    .landing-identity-content .tagline {
+      font-size: clamp(1rem, 0.8rem + 0.8vw, 1.3rem); color: var(--color-accent); 
+      margin-bottom: var(--spacing-xxs); text-align: center; 
+      hyphens: none; line-height: 1.3;
+    }
+    .landing-identity-content .location {
+      font-size: clamp(0.9rem, 0.7rem + 0.6vw, 1.1rem); color: var(--color-text-secondary); 
+      margin-bottom: 0; text-align: center; 
+      hyphens: none; line-height: 1.3;
+    }
+
+    /* ... (existing .landing-navigation-buttons and .landing-button styles) ... */
+    .landing-navigation-buttons {
+      display: flex; flex-direction: column; 
+      align-items: center; gap: var(--spacing-md);
+      width: 100%; 
+    }
+    .landing-button {
+      display: inline-block; padding: var(--spacing-sm) var(--spacing-lg);
+      border: 1px solid var(--color-border-subtle); border-radius: var(--border-radius-sm);
+      color: var(--color-text-unified); background-color: rgba(var(--color-text-unified-rgb), 0.1); 
+      text-decoration: none; font-weight: var(--font-weight-medium);
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      width: 100%; max-width: 320px; 
+      text-align: center; cursor: pointer;
+      font-size: 1rem; line-height: 1.5; box-sizing: border-box;
+    }
+    .landing-button:hover {
+      background-color: var(--color-surface-light-hover);
+      border-color: var(--color-accent-hover-custom);
+      color: var(--color-accent-hover-custom);
+    }
+
+    @media (min-width: 769px) { 
+      .landing-navigation-buttons {
+        flex-direction: row; justify-content: center; 
+        gap: var(--spacing-lg);
+      }
+      .landing-button { 
+        width: auto; min-width: 200px; 
+      }
+    }
+
+    @media (max-width: 768px) {
+        .landing-main-content-box {
+            width: 100%; 
+            max-width: none; 
+            min-width: 0; 
+            
+            height: auto; /* Height determined by content */
+            /* No fixed position, no margin-top: auto */
+            /* flex-shrink: 0; /* Not strictly needed if parent is not constraining height */
+
+            /* Restore semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.65); 
+            /* Light mode semi-transparent background */
+            /* html.light-mode will handle its specific semi-transparent color */
+            
+            /* Internal content centering is inherited */
+            
+            padding: var(--spacing-lg) var(--spacing-md); /* Restore original mobile padding */
+            
+            border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0; 
+            margin-bottom: 0; /* Ensure it's flush if it reaches bottom of viewport */
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.2); 
+            /* overflow-y: auto; /* Only if content *within this box* might exceed its own natural height and needs scroll */
+        }
+        html.light-mode .landing-main-content-box {
+            /* This rule is already defined above for desktop, ensure it applies correctly for mobile too */
+            background-color: rgba(255, 255, 255, 0.75); 
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.07);
+        }
+
+        .landing-identity-content {
+            margin-bottom: var(--spacing-xs); 
+        }
+        .landing-identity-content .site-name { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem); }
+        .landing-identity-content .tagline { font-size: clamp(0.9rem, 0.7rem + 0.7vw, 1.1rem); }
+        .landing-identity-content .location { font-size: clamp(0.8rem, 0.6rem + 0.5vw, 1rem); }
+
+
+        .landing-navigation-buttons {
+            flex-direction: row; 
+            justify-content: space-between; 
+            gap: var(--spacing-sm); 
+        }
+        .landing-button {
+            width: calc(50% - (var(--spacing-sm) / 2)); 
+            max-width: none; 
+            padding: var(--spacing-xs) var(--spacing-xs); 
+            font-size: 0.8rem; 
+        }
+    }
+
+    @media (max-width: 480px) { 
+        .landing-main-content-box {
+            padding: var(--spacing-md) var(--spacing-sm); /* Adjust padding for very small screens */
+        }
+        .landing-button {
+            font-size: 0.9rem; 
+            line-height: 1.2;
+        }
+        .landing-identity-content .site-name { font-size: clamp(1.3rem, 1rem + 1.2vw, 2rem); }
+    }
+  </style>
+
+  <script> 
+    const themeToggleButtonFixed = document.getElementById('theme-toggle-btn-fixed');
+
+    function updateButtonText(theme: string) { 
+      if (themeToggleButtonFixed) {
+        themeToggleButtonFixed.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode'; 
+        themeToggleButtonFixed.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+      }
+    }
+
+    if (typeof window.currentTheme !== 'undefined' && themeToggleButtonFixed) {
+      updateButtonText(window.currentTheme);
+    } else if (themeToggleButtonFixed) { 
+      const initialTheme = localStorage.getItem('theme-preference') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      updateButtonText(initialTheme);
+    }
+    
+    themeToggleButtonFixed?.addEventListener('click', () => {
+      if (typeof window.toggleTheme === 'function') {
+        window.toggleTheme(); 
+      }
+    });
+
+    document.addEventListener('themechanged', (e) => {
+      const event = e as CustomEvent<{ theme: string }>; 
+      
+      if (event.detail && typeof event.detail.theme !== 'undefined') {
+        updateButtonText(event.detail.theme);
+      }
+    });
+  </script>
+</LandingLayout>/* src/styles/global.css */
+
+/* 1. CSS Reset / Normalization */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+button, input, textarea, select { font: inherit; margin: 0; }
+ul, ol { padding: 0; /* list-style: none; */ } 
+img, video, picture, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
+
+/* 2. CSS Custom Properties (Variables) */
+:root {
+  /* --- DARK THEME (DEFAULT) --- */
+  --font-family-unified: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-desktop-unified: clamp(0.9rem, 0.7rem + 0.2vw, 1rem);
+  --font-size-mobile-content-responsive: clamp(0.85rem, 0.75rem + 0.3vw, 1.0rem);
+  --font-size-mobile-header-responsive: clamp(1.1rem, 0.9rem + 0.6vw, 1.3rem);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-unified: var(--font-weight-regular);
+  --line-height-unified: 1.6;
+  
+  /* Dark Theme Colors */
+  --color-background-dark: #000000;
+  --color-text-unified-dark: #ccc;
+  --color-text-secondary-dark: #aaa;
+  --color-border-subtle-dark: rgba(43, 43, 43, 0.65); /* #2b2b2b at 65% opacity */
+  --color-border-light-dark: #444; /* For blockquotes, etc. */
+  --color-background-muted-dark: #1a1a1a;
+  --color-surface-light-dark: #2a2a2a; /* Used for some component backgrounds */
+  --color-surface-light-hover-dark: #383838;
+  --color-text-unified-rgb-dark: 204, 204, 204;
+
+  /* --- LIGHT THEME --- */
+  --color-background-light: #f0f0f0; /* Light grey background */
+  --color-text-unified-light: #222222; /* Dark text */
+  --color-text-secondary-light: #555555; /* Slightly lighter dark text */
+  --color-border-subtle-light: rgba(180, 180, 180, 0.65); /* Lighter border */
+  --color-border-light-light: #cccccc; /* Lighter equivalent for blockquotes */
+  --color-background-muted-light: #e0e0e0; /* Lighter muted background */
+  --color-surface-light-light: #ffffff; /* White for component backgrounds */
+  --color-surface-light-hover-light: #f5f5f5; /* Slight hover for light surfaces */
+  --color-text-unified-rgb-light: 34, 34, 34;
+
+  /* --- THEME-AGNOSTIC / ACCENT COLORS --- */
+  --color-accent-original: #e70221;
+  --color-accent-hover-custom: #D8391E;
+  --border-radius-sm: 4px;
+  --line-thickness-subtle: 1px;
+
+  /* --- DEFAULT TO DARK THEME VARIABLES --- */
+  --color-background: var(--color-background-dark);
+  --color-text-unified: var(--color-text-unified-dark);
+  --color-text-secondary: var(--color-text-secondary-dark);
+  --color-border-subtle: var(--color-border-subtle-dark);
+  --color-border-light: var(--color-border-light-dark);
+  --color-background-muted: var(--color-background-muted-dark);
+  --color-surface-light: var(--color-surface-light-dark);
+  --color-surface-light-hover: var(--color-surface-light-hover-dark);
+  --color-text-unified-rgb: var(--color-text-unified-rgb-dark);
+  
+  /* These remain the same for both themes */
+  --color-accent: var(--color-accent-original);
+  --color-text-hover: var(--color-accent-hover-custom); /* This is an accent hover, so it can stay */
+  --color-border: var(--color-border-subtle); /* Defaulting to subtle */
+  --line-thickness: var(--line-thickness-subtle);
+
+  /* Spacing variables */
+  --spacing-unit: 1rem;
+  --spacing-xxs: calc(0.25 * var(--spacing-unit));
+  --spacing-xs: calc(0.5 * var(--spacing-unit));
+  --spacing-sm: calc(0.75 * var(--spacing-unit));
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(1.5 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-xxl: calc(3 * var(--spacing-unit));
+  --spacing-content-side-padding: var(--spacing-xl);
+  --content-padding-x-desktop: var(--spacing-lg);
+  --content-padding-x-mobile: var(--spacing-md);
+  --column-gap-desktop: var(--spacing-lg);
+  --column-gap-mobile: var(--spacing-md);
+  --desktop-info-column-width: 33.33%;
+  --desktop-feed-column-width: calc(100% - var(--desktop-info-column-width));
+}
+
+/* --- APPLY LIGHT THEME WHEN .light-mode CLASS IS PRESENT ON HTML --- */
+html.light-mode {
+  --color-background: var(--color-background-light);
+  --color-text-unified: var(--color-text-unified-light);
+  --color-text-secondary: var(--color-text-secondary-light);
+  --color-border-subtle: var(--color-border-subtle-light);
+  --color-border-light: var(--color-border-light-light);
+  --color-background-muted: var(--color-background-muted-light);
+  --color-surface-light: var(--color-surface-light-light);
+  --color-surface-light-hover: var(--color-surface-light-hover-light);
+  --color-text-unified-rgb: var(--color-text-unified-rgb-light);
+
+  /* Specific overrides for light mode if general variables are not enough */
+  /* For example, if markdown link color needs adjustment */
+  /* .markdown-content a { color: var(--color-accent-original); } */
+  /* .markdown-content a:hover { color: var(--color-text-unified-light); } */
+}
+
+
+/* 3. Core Body & Universal Text Styling */
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-family-unified);
+  font-size: var(--font-size-desktop-unified);
+  font-weight: var(--font-weight-unified);
+  line-height: var(--line-height-unified);
+  color: var(--color-text-unified);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+  transition: color 0.3s ease;
+}
+h3 { font-size: 1.1em; }
+
+p, li, dt, dd, span, label {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: var(--spacing-sm);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  transition: color 0.3s ease;
+}
+
+li::marker {
+  color: var(--color-accent); /* Accent color for markers, should be fine for both themes */
+}
+
+.header-site-name-text {
+    font-weight: var(--font-weight-bold);
+}
+
+/* 4. Basic Link & Button Hover Styling */
+a:hover { color: var(--color-text-hover); } 
+button:hover { color: var(--color-text-hover); }
+
+button.active {
+  color: var(--color-accent);
+}
+button { cursor: pointer; }
+
+/* 5. Utility Classes */
+.accent-text {
+  color: var(--color-accent);
+}
+
+/* ================================== */
+/* --- GLOBAL MOBILE OVERRIDES --- */
+/* ================================== */
+@media (max-width: 768px) {
+    body {
+        font-size: var(--font-size-mobile-content-responsive);
+    }
+    :root { /* This :root inside media query might not be ideal, but let's keep it for now if it's working for you */
+        --spacing-content-side-padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 992px) and (orientation: landscape) {
+  body {
+      font-size: 0.8rem;
+  }
+}
+
+/* --- Global Markdown Content Styles --- */
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote {
+    line-height: var(--line-height-unified);
+    margin-bottom: var(--spacing-sm);
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.2;
+}
+.markdown-content > *:first-child { margin-top: 0; }
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child,
+.markdown-content h4:first-child,
+.markdown-content h5:first-child,
+.markdown-content h6:first-child {
+    margin-top: 0;
+}
+
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: var(--spacing-lg);
+    list-style: revert;
+}
+.markdown-content ul { list-style-type: disc; }
+.markdown-content ol { list-style-type: decimal; }
+.markdown-content ul ul, .markdown-content ol ol { margin-bottom: 0; list-style-type: circle; }
+.markdown-content ul ol, .markdown-content ol ul { margin-bottom: 0; }
+
+
+.markdown-content li {
+    margin-bottom: var(--spacing-xxs);
+}
+.markdown-content li > p:only-child {
+    margin-bottom: 0;
+}
+.markdown-content li > p:last-child {
+    margin-bottom: 0;
+}
+
+
+.markdown-content blockquote {
+    margin-left: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+    border-left: 3px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+.markdown-content blockquote p {
+    margin-bottom: var(--spacing-xs);
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-border-light); /* This will change with theme */
+    transition: background-color 0.3s ease;
+}
+
+.markdown-content a {
+    color: var(--color-accent-hover-custom); 
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    overflow-wrap: break-word;
+    /* No transition needed here as accent color is theme-agnostic */
+}
+.markdown-content a:hover {
+    color: var(--color-text-unified); /* This will change with theme */
+    text-decoration: none;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border); 
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    transition: border-top-color 0.3s ease;
+}
+
+.markdown-content table {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    border-collapse: collapse;
+    border: 1px solid var(--color-border-light);
+    table-layout: fixed;
+    transition: border-color 0.3s ease;
+}
+.markdown-content th,
+.markdown-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--color-border-light);
+    text-align: left;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    transition: border-color 0.3s ease;
+}
+.markdown-content th {
+    background-color: var(--color-surface-light);
+    font-weight: var(--font-weight-bold);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.markdown-content pre {
+    background-color: var(--color-background-muted);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    overflow-x: auto;
+    margin-bottom: var(--spacing-md);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Color of text inside pre */
+}
+.markdown-content code { /* Inline code */
+    background-color: var(--color-background-muted);
+    padding: 0.1em 0.3em;
+    border-radius: var(--border-radius-sm);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Color of inline code text */
+}
+.markdown-content pre code { /* Code within pre blocks */
+    background-color: transparent; /* No separate background for code inside pre */
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    overflow-wrap: normal;
+    word-break: normal;
+    /* Transition handled by parent pre */
+}
+
+.markdown-content iframe,
+.markdown-content video,
+.markdown-content embed,
+.markdown-content object {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 200px;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: none;
+    box-sizing: border-box;
+    background-color: var(--color-background-muted);
+    transition: background-color 0.3s ease;
+}
+
+.markdown-content div[style*="width"] > iframe,
+.markdown-content div[style*="width"] > video,
+.markdown-content div[style*="width"] > embed,
+.markdown-content div[style*="width"] > object {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+.markdown-content div[style*="width"] {
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+.markdown-content div[style*="height"] {
+    height: auto !important;
+    max-height: 100vh;
+}

@@ -8,11 +8,7 @@ myRole:
   - Location sound
 contentBlocks:
   - type: fullWidthEmbed
-    embedCode: <iframe style="border-radius:12px"
-      src="https://open.spotify.com/embed/episode/41sG28ZEVwKsIvyg5VVEYD?utm_source=generator"
-      width="100%" height="152" frameBorder="0" allowfullscreen=""
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen;
-      picture-in-picture" loading="lazy"></iframe>
+    embedCode: <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/41sG28ZEVwKsIvyg5VVEYD?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   - type: twoColumn
     right: |-
       <span class="accent-text">Client:</span> The New York Times Opinion Audio

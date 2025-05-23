@@ -10,6 +10,8 @@ import AboutSection from '../components/AboutSection.astro';
 import AllFeedColumn from '../components/AllFeedColumn.astro';
 import ContactSection from '../components/ContactSection.astro';
 import type { CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content'; // To fetch static_info for portrait
+import { Image }  from 'astro:assets';   // To render the dedicated portrait
 
 const feedEntriesFetched: CollectionEntry<'feed'>[] = await getCollection('feed');
 const feedEntries = feedEntriesFetched.sort((a, b) => {
@@ -82,6 +84,7 @@ const overviewItems = feedEntries.map(entry => ({
     }
 </style>
 
+      
 <script>
     // Script remains the same as the last working version
     document.addEventListener('DOMContentLoaded', () => {
@@ -131,6 +134,7 @@ const overviewItems = feedEntries.map(entry => ({
         const MOBILE_BREAKPOINT = 768;
         let currentView = 'home'; 
         let wasMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+        let isInitialPortfolioLoad = true; // MODIFICATION: Added flag
 
         function isMobile() { return window.innerWidth <= MOBILE_BREAKPOINT; }
 
@@ -209,11 +213,19 @@ const overviewItems = feedEntries.map(entry => ({
             updateActiveStates();
 
             const performScrollIfNeeded = () => {
-                if (window.location.hash) { 
+                // MODIFICATION: Conditional scroll logic
+                if (isInitialPortfolioLoad && !window.location.hash) {
+                    // On initial portfolio load without a hash, do not scroll.
+                    // This allows the browser's default behavior or user's quick scroll to persist.
+                } else if (window.location.hash) { 
+                    // If there's a hash, only scroll to top if not in 'all-feed' or 'contact' view
+                    // (these views might have their own hash-based scrolling).
                     if (view !== 'all-feed' && view !== 'contact') {
                         window.scrollTo(0, 0);
                     }
                 } else {
+                    // No hash, and it's not the initial portfolio load (e.g., internal view change).
+                    // Scroll to top for views like 'overview' triggered by "See more projects".
                     window.scrollTo(0, 0);
                 }
             };
@@ -309,6 +321,7 @@ const overviewItems = feedEntries.map(entry => ({
                 initialTargetView = 'contact';
             }
             setMainView(initialTargetView);
+            isInitialPortfolioLoad = false; // MODIFICATION: Set flag after initial view is processed
         }
         
         handleInitialLoad(); 

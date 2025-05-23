@@ -233,14 +233,16 @@ const formattedDate = data.date
     .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
     .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
     
-    .block-full-width-embed { 
-        width: 100%; 
-        max-width: 100%; 
-        overflow: hidden; /* Clip content that might still try to overflow */
-        background-color: var(--color-border-light); 
-        position: relative; 
-        /* padding-bottom: 56.25%; /* 16:9 aspect ratio - can be applied if all embeds are 16:9 */
-        /* height: 0; */
+    .block-full-width-embed :global(iframe) { 
+        display: block; /* Ensures it behaves like a block element */
+        width: 100% !important; /* Takes full width of its container */
+        max-width: 100% !important; /* Prevents exceeding container width */
+        /* REMOVED: height: auto !important; */
+        /* REMOVED: aspect-ratio: 16 / 9; */
+        /* The height will now be determined by the 'height' attribute in the embed code,
+           or by the iframe's content, or a browser default (e.g., 150px). */
+        border: none; 
+        margin: 0; /* Reset any default margins */
     }
     /* More specific iframe styling for full-width embeds */
     .block-full-width-embed :global(iframe) { 
