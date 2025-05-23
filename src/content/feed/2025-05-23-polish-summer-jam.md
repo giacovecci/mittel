@@ -21,9 +21,9 @@ contentBlocks:
 
       <span class="accent-text">My role:</span> Camera, Editing, Sound, Colour correction
     left: >-
-      The experimental duo An-Hoer performed an intense and playful set secret
-      nano-festival in the heart of Poland's northern woodlands. And I was there
-      to capture the vibes.
+      The experimental duo An-Hoer performed an intense and playful set at a
+      secret nano-festival in the heart of Poland's northern woodlands. And I
+      was there to capture the vibes.
 
 
       The oneiric melodies mutating into noisy industrial motorik went very well with the lazy midday sun (and the equally relaxed audience). I aimed to capture Wojtek and Piotr's emotions as they conjured one surprising groove after another, as well as to do justice to the fresh, warm breeze that graced us that day.
