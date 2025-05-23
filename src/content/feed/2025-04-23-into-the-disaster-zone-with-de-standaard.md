@@ -1,10 +1,11 @@
 ---
-title: Into the disaster zone with De Standaard
+title: Poland vs high water
 date: 2024-09-21T01:01:00.000Z
 thumbnail: /uploads/ds-2409-thumb.jpg
-contentType: "Press"
-clientName: "De Standaard"
-myRole: ["Field Production"]
+contentType: Press
+clientName: De Standaard
+myRole:
+  - Field Production
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
 contentBlocks:
