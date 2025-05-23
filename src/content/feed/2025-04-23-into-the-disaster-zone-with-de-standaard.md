@@ -1,5 +1,5 @@
 ---
-title: Poland fighting the High Water
+title: Poland vs high water
 date: 2024-09-21T01:01:00.000Z
 thumbnail: /uploads/ds-2409-thumb.jpg
 contentType: Press
