@@ -1,10 +1,11 @@
 ---
-title: Exploring Poland's regional cuisine for the ARD
+title: A taste of Poland for the ARD
 date: 2025-05-08T20:30:00.000Z
 thumbnail: /uploads/ddd05654.png
-contentType: "Documentary"
-clientName: "ACP"
-myRole: ["Field Production"]
+contentType: Documentary
+clientName: ACP
+myRole:
+  - Field Production
 contentBlocks:
   - type: fullWidthEmbed
     embedCode: >-
