@@ -2,6 +2,9 @@
 title: Chasing Alice, part one
 date: 2024-09-12T12:15:00.000Z
 thumbnail: /uploads/j1nfkas2.png
+contentType: "TV News"
+clientName: "Channel 4 News"
+myRole: ["Field Production"]
 contentBlocks:
   - type: fullWidthEmbed
     embedCode: <iframe width="560" height="315"

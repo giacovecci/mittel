@@ -1,7 +1,7 @@
 backend:
   name: git-gateway
   repo: giacovecci/mittel
-  branch: final-mittel
+  branch: final-mittel-v2
   identity_url: https://auth.decapbridge.com/sites/6f47cec6-ee71-4b7d-a4fb-b4518e61898e
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
@@ -29,6 +29,25 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime", required: false }
       - { label: "Thumbnail Image", name: "thumbnail", widget: "image", required: false }
+      - label: "Content Type"
+        name: "contentType"
+        widget: "select"
+        options:
+          - { label: "TV News", value: "TV News" }
+          - { label: "Documentary", value: "Documentary" }
+          - { label: "Audio", value: "Audio" }
+          - { label: "Press", value: "Press" }
+        required: false
+        hint: "Select the primary type of content for this entry."
+      # MODIFICATION: Added clientName and myRole widgets
+      - { label: "Client Name", name: "clientName", widget: "string", required: false, hint: "Name of the client or organization." }
+      - label: "My Role(s)"
+        name: "myRole"
+        widget: "list"
+        summary: "{{fields.role}}" # Shows the role text in the list item summary in CMS
+        field: { label: "Role", name: "role", widget: "string" } # Each item in the list is a string
+        required: false
+        hint: "Your role(s) in this project (e.g., Producer, Researcher)."
       - label: "Content Blocks"
         name: "contentBlocks"
         widget: "list"
@@ -41,6 +60,7 @@ collections:
           - { label: "Horizontal Gallery", name: "horizontalGallery", widget: "object", fields: [ { label: "Images", name: "images", widget: "list", fields: [ { label: "Image", name: "image", widget: "image" }, { label: "Alt Text", name: "alt", widget: "string", required: false } ] } ] }
 
   - name: "highlights"
+    # ... rest of highlights collection ...
     label: "Highlights & Separators"
     folder: "src/content/highlights"
     create: true
@@ -59,6 +79,7 @@ collections:
       - { label: "Slug of Linked Feed Entry (for Highlights)", name: "linkedFeedSlug", widget: "string", required: false, hint: "Enter the exact slug of the feed entry this highlight links to (e.g., 2023-10-26-my-post-title)." }
       
   - name: "general_content"
+    # ... rest of general_content collection ...
     label: "General Content"
     files:
       - label: "Static Info (Left Column)"
@@ -76,12 +97,12 @@ collections:
               - { label: "Alt Text", name: "alt", widget: "string", hint: "Important for accessibility, e.g., 'The New York Times logo'" }
               - { label: "Link URL (Optional)", name: "link", widget: "string", required: false, hint: "Full URL if the logo should be clickable, e.g., https://www.nytimes.com" }
               - { label: "Client Name (Optional)", name: "name", widget: "string", required: false, hint: "For internal reference or future use." }
-              - label: "Already Suits Dark Mode?" # ADDED
-                name: "alreadySuitsDarkMode" # ADDED
-                widget: "boolean" # ADDED
-                default: false # ADDED
-                required: false # ADDED
-                hint: "Check this if the logo is already white/light and doesn't need color filtering in dark mode." # ADDED
+              - label: "Already Suits Dark Mode?"
+                name: "alreadySuitsDarkMode"
+                widget: "boolean"
+                default: false
+                required: false
+                hint: "Check this if the logo is already white/light and doesn't need color filtering in dark mode."
       - label: "About Page"
         name: "about_page_content"
         file: "src/content/general_content/about_page.md"

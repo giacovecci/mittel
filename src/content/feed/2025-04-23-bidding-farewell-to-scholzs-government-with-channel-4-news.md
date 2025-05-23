@@ -2,6 +2,9 @@
 title: Bidding farewell to Scholz's government
 date: 2024-12-16T01:01:00.000Z
 thumbnail: /uploads/img_20241214_133736.jpg
+contentType: "TV News"
+clientName: "Channel 4 News"
+myRole: ["Field Production"]
 _styling_note: Use `<span class="accent-text">Your Text Here</span>` within
   Markdown fields to make text red.
 contentBlocks:

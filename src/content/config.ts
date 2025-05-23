@@ -2,6 +2,7 @@
 import { defineCollection, z } from 'astro:content';
 
 // --- Block Schemas (Used by 'feed' collection) ---
+// ... (Block schemas remain the same) ...
 const twoColumnBlockSchema = z.object({
     type: z.literal('twoColumn'),
     left: z.string().optional(),
@@ -30,6 +31,7 @@ const horizontalGalleryBlockSchema = z.object({
     ).optional(),
 });
 
+
 // --- Collection Definition: feed ---
 const feed = defineCollection({
     type: 'content',
@@ -37,6 +39,10 @@ const feed = defineCollection({
         title: z.string(),
         date: z.date().optional(),
         thumbnail: z.string().optional(),
+        contentType: z.enum(['TV News', 'Documentary', 'Audio', 'Press']).optional(),
+        // MODIFICATION: Added clientName and myRole
+        clientName: z.string().optional(),
+        myRole: z.array(z.string()).optional(), // Array of strings for roles
         contentBlocks: z.array(
             z.discriminatedUnion('type', [
                 twoColumnBlockSchema,
@@ -50,15 +56,17 @@ const feed = defineCollection({
 });
 
 // --- Define a schema for client logos ---
+// ... (clientLogoSchema remains the same) ...
 const clientLogoSchema = z.object({
     image: z.string(),
     alt: z.string(),
     link: z.string().url().optional(),
     name: z.string().optional(),
-    alreadySuitsDarkMode: z.boolean().optional(), // ADDED: Flag for dark mode suitability
+    alreadySuitsDarkMode: z.boolean().optional(),
 });
 
 // --- Collection Definition: general_content ---
+// ... (general_content schema remains the same) ...
 const general_content = defineCollection({
     type: 'content',
     schema: z.object({
@@ -77,6 +85,7 @@ const general_content = defineCollection({
 });
 
 // --- Collection Definition: highlights ---
+// ... (highlights schema remains the same) ...
 const highlights = defineCollection({
     type: 'content',
     schema: z.object({

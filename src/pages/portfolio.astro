@@ -17,11 +17,16 @@ const feedEntries = feedEntriesFetched.sort((a, b) => {
     const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
     return dateB - dateA;
 });
+
+// MODIFICATION: Added contentType, clientName, and myRole to the overviewItems map
 const overviewItems = feedEntries.map(entry => ({
     id: entry.slug,
     title: entry.data.title || 'Untitled',
     imageUrl: entry.data.thumbnail || '/placeholder.jpg', 
-    altText: entry.data.title || 'Feed item thumbnail'
+    altText: entry.data.title || 'Feed item thumbnail',
+    contentType: entry.data.contentType,
+    clientName: entry.data.clientName, // Pass clientName
+    myRole: entry.data.myRole // Pass myRole
 }));
 ---
 <BaseLayout title="Żakowiecki | Portfolio">
@@ -48,6 +53,7 @@ const overviewItems = feedEntries.map(entry => ({
 </BaseLayout>
 
 <style>
+    /* Styles remain the same */
     #highlights-content-wrapper-actual,
     #about-content-wrapper-actual {
         display: none; 
@@ -77,6 +83,7 @@ const overviewItems = feedEntries.map(entry => ({
 </style>
 
 <script>
+    // Script remains the same as the last working version
     document.addEventListener('DOMContentLoaded', () => {
         const appContainer = document.getElementById('app-container');
         const infoContentArea = document.getElementById('info-content-area'); 
@@ -211,7 +218,6 @@ const overviewItems = feedEntries.map(entry => ({
                 }
             };
             
-            // MODIFICATION: Nested setTimeout within requestAnimationFrame for scroll
             requestAnimationFrame(() => {
                 setTimeout(performScrollIfNeeded, 0);
             });

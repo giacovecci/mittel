@@ -1,91 +1,133 @@
 ---
-// src/components/GridItem.astro
 export interface Props {
-    item: { id: string; title: string; imageUrl?: string; altText?: string; };
+    item: { 
+        id: string; 
+        title: string; 
+        imageUrl?: string; 
+        altText?: string;
+        contentType?: 'TV News' | 'Documentary' | 'Audio' | 'Press' | string; // Allow string for flexibility
+        clientName?: string;
+        myRole?: string[]; // Array of strings
+    };
 }
 const { item } = Astro.props;
 const itemLink = `#${item.id}`;
+
+const typeLabel = item.contentType || ''; // Use contentType directly as label
+const rolesString = item.myRole && item.myRole.length > 0 ? item.myRole.join(' / ') : '';
+
+// For the text overlay, we'll use a gradient background for readability
+// The image itself will be a CSS background on .grid-item-thumbnail
+const thumbnailStyle = item.imageUrl ? `background-image: url('${item.imageUrl}');` : '';
 ---
 <a href={itemLink} class="grid-item" data-target-id={item.id}>
-    <div class="grid-item-thumbnail">
-        {item.imageUrl ? (
-            <img src={item.imageUrl} alt={item.altText ?? `Thumbnail for ${item.title}`} loading="lazy" />
-        ) : (
-            <span class="placeholder-text">THUMB</span>
-        )}
+    <div class="grid-item-thumbnail" style={thumbnailStyle}>
+        {!item.imageUrl && <span class="placeholder-text">THUMB</span>}
+        <div class="text-overlay-container">
+            <div class="text-content">
+                {typeLabel && <span class="type-label">{typeLabel}</span>}
+                <h3 class="grid-item-title">{item.title ?? 'Untitled'}</h3>
+                {item.clientName && <span class="detail-label client-name">Client: {item.clientName}</span>}
+                {rolesString && <span class="detail-label roles">Role: {rolesString}</span>}
+            </div>
+        </div>
     </div>
-    <div class="grid-item-label">{item.title ?? 'Untitled'}</div>
 </a>
 
 <style>
-    /* Ensure variables used below are defined in global.css */
-
     .grid-item {
-        display: block;
+        display: block; /* Revert to block, as the thumbnail will be the main element */
         text-decoration: none;
-        color: inherit;
-        text-align: center;
-        /* --- RESTORED BACKGROUND and BORDER --- */
-        background-color: var(--color-surface-light);
-        border: var(--line-thickness) solid var(--color-border);
-        padding: var(--spacing-xs); /* Keep padding */
-        /* --- RESTORED TRANSITION --- */
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-        box-sizing: border-box;
-        overflow: hidden; /* Keep overflow hidden */
+        color: var(--color-text-unified); /* Default text color for overlay */
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        position: relative; /* Needed for absolute positioning of overlay elements */
+    }
+
+    .grid-item:hover {
+        transform: translateY(-5px) scale(1.02); /* Slightly more pronounced hover */
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .grid-item:hover .grid-item-title {
+        /* color: var(--color-accent); */ /* Keep title color consistent on hover for overlay */
     }
 
     .grid-item-thumbnail {
-        aspect-ratio: 1 / 1;
-        background-color: rgba(var(--color-text-unified-rgb), 0.1);
-        margin-bottom: var(--spacing-xs);
-        display: flex;
+        aspect-ratio: 1 / 1; /* Or your preferred aspect ratio, e.g., 16/9 or 4/3 */
+        background-size: cover;
+        background-position: center;
+        background-color: var(--color-background-muted); /* Fallback if no image */
+        position: relative; /* For positioning placeholder and overlay container */
+        display: flex; /* To help center placeholder if needed */
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        /* Removed internal border, main border is on .grid-item */
-        /* border: 1px solid rgba(var(--color-text-unified-rgb), 0.2); */
-        width: 100%;
     }
+
      .grid-item-thumbnail .placeholder-text {
-        font-size: 0.8em;
-        color: rgba(var(--color-text-unified-rgb), 0.6);
+        font-size: 1em; /* Larger placeholder text */
+        font-weight: var(--font-weight-bold);
+        color: rgba(var(--color-text-unified-rgb), 0.5);
+        text-transform: uppercase;
      }
 
-    .grid-item-thumbnail img {
+    .text-overlay-container {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align text to the bottom */
+    padding: var(--spacing-md); /* Increased padding for text content */
+    /* MODIFIED GRADIENT FOR DARKER OVERLAY */
+    background: linear-gradient(
+        to top, 
+        rgba(0,0,0,0.95) 0%,  /* Was 0.85 - Now 95% opacity at bottom */
+        rgba(0,0,0,0.8) 40%, /* Was 0.6 - Now 80% opacity at 40% */
+        rgba(0,0,0,0.3) 80%, /* Was 0.1 - Now 30% opacity at 80% */
+        rgba(0,0,0,0.1) 100% /* Was transparent - Now 10% opacity at top */
+    );
+    transition: background-color 0.3s ease; 
+    box-sizing: border-box;
+}
+    
+    .text-content {
+        /* Container for all text elements within the overlay */
+    }
+
+    .type-label {
         display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        font-size: 0.85em; /* Larger font */
+        font-weight: var(--font-weight-heavy);
+        color: rgba(255,255,255,0.85); /* Light text for dark overlay */
+        margin-bottom: var(--spacing-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    .grid-item-label {
-        font-size: 0.9em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--color-text-unified);
-        padding: 0 var(--spacing-xxs);
+    .grid-item-title {
+        font-size: 1.15em; /* Larger font */
+        font-weight: var(--font-weight-bold); /* Bolder */
+        line-height: 1.3;
+        color: #ffffff; /* White text for dark overlay */
+        margin: 0 0 var(--spacing-xs) 0; /* Adjusted margin */
+    }
+    
+    .detail-label {
         display: block;
-        width: 100%;
+        font-size: 0.8em; /* Larger font */
+        font-weight: var(--font-weight-regular);
+        color: rgba(255,255,255,0.75); /* Light text */
+        line-height: 1.4;
+        margin-top: var(--spacing-xxs);
+    }
+    .detail-label.client-name {
+        /* Specific styles if needed */
+    }
+    .detail-label.roles {
+        /* Specific styles if needed */
     }
 
-    /* --- RESTORED HOVER STYLE --- */
-    .grid-item:hover {
-        background-color: var(--color-surface-light-hover); /* Use variable */
-        /* border-color: var(--color-accent); */ /* Keep optional border commented */
-    }
-
-     /* --- Mobile Adjustments --- */
-     @media (max-width: 768px) {
-        .grid-item {
-            padding: var(--spacing-xxs);
-        }
-        .grid-item-thumbnail {
-            margin-bottom: var(--spacing-xxs);
-        }
-        .grid-item-label {
-            font-size: 0.85em;
-        }
-     }
+    /* No specific mobile overrides needed for this structure if it's designed mobile-first */
+    /* The grid layout itself in OverviewGrid.astro handles column changes */
 </style>
