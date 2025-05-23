@@ -1,10 +1,11 @@
 ---
-title: Five Polish stories in six days
+title: Five stories in six days
 date: 2024-03-01T09:31:00.000Z
 thumbnail: /uploads/240225-csm-thumb.jpg
-contentType: "Press"
-clientName: "The Monitor"
-myRole: ["Field Production"]
+contentType: Press
+clientName: The Monitor
+myRole:
+  - Field Production
 contentBlocks:
   - type: twoColumn
     right: |-
