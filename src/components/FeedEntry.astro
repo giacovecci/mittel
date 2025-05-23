@@ -207,62 +207,69 @@ const formattedDate = data.date
     .block-two-column .column.markdown-content > *:first-child { margin-top: 0; }
     .block-two-column .column.markdown-content > *:last-child { margin-bottom: 0; }
     
-    /* Target iframes specifically within two-column blocks or any markdown content */
+    /* Styles for iframes within general markdown content (e.g., in two-column blocks) */
     .block-two-column .column :global(iframe),
     .markdown-content :global(iframe) {
-        max-width: 100% !important; /* Ensure iframe itself scales down */
-        width: 100% !important;     /* Force it to take container width */
-        height: auto !important;    /* Adjust height proportionally if original embed doesn't have aspect ratio */
-        aspect-ratio: 16 / 9; /* Common aspect ratio, adjust if needed or make it configurable */
-        display: block; /* Remove extra space below */
-        border: none; /* Remove default iframe border */
+        max-width: 100% !important;
+        width: 100% !important;    
+        height: auto !important;   
+        aspect-ratio: 16 / 9; /* Default aspect ratio for videos in markdown */
+        display: block; 
+        border: none; 
     }
-    /* If the iframe is wrapped in a div by the embed code, target that too */
     .block-two-column .column :global(div[style*="width"]) > :global(iframe),
     .markdown-content :global(div[style*="width"]) > :global(iframe) {
         width: 100% !important;
         max-width: 100% !important;
     }
-    .block-two-column .column :global(div[style*="width"]), /* Target wrapper divs with inline width */
+    .block-two-column .column :global(div[style*="width"]), 
     .markdown-content :global(div[style*="width"]) {
-        width: auto !important; /* Override inline width */
+        width: auto !important; 
         max-width: 100% !important;
     }
-
 
     .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
     .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
     
-    .block-full-width-embed :global(iframe) { 
-        display: block; /* Ensures it behaves like a block element */
-        width: 100% !important; /* Takes full width of its container */
-        max-width: 100% !important; /* Prevents exceeding container width */
-        /* REMOVED: height: auto !important; */
-        /* REMOVED: aspect-ratio: 16 / 9; */
-        /* The height will now be determined by the 'height' attribute in the embed code,
-           or by the iframe's content, or a browser default (e.g., 150px). */
-        border: none; 
-        margin: 0; /* Reset any default margins */
+    /* --- MODIFICATION START: Styles for .block-full-width-embed and its iframes --- */
+    .block-full-width-embed {
+        width: 100%;
+        /* Container itself does not impose height or aspect ratio */
     }
-    /* More specific iframe styling for full-width embeds */
-    .block-full-width-embed :global(iframe) { 
-        display: block; 
-        width: 100% !important; 
-        height: auto !important; /* Let aspect-ratio or embed itself define height */
-        max-width: 100% !important; 
-        aspect-ratio: 16 / 9; /* Default aspect ratio, can be overridden by embed */
-        border: none; 
-        margin: 0;
-        /* position: absolute; top: 0; left: 0; /* Only if using padding-bottom trick on parent */
+
+    /* Default styling for ALL iframes within .block-full-width-embed */
+    /* Good for audio players that use their 'height' attribute from embed code */
+    .block-full-width-embed :global(iframe) {
+      display: block;
+      width: 100% !important; /* Takes full width of its container */
+      max-width: 100%; /* Prevents exceeding container width */
+      /* NO 'height' or 'aspect-ratio' here by default. */
+      /* Height will come from iframe's 'height' attribute or its content. */
+      border: none;
+      margin: 0 auto; /* Centers if iframe's own width attribute is less than 100% */
+      background-color: var(--color-background-muted); /* Optional: for loading or transparent embeds */
     }
-    /* If the iframe is wrapped by a div with fixed width from the embed code */
+
+    /* Specific overrides for VIDEO iframes to enforce aspect ratio */
+    .block-full-width-embed :global(iframe[src*="youtube.com"]),
+    .block-full-width-embed :global(iframe[src*="youtu.be"]),
+    .block-full-width-embed :global(iframe[src*="vimeo.com"]) {
+      /* width: 100% !important; is inherited from the general rule above */
+      aspect-ratio: 16 / 9;
+      height: auto !important; /* Allows aspect-ratio to determine height based on 100% width, overriding iframe's height attribute for display */
+    }
+    /* --- MODIFICATION END --- */
+
+    /* Ensure any wrapper divs from embed codes are also responsive */
     .block-full-width-embed :global(div[style*="width"]) {
-        width: auto !important; /* Override inline width */
+        width: auto !important; 
         max-width: 100% !important;
+        height: auto !important; 
     }
      .block-full-width-embed :global(div[style*="width"]) > :global(iframe) {
         width: 100% !important;
         max-width: 100% !important;
+        /* Height and aspect-ratio will be governed by the iframe-specific rules above */
     }
 
     .block-full-width-text {} 
@@ -313,16 +320,14 @@ const formattedDate = data.date
         .feed-entry {
              --gallery-item-gap: var(--spacing-sm); 
         }
-        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--mobile-header-height, 125px) + 1rem); } /* Adjusted scroll margin */
+        .feed-entry { margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); scroll-margin-top: calc(var(--mobile-header-height, 125px) + 1rem); }
         .feed-entry-blocks { margin-top: var(--spacing-md); }
         .content-block { margin-bottom: var(--spacing-md); }
         .block-two-column { flex-direction: column; gap: var(--spacing-md); }
-        /* Ensure columns in two-column layout don't cause overflow on mobile */
         .block-two-column .column {
-            width: 100%; /* Take full width of the parent flex container */
-            flex-basis: auto; /* Reset flex-basis */
+            width: 100%; 
+            flex-basis: auto; 
         }
-
         .entry-separator { margin-top: var(--spacing-lg); }
         .feed-entry-date { font-size: 0.85em; }
         .gallery-scroll-container {
