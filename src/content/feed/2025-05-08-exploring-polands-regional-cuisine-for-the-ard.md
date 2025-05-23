@@ -1,5 +1,5 @@
 ---
-title: A taste of Poland for the ARD
+title: A taste for Poland
 date: 2025-05-08T20:30:00.000Z
 thumbnail: /uploads/ddd05654.png
 contentType: Documentary
