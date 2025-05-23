@@ -201,7 +201,6 @@ const overviewItems = feedEntries.map(entry => ({
             
             updateActiveStates();
 
-            // MODIFICATION: Scroll logic wrapped in requestAnimationFrame
             const performScrollIfNeeded = () => {
                 if (window.location.hash) { 
                     if (view !== 'all-feed' && view !== 'contact') {
@@ -211,7 +210,11 @@ const overviewItems = feedEntries.map(entry => ({
                     window.scrollTo(0, 0);
                 }
             };
-            requestAnimationFrame(performScrollIfNeeded);
+            
+            // MODIFICATION: Nested setTimeout within requestAnimationFrame for scroll
+            requestAnimationFrame(() => {
+                setTimeout(performScrollIfNeeded, 0);
+            });
         }
 
         function toggleMobileMenu(forceClose = false) {
