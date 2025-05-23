@@ -1,5 +1,4 @@
 ---
-// src/components/StaticInfo.astro
 import { getEntry } from 'astro:content';
 import { render as parseMarkdown } from './MarkdownRenderer.astro';
 import { Image } from 'astro:assets';
@@ -21,14 +20,8 @@ let portraitImageUrl: string | undefined = undefined;
 let portraitImageAlt: string | undefined = undefined;
 let introTextOnlyMd = "";
 
-// Use the natural dimensions of your portrait image for aspect ratio
-// For 'żako-8_websize.jpg' (1000x1500px), the aspect ratio is 2:3
-const PORTRAIT_ASPECT_RATIO_WIDTH = 2; 
-const PORTRAIT_ASPECT_RATIO_HEIGHT = 3;
-// You can use larger numbers for width/height for better quality hints,
-// but the ratio is key. e.g. 1000 and 1500.
-const PORTRAIT_RENDER_WIDTH = 1000; // A representative large width for quality hints
-const PORTRAIT_RENDER_HEIGHT = 1500; // (PORTRAIT_RENDER_WIDTH / PORTRAIT_ASPECT_RATIO_WIDTH) * PORTRAIT_ASPECT_RATIO_HEIGHT
+const PORTRAIT_RENDER_WIDTH = 1000; 
+const PORTRAIT_RENDER_HEIGHT = 1500;
 
 
 if (entry && entry.data) {
@@ -61,7 +54,7 @@ if (entry && entry.data) {
     console.error("StaticInfo.astro: Could not load entry 'general_content/static_info.md'.");
 }
 
-const htmlIntroTextPortion = parseMarkdown(introTextOnlyMd);
+const htmlIntroTextPortion = await parseMarkdown(introTextOnlyMd);
 const hasTextContent = introTextOnlyMd.trim() !== "";
 const hasLogos = clientLogos.length > 0;
 const hasPortrait = !!portraitImageUrl;
@@ -123,6 +116,11 @@ const displayError = !hasTextContent && !hasLogos && !hasPortrait;
 </div>
 
 <style>
+    /* MODIFICATION: Define a CSS variable for minimum logo item width */
+    :root {
+        --logo-item-min-width: 100px; /* Adjust this value as needed */
+    }
+
     .static-info-wrapper {
         display: flex;
         flex-direction: column;
@@ -131,7 +129,6 @@ const displayError = !hasTextContent && !hasLogos && !hasPortrait;
         box-sizing: border-box;
     }
 
-    /* --- Mobile (Default) Order and Styling --- */
     .intro-text-content { order: 1; }
     .portrait-image-container { order: 2; display: none; } 
     .client-logos-container {
@@ -140,30 +137,44 @@ const displayError = !hasTextContent && !hasLogos && !hasPortrait;
         border-top: 1px solid var(--color-border-subtle);
     }
 
-    .portrait-image-container :global(img) { /* Style for the Astro Image component's output */
+    .portrait-image-container :global(img) { 
         display: block;
-        width: 100%; /* Make the image fill the container's width */
-        height: auto; /* Maintain aspect ratio based on width */
-        max-width: 100%; /* Ensure it doesn't overflow its container if something goes wrong */
+        width: 100%; 
+        height: auto; 
+        max-width: 100%; 
         border-radius: var(--border-radius-sm);
-        background-color: var(--color-border-light); /* Fallback color */
-        object-fit: cover; /* Cover the area. Use 'contain' if you want the whole image visible, possibly with letterboxing. */
+        background-color: var(--color-border-light); 
+        object-fit: cover; 
     }
 
     .client-logos-title {
         font-size: 0.9em; font-weight: var(--font-weight-medium); color: var(--color-text-secondary);
         text-align: left; margin-bottom: var(--spacing-md); text-transform: uppercase; letter-spacing: 0.075em;
     }
+
+    /* MODIFICATION: Updated .logos-grid to be responsive based on item width */
     .logos-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: var(--spacing-md); align-items: center;
+        display: grid;
+        /* This will create as many columns as fit, each at least --logo-item-min-width wide */
+        /* and at most 1fr (distributing extra space) */
+        grid-template-columns: repeat(auto-fill, minmax(var(--logo-item-min-width), 1fr));
+        gap: var(--spacing-md); 
+        align-items: center; 
     }
+
     .logo-item {
-        display: flex; justify-content: center; align-items: center; min-height: 50px;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 50px; 
     }
     .logo-item img { 
-        display: block; max-width: 100%; max-height: 45px;
-        width: auto; height: auto; object-fit: contain;
+        display: block; 
+        max-width: 100%; 
+        max-height: 45px; 
+        width: auto; 
+        height: auto; 
+        object-fit: contain; 
         transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
     }
     html:not(.light-mode) .logo-item img { opacity: 0.7; }
@@ -180,11 +191,14 @@ const displayError = !hasTextContent && !hasLogos && !hasPortrait;
 
     @media (max-width: 768px) { /* Mobile refinements */
         .static-info-wrapper { gap: var(--spacing-md); }
+        
+        /* MODIFICATION: Adjust gap and potentially min-width for smaller screens if needed */
         .logos-grid {
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: var(--spacing-sm);
+            /* You could also adjust --logo-item-min-width here if 100px is too large for very narrow mobile */
+            /* Example: grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); */
         }
-        .logo-item img { max-height: 40px; }
+        .logo-item img { max-height: 40px; } 
         .client-logos-title { font-size: 0.85em; }
     }
 
@@ -198,15 +212,11 @@ const displayError = !hasTextContent && !hasLogos && !hasPortrait;
         }
         .portrait-image-container {
             order: 3;
-            display: block; /* Make it visible on desktop */
+            display: block; 
             padding-top: var(--spacing-md);
             border-top: 1px solid var(--color-border-subtle);
-            width: 100%; /* Make the container take the full column width */
-            /* Optional: You can add a max-width to the container if you don't want the image to be TOO large on wide screens */
-            /* max-width: 350px; */ /* Example: Limit max width of the image container */
-            /* margin-left: auto; */ /* If using max-width, this can help center the container */
-            /* margin-right: auto; */ /* If using max-width, this can help center the container */
+            width: 100%; 
         }
-        /* The :global(img) style for width: 100%; height: auto; already handles responsiveness within the container. */
+        /* No specific changes needed for .logos-grid here, auto-fill handles it */
     }
 </style>

@@ -1,9 +1,15 @@
 ---
-// src/layouts/BaseLayout.astro
 interface Props {
     title?: string;
 }
 const { title = 'Portfolio' } = Astro.props;
+
+const linkedInIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="img" aria-labelledby="linkedinTitle">
+    <title id="linkedinTitle">LinkedIn Profile</title>
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+</svg>
+`;
 ---
 <!doctype html>
 <html lang="en" class="desktop-layout">
@@ -16,41 +22,14 @@ const { title = 'Portfolio' } = Astro.props;
     <title>{title}</title>
 
     <script is:inline>
+      // Theme script (no changes)
       const THEME_KEY = 'theme-preference';
       const THEME_CLASS_LIGHT = 'light-mode';
-      const THEME_CLASS_DARK = 'dark-mode'; // This variable isn't actively used to apply dark theme with current CSS
-
-      const getThemePreference = () => {
-        if (typeof localStorage !== 'undefined') {
-          const storedTheme = localStorage.getItem(THEME_KEY);
-          if (storedTheme) {
-            return storedTheme;
-          }
-        }
-        // Default to 'light' if no theme is stored in localStorage
-        return 'light';
-      };
-
-      const applyTheme = (theme) => {
-        document.documentElement.classList.remove(THEME_CLASS_LIGHT, THEME_CLASS_DARK);
-        if (theme === 'light') {
-          document.documentElement.classList.add(THEME_CLASS_LIGHT);
-        } else {
-          // Dark theme is applied by removing THEME_CLASS_LIGHT, 
-          // as CSS defaults to dark theme styles.
-        }
-      };
-      
-      // Make currentTheme available globally on window for other scripts if needed
-      window.currentTheme = getThemePreference();
-      applyTheme(window.currentTheme);
-
-      window.toggleTheme = () => {
-        window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem(THEME_KEY, window.currentTheme);
-        applyTheme(window.currentTheme);
-        document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } }));
-      };
+      const THEME_CLASS_DARK = 'dark-mode'; 
+      const getThemePreference = () => { if (typeof localStorage !== 'undefined') { const storedTheme = localStorage.getItem(THEME_KEY); if (storedTheme) { return storedTheme; } } return 'light'; };
+      const applyTheme = (theme) => { document.documentElement.classList.remove(THEME_CLASS_LIGHT, THEME_CLASS_DARK); if (theme === 'light') { document.documentElement.classList.add(THEME_CLASS_LIGHT); } };
+      window.currentTheme = getThemePreference(); applyTheme(window.currentTheme);
+      window.toggleTheme = () => { window.currentTheme = window.currentTheme === 'light' ? 'dark' : 'light'; localStorage.setItem(THEME_KEY, window.currentTheme); applyTheme(window.currentTheme); document.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: window.currentTheme } })); };
     </script>
       
     <style is:global>
@@ -65,13 +44,18 @@ const { title = 'Portfolio' } = Astro.props;
           --mobile-content-padding-x: var(--content-padding-x-mobile, var(--spacing-md));
           --mobile-header-height: 80px;
           --header-area-height: 90px; 
+          --footer-height-desktop: 50px; 
+          --footer-height-mobile: auto; 
        }
 
         html { height: 100%; box-sizing: border-box; }
         *, *:before, *:after { box-sizing: inherit; }
 
         body {
-            overscroll-behavior: none; min-height: 100%;
+            overscroll-behavior: none; 
+            min-height: 100%;
+            display: flex; 
+            flex-direction: column; 
         }
         body.mobile-menu-open {
             overflow: hidden;
@@ -79,246 +63,287 @@ const { title = 'Portfolio' } = Astro.props;
 
         #app-container {
             box-sizing: border-box;
-            position: relative;
+            position: relative; /* Keep for potential absolute children if any, but not for footer */
+            display: flex; 
+            flex-direction: column;
+            flex-grow: 1; 
         }
-        #app-container > div:not(#mobile-header-sticky-container) { box-sizing: border-box; }
+        
+        /* This div will wrap all scrollable/main content sections */
+        /* to make flex-grow work correctly for pushing footer down */
+        #main-content-slots-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        #app-container > div:not(#mobile-header-sticky-container):not(#app-footer):not(#main-content-slots-wrapper) { 
+            box-sizing: border-box; 
+        }
         #mobile-header-sticky-container { box-sizing: border-box; }
 
 
         @media (min-width: 769px) { /* DESKTOP */
-            body { overflow: hidden; height: 100%; }
-            #app-container { height: 100%; }
+            body { 
+                overflow: hidden; 
+                height: 100%; 
+            }
+            #app-container { 
+                height: 100vh; 
+                flex-grow: 0; 
+            }
             #app-container.is-desktop {
                 display: grid;
                 grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
-                grid-template-rows: var(--header-area-height) 1fr;
-                height: 100vh; overflow: hidden;
+                grid-template-rows: var(--header-area-height) 1fr var(--footer-height-desktop);
+                /* height: 100vh; /* Already on #app-container */
+                overflow: hidden;
             }
-
+            #main-content-slots-wrapper { /* On desktop, this wrapper becomes part of the grid */
+                grid-column: 1 / 4; /* Span all columns for content like overview/contact */
+                grid-row: 2 / 3;    /* Content row */
+                display: contents;  /* Allow children to be direct grid items */
+            }
+            /* ... (rest of desktop styles for header, divider, content areas as before) ... */
             #app-container.is-desktop > #mobile-header-sticky-container {
-                display: grid;
-                grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
-                grid-column: 1 / 4; 
-                grid-row: 1 / 2;    
-                height: var(--header-area-height);
-                background-color: var(--color-background);
-                border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
-                position: relative; 
-                z-index: 20; 
+                display: grid; grid-template-columns: var(--desktop-identity-width) var(--desktop-divider-width) var(--desktop-main-header-width);
+                grid-column: 1 / 4; grid-row: 1 / 2; height: var(--header-area-height);
+                background-color: var(--color-background); border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                position: relative; z-index: 20; 
             }
-
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area,
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
-                position: relative;
-                overflow: hidden;
-                font-size: 1.5em;
-                height: 100%; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+                position: relative; overflow: hidden; font-size: 1.5em; height: 100%; 
+                display: flex; flex-direction: column; justify-content: center;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area {
-                 grid-column: 1 / 2; 
-                 padding-left: var(--spacing-content-side-padding);
-                 padding-right: var(--spacing-md);
-                 pointer-events: none;
+                 grid-column: 1 / 2; padding-left: var(--spacing-content-side-padding);
+                 padding-right: var(--spacing-md); pointer-events: none;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper) {
-                 pointer-events: auto; 
-                 cursor: default;
+                 pointer-events: auto; cursor: default;
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #identity-header-area > :global(a.identity-header-link-mobile-wrapper > .identity-header-content-wrapper) {
                  pointer-events: auto; 
             }
             #app-container.is-desktop > #mobile-header-sticky-container > #main-header-area {
-                 grid-column: 3 / 4; 
-                 padding-right: var(--spacing-content-side-padding);
+                 grid-column: 3 / 4; padding-right: var(--spacing-content-side-padding);
                  padding-left: var(--spacing-md);
             }
-
             #app-container.is-desktop > #divider-area {
-                grid-column: 2 / 3; 
-                grid-row: 1 / 3;    
-                background: linear-gradient(to bottom, 
-                    transparent 0, 
-                    transparent var(--header-area-height), 
-                    var(--color-background) var(--header-area-height), 
-                    var(--color-background) 100%
-                );
-                z-index: 30; 
-                position: relative; 
-                display: block;
+                grid-column: 2 / 3; grid-row: 1 / 3; 
+                background: linear-gradient(to bottom, transparent 0, transparent var(--header-area-height), var(--color-background) var(--header-area-height), var(--color-background) 100%);
+                z-index: 30; position: relative; display: block;
             }
-            #app-container.is-desktop > #divider-area::before {
-                 content: ''; 
-                 position: absolute; 
-                 top: 0; 
-                 bottom: 0; 
-                 left: 50%;
-                 transform: translateX(-50%);
-                 width: var(--line-thickness-subtle);
-                 background-color: var(--color-border-subtle); 
-                 opacity: 1;
+             #app-container.is-desktop > #divider-area::before {
+                 content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+                 transform: translateX(-50%); width: var(--line-thickness-subtle);
+                 background-color: var(--color-border-subtle); opacity: 1;
             }
-
-            #app-container.is-desktop > #info-content-area,
-            #app-container.is-desktop > #dynamic-content-area,
-            #app-container.is-desktop > #all-feed-content-area,
-            #app-container.is-desktop > #overview-content-area,
-            #app-container.is-desktop > #contact-content-area,
-            #app-container.is-desktop > #feed-content-area {
-                overflow-y: auto;
-                scrollbar-width: thin;
+            /* Content areas are children of #main-content-slots-wrapper, which uses display: contents */
+            /* So these rules apply as if they are direct children of the grid */
+            #app-container.is-desktop #info-content-area, /* Note: removed > combinator */
+            #app-container.is-desktop #dynamic-content-area,
+            #app-container.is-desktop #all-feed-content-area,
+            #app-container.is-desktop #overview-content-area,
+            #app-container.is-desktop #contact-content-area,
+            #app-container.is-desktop #feed-content-area {
+                overflow-y: auto; scrollbar-width: thin;
                 scrollbar-color: var(--scrollbar-thumb-color, #555) var(--scrollbar-track-color, #222);
+                grid-row: 2 / 3; /* This is important, inherited from #main-content-slots-wrapper's context */
             }
-            #app-container.is-desktop > #info-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
-
-            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-track,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
-
-            #app-container.is-desktop > #info-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #feed-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #dynamic-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #all-feed-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #contact-content-area::-webkit-scrollbar-thumb,
-            #app-container.is-desktop > #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
-
-
-            #app-container.is-desktop > #info-content-area {
-                grid-column: 1 / 2; grid-row: 2 / 3; display: block;
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar-track,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar-track { background: var(--scrollbar-track-color, #222); }
+            #app-container.is-desktop #info-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #dynamic-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #all-feed-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #contact-content-area::-webkit-scrollbar-thumb,
+            #app-container.is-desktop #overview-content-area::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb-color, #555); border-radius: calc(var(--scrollbar-width, 8px) / 2); border: 2px solid var(--scrollbar-track-color, #222); }
+            
+            #app-container.is-desktop #info-content-area {
+                grid-column: 1 / 2; display: block;
                 padding: var(--desktop-content-padding-top) var(--spacing-md) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
-            #app-container.is-desktop > #dynamic-content-area,
-            #app-container.is-desktop > #all-feed-content-area,
-            #app-container.is-desktop > #feed-content-area {
-                grid-column: 3 / 4; grid-row: 2 / 3; display: none;
+            #app-container.is-desktop #dynamic-content-area,
+            #app-container.is-desktop #all-feed-content-area,
+            #app-container.is-desktop #feed-content-area {
+                grid-column: 3 / 4; display: none;
                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-md);
             }
-            #app-container.is-desktop > #overview-content-area,
-            #app-container.is-desktop > #contact-content-area {
-                grid-column: 1 / 4; grid-row: 2 / 3; display: none;
+            #app-container.is-desktop #overview-content-area,
+            #app-container.is-desktop #contact-content-area {
+                /* These span all columns if the divider is hidden */
+                grid-column: 1 / 4; display: none;
                 padding: var(--desktop-content-padding-top) var(--spacing-content-side-padding) var(--desktop-content-padding-bottom) var(--spacing-content-side-padding);
             }
-
-             #app-container.is-desktop.view-home > #info-content-area { display: block; }
-             #app-container.is-desktop.view-home > #dynamic-content-area { display: block; }
-             #app-container.is-desktop.view-home > #all-feed-content-area { display: none; }
-             #app-container.is-desktop.view-home > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-home > #contact-content-area { display: none; }
-             #app-container.is-desktop.view-home > #divider-area { display: block; }
-
-             #app-container.is-desktop.view-all-feed > #info-content-area { display: block; }
-             #app-container.is-desktop.view-all-feed > #all-feed-content-area { display: block; }
-             #app-container.is-desktop.view-all-feed > #dynamic-content-area { display: none; }
-             #app-container.is-desktop.view-all-feed > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-all-feed > #contact-content-area { display: none; }
-             #app-container.is-desktop.view-all-feed > #divider-area { display: block; }
-            
-             #app-container.is-desktop.view-about > #info-content-area { display: block; }
-             #app-container.is-desktop.view-about > #dynamic-content-area { display: block; }
-             #app-container.is-desktop.view-about > #all-feed-content-area { display: none; }
-             #app-container.is-desktop.view-about > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-about > #contact-content-area { display: none; }
-             #app-container.is-desktop.view-about > #divider-area { display: block; }
-
-             #app-container.is-desktop.view-overview > #info-content-area { display: none; }
-             #app-container.is-desktop.view-overview > #dynamic-content-area { display: none; }
-             #app-container.is-desktop.view-overview > #all-feed-content-area { display: none; }
-             #app-container.is-desktop.view-overview > #overview-content-area { display: block; }
-             #app-container.is-desktop.view-overview > #contact-content-area { display: none; }
-             #app-container.is-desktop.view-overview > #divider-area { display: none; }
-
-             #app-container.is-desktop.view-contact > #info-content-area { display: none; }
-             #app-container.is-desktop.view-contact > #dynamic-content-area { display: none; }
-             #app-container.is-desktop.view-contact > #all-feed-content-area { display: none; }
-             #app-container.is-desktop.view-contact > #overview-content-area { display: none; }
-             #app-container.is-desktop.view-contact > #contact-content-area { display: block; }
-             #app-container.is-desktop.view-contact > #divider-area { display: none; }
+             #app-container.is-desktop.view-home #info-content-area { display: block; }
+             #app-container.is-desktop.view-home #dynamic-content-area { display: block; }
+             #app-container.is-desktop.view-home #divider-area { display: block; }
+             #app-container.is-desktop.view-all-feed #info-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed #all-feed-content-area { display: block; }
+             #app-container.is-desktop.view-all-feed #divider-area { display: block; }
+             #app-container.is-desktop.view-about #info-content-area { display: block; }
+             #app-container.is-desktop.view-about #dynamic-content-area { display: block; }
+             #app-container.is-desktop.view-about #divider-area { display: block; }
+             #app-container.is-desktop.view-overview #overview-content-area { grid-column: 1 / 4; display: block; }
+             #app-container.is-desktop.view-overview #divider-area { display: none; }
+             #app-container.is-desktop.view-contact #contact-content-area { grid-column: 1 / 4; display: block; }
+             #app-container.is-desktop.view-contact #divider-area { display: none; }
         }
 
         @media (max-width: 768px) { /* MOBILE */
-            body {
-                height: auto; overflow-y: auto; overflow-x: hidden;
-            }
             #app-container.is-mobile {
-                display: flex; flex-direction: column; min-height: 100vh;
-                height: auto; position: relative; padding-top: var(--mobile-header-height);
+                padding-top: var(--mobile-header-height); 
+            }
+            #main-content-slots-wrapper { /* This wrapper takes the padding for mobile */
+                 padding-top: 0; /* Reset if #app-container had it */
+                 /* flex-grow: 1; /* Already set globally */
             }
             #app-container.is-mobile > #mobile-header-sticky-container {
-                display: flex; flex-direction: row; width: 100%;
-                position: fixed; top: 0; left: 0; right: 0;
+                display: flex; flex-direction: row; width: 100%; position: fixed; top: 0; left: 0; right: 0;
                 background-color: var(--color-background); z-index: 1000;
                 border-bottom: var(--line-thickness-subtle) solid var(--color-border-subtle);
                 box-sizing: border-box; height: var(--mobile-header-height);
             }
             #app-container.is-mobile > #mobile-header-sticky-container > #identity-header-area {
-                 flex-grow: 1; flex-shrink: 1;
-                 min-width: 50px;
-                 display: flex; 
-                 flex-direction: column; 
-                 justify-content: center;
-                 height: 100%;
+                 flex-grow: 1; flex-shrink: 1; min-width: 50px; display: flex; 
+                 flex-direction: column; justify-content: center; height: 100%;
                  padding: 0 var(--spacing-xs) 0 var(--mobile-content-padding-x);
                  font-size: var(--font-size-mobile-header-responsive);
-                 overflow: hidden; 
-                 box-sizing: border-box; 
-                 align-items: flex-start;
-                 cursor: pointer;
+                 overflow: hidden; box-sizing: border-box; align-items: flex-start; cursor: pointer;
             }
             #app-container.is-mobile > #mobile-header-sticky-container > #main-header-area {
-                 flex-grow: 0; flex-shrink: 0;
-                 display: flex;
-                 justify-content: center;
-                 align-items: center;
-                 height: 100%;
-                 padding: 0 var(--spacing-sm);
-                 font-size: var(--font-size-mobile-header-responsive);
-                 box-sizing: border-box;
+                 flex-grow: 0; flex-shrink: 0; display: flex; justify-content: center; align-items: center; height: 100%;
+                 padding: 0 var(--spacing-sm); font-size: var(--font-size-mobile-header-responsive); box-sizing: border-box;
             }
             #app-container.is-mobile > #divider-area { display: none; }
 
-            #app-container.is-mobile > #info-content-area,
-            #app-container.is-mobile > #feed-content-area,
-            #app-container.is-mobile > #overview-content-area,
-            #app-container.is-mobile > #dynamic-content-area,
-            #app-container.is-mobile > #contact-content-area,
-            #app-container.is-mobile > #all-feed-content-area {
-                 order: 3; width: 100%; position: static;
-                 border: none; max-height: none;
+            /* Content areas are children of #main-content-slots-wrapper */
+            #app-container.is-mobile #info-content-area, /* Note: removed > combinator */
+            #app-container.is-mobile #feed-content-area,
+            #app-container.is-mobile #overview-content-area,
+            #app-container.is-mobile #dynamic-content-area,
+            #app-container.is-mobile #contact-content-area,
+            #app-container.is-mobile #all-feed-content-area {
+                 /* order: 3; /* Removed order property */
+                 width: 100%; 
                  padding: var(--spacing-lg) var(--mobile-content-padding-x);
                  display: none; box-sizing: border-box;
+                 flex-grow: 1; /* Ensure the *active* content area grows */
             }
-            #app-container.is-mobile.view-home > #dynamic-content-area { display: block; }
-            #app-container.is-mobile.view-all-feed > #all-feed-content-area { display: block; }
-            #app-container.is-mobile.view-info > #info-content-area { display: block; }
-            #app-container.is-mobile.view-info > #dynamic-content-area { display: block; }
-            #app-container.is-mobile.view-about > #dynamic-content-area { display: block; }
-            #app-container.is-mobile.view-overview > #overview-content-area { display: block; }
-            #app-container.is-mobile.view-contact > #contact-content-area { display: block; }
+            #app-container.is-mobile.view-home #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-all-feed #all-feed-content-area { display: block; }
+            #app-container.is-mobile.view-info #info-content-area { display: block; } 
+            #app-container.is-mobile.view-info #dynamic-content-area { display: block; } 
+            #app-container.is-mobile.view-about #dynamic-content-area { display: block; }
+            #app-container.is-mobile.view-overview #overview-content-area { display: block; }
+            #app-container.is-mobile.view-contact #contact-content-area { display: block; }
         }
+
+            #app-footer {
+                width: 100%;
+                background-color: var(--color-background); 
+                border-top: var(--line-thickness-subtle) solid var(--color-border-subtle);
+                /* This padding on #app-footer will now define the outer edges for its content */
+                padding: var(--spacing-sm) var(--spacing-content-side-padding); 
+                box-sizing: border-box;
+                font-size: 0.8em;
+                color: var(--color-text-secondary);
+                /* Desktop Grid positioning */
+                grid-column: 1 / 4; 
+                grid-row: 3 / 4;    
+                flex-shrink: 0; 
+            }
+            .footer-content {
+                display: flex;
+                justify-content: space-between; /* Key for left/right alignment */
+                align-items: center;          /* Key for vertical centering of items */
+                gap: var(--spacing-md); 
+                /* MODIFICATION: Removed max-width and margin: 0 auto; */
+                /* Now .footer-content will expand to the padded width of #app-footer */
+            }
+            .footer-copyright {
+                margin: 0; 
+                padding: 0; 
+                /* text-align: left; /* Default, not strictly needed */
+            }
+            .footer-linkedin-link {
+                display: inline-flex; 
+                align-items: center;  
+                color: var(--color-text-secondary);
+                transition: color 0.2s ease;
+                flex-shrink: 0; /* Prevent icon from shrinking if copyright text is very long */
+                margin: 0; 
+                padding: 0; 
+            }
+            .footer-linkedin-link:hover {
+                color: var(--color-accent);
+            }
+            .footer-linkedin-link svg {
+                width: 2em;  
+                height: 2em; 
+                fill: currentColor;
+            }
+
+            @media (max-width: 768px) {
+                #app-footer {
+                    /* On mobile, use mobile-specific padding */
+                    padding: var(--spacing-sm) var(--mobile-content-padding-x);
+                    min-height: var(--footer-height-mobile); 
+                    font-size: 0.75em;
+                }
+                .footer-content {
+                    /* If space is very tight on mobile, items might wrap. */
+                    /* If you want to ensure they stay on one line and potentially cause overflow, use flex-wrap: nowrap; */
+                    /* By default, flex-wrap is nowrap. If they are wrapping, it's due to content width. */
+                    flex-wrap: wrap; /* Allow wrapping for very small screens */
+                    /* If they wrap, you might prefer them centered: */
+                    /* justify-content: center; */
+                }
+                /* Optional: if wrapping occurs, style copyright to take full width */
+                /* .footer-copyright {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: var(--spacing-xs);
+                } */
+            }        
     </style>
+</head>
 <body>
     <div id="app-container">
         <div id="mobile-header-sticky-container">
              <div id="identity-header-area"><slot name="identity-header" /></div>
              <div id="main-header-area"><slot name="main-header" /></div>
         </div>
-        <div id="divider-area"></div>
-        <div id="info-content-area"><slot name="info-content" /></div>
-        <div id="feed-content-area"><slot name="feed-content" /></div>
-        <div id="overview-content-area"><slot name="overview-content" /></div>
-        <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
-        <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
-        <div id="contact-content-area"><slot name="contact-content" /></div>
+        
+        <div id="main-content-slots-wrapper"> {/* MODIFICATION: Wrapper for main content slots */}
+            <div id="divider-area"></div> {/* Divider is now inside this wrapper for desktop grid context */}
+            <div id="info-content-area"><slot name="info-content" /></div>
+            <div id="feed-content-area"><slot name="feed-content" /></div>
+            <div id="overview-content-area"><slot name="overview-content" /></div>
+            <div id="dynamic-content-area"><slot name="dynamic-content" /></div>
+            <div id="all-feed-content-area"><slot name="all-feed-content" /></div>
+            <div id="contact-content-area"><slot name="contact-content" /></div>
+        </div>
+
+        <footer id="app-footer">
+            <div class="footer-content">
+                <span class="footer-copyright">© 2025 Piotr Żakowiecki</span> {/* Year updated */}
+                <a href="https://www.linkedin.com/in/zakowiecki" target="_blank" rel="noopener noreferrer" class="footer-linkedin-link" set:html={linkedInIconSvg}>
+                </a>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
