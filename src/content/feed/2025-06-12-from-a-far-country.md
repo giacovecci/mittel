@@ -1,6 +1,7 @@
 ---
 title: From a Far Country
 date: 2025-06-02T13:06:00.000Z
+thumbnail: /uploads/img_20250601_113603.jpg
 contentType: TV News
 clientName: Alaraby TV
 myRole:
