@@ -25,8 +25,15 @@ contentBlocks:
       trajectories.
 
 
-      Qatar's Alaraby TV, a leading outlet in the Gulf region and beyond, wished to bring their audiences up to speed with the arguably somewhat exotic themes that move Polish people. I worked with their European correspondent, [Muath Hamed](https://x.com/MuathHamed), to deliver a comprehensive yet not overwhelming coverage of the vote.
+      Qatar's Alaraby TV, a leading outlet in the Gulf region and beyond, wished to bring their audiences up to speed with the arguably somewhat exotic themes that move Polish people. I worked with their European correspondent, [Muath Hamed](https://x.com/MuathHamed), to deliver a comprehensive, yet not overwhelming coverage of the vote.
 
 
-      My responsibilities involved both field production and videography, while Muath took care of editing.
+      My responsibilities involved both field production (research and fixing) and videography, as well as providing expert commentary.
+  - type: fullWidthEmbed
+    embedCode: <iframe
+      src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Falarabytelevision%2Fvideos%2F1271513711068663%2F&show_text=false&width=560&t=0"
+      width="560" height="314" style="border:none;overflow:hidden"
+      scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay;
+      clipboard-write; encrypted-media; picture-in-picture; web-share"
+      allowFullScreen="true"></iframe>
 ---
