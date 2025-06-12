@@ -231,36 +231,28 @@ const formattedDate = data.date
     .block-full-width-image img, .block-full-width-image picture { display: block; width: 100%; height: auto; border-radius: var(--border-radius-sm); background-color: var(--color-border-light); }
     .block-missing-image p { font-style: italic; color: var(--color-text-secondary); background-color: var(--color-background-muted); padding: var(--spacing-md); border-radius: var(--border-radius-sm); text-align: center; }
     
-    /* --- MODIFICATION START: Styles for .block-full-width-embed and its iframes --- */
     .block-full-width-embed {
         width: 100%;
-        /* Container itself does not impose height or aspect ratio */
     }
 
-    /* Default styling for ALL iframes within .block-full-width-embed */
-    /* Good for audio players that use their 'height' attribute from embed code */
     .block-full-width-embed :global(iframe) {
       display: block;
-      width: 100% !important; /* Takes full width of its container */
-      max-width: 100%; /* Prevents exceeding container width */
-      /* NO 'height' or 'aspect-ratio' here by default. */
-      /* Height will come from iframe's 'height' attribute or its content. */
+      width: 100% !important; 
+      max-width: 100%; 
       border: none;
-      margin: 0 auto; /* Centers if iframe's own width attribute is less than 100% */
-      background-color: var(--color-background-muted); /* Optional: for loading or transparent embeds */
+      margin: 0 auto; 
+      background-color: var(--color-background-muted); 
     }
 
     /* Specific overrides for VIDEO iframes to enforce aspect ratio */
     .block-full-width-embed :global(iframe[src*="youtube.com"]),
     .block-full-width-embed :global(iframe[src*="youtu.be"]),
-    .block-full-width-embed :global(iframe[src*="vimeo.com"]) {
-      /* width: 100% !important; is inherited from the general rule above */
+    .block-full-width-embed :global(iframe[src*="vimeo.com"]),
+    .block-full-width-embed :global(iframe[src*="facebook.com/plugins/video.php"]) { /* MODIFIED: Added Facebook video */
       aspect-ratio: 16 / 9;
-      height: auto !important; /* Allows aspect-ratio to determine height based on 100% width, overriding iframe's height attribute for display */
+      height: auto !important; 
     }
-    /* --- MODIFICATION END --- */
 
-    /* Ensure any wrapper divs from embed codes are also responsive */
     .block-full-width-embed :global(div[style*="width"]) {
         width: auto !important; 
         max-width: 100% !important;
@@ -269,7 +261,6 @@ const formattedDate = data.date
      .block-full-width-embed :global(div[style*="width"]) > :global(iframe) {
         width: 100% !important;
         max-width: 100% !important;
-        /* Height and aspect-ratio will be governed by the iframe-specific rules above */
     }
 
     .block-full-width-text {} 
